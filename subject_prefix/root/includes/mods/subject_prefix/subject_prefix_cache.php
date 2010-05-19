@@ -27,5 +27,45 @@ if (!class_exists('acm'))
 */
 class subject_prefix_cache extends acm
 {
+	/** @#+
+	* Subject Prefix database tables
+	*/
+	const SUBJECT_PREFIX_TABLE = 'subject_prefix';
+	/**@#-*/
 
+	/**
+	* @var Array Array containing all prefixes from the database
+	*/
+	private static $prefixlist = array();
+
+	/**
+	* Get all the prefixes from the database
+	* @return Array Array containing all prefixes from the database
+	*/
+	public function obtain_prefix_list()
+	{
+		global $db;
+
+		// Might be needed more than once
+		if (!empty(self::$prefixlist))
+		{
+			return self::$prefixlist;
+		}
+
+		if ((self::$prefixlist = $this->get('_subject_prefix')) === false)
+		{
+			$sql = 'SELECT *
+				FROM ' . self::SUBJECT_PREFIX_TABLE;
+			$result	= $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				self::$prefixlist[$row['prefix_id']] = $row['prefix_title'];
+			}
+			$db->sql_query($sql);
+
+			$this->put('_subject_prefix', self::$prefixlist);
+		}
+
+		return self::$prefixlist;
+	}
 }

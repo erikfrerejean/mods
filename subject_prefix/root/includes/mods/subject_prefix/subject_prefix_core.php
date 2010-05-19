@@ -23,9 +23,39 @@ if (!defined('IN_PHPBB'))
 abstract class subject_prefix_core
 {
 	/**
+	* @var subject_prefix_cache The Subject Prefix cache object
+	*/
+	public static $sp_cache = null;
+
+	/**
 	* Initialise the MOD
 	*/
 	public static function init()
 	{
+		// Load the cache
+		self::$sp_cache = new subject_prefix_cache();
+	}
+
+
+	public static function add_subject_prefix($topic, $blockname)
+	{
+		// Topic doesn't have a prefix
+		if ($topic['subject_prefix_id'] == 0)
+		{
+			return;
+		}
+
+		// Get the prefixes
+		$prefixlist = self::$sp_cache->obtain_prefix_list();
+
+		if (!isset($prefixlist[$topic['subject_prefix_id']]))
+		{
+			return;
+		}
+
+		// We have a prefix, alter the block array and add it
+		global $template;
+
+		$template->alter_block_array($blockname, array('SUBJECT_PREFIX' => $prefixlist[$topic['subject_prefix_id']]), true, 'change');
 	}
 }

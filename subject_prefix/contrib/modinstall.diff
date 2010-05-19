@@ -1,0 +1,50 @@
+Index: ../../styles/prosilver/theme/common.css
+===================================================================
+--- ../../styles/prosilver/theme/common.css	(revision 10624)
++++ ../../styles/prosilver/theme/common.css	(working copy)
+@@ -630,3 +630,15 @@
+ 	line-height: 1px;
+ 	background: transparent;
+ }
++
++/* Begin Subject Prefix
++---------------------------------------- */
++.subjectprefix {
++	font-family: "Trebuchet MS", Helvetica, Arial, Sans-serif;
++	font-size: 1.2em;
++	font-weight: bold;
++	color: #105289;
++	text-decoration: none;
++}
++/* End Subject Prefix
++---------------------------------------- */
+\ No newline at end of file
+Index: ../../styles/prosilver/template/viewforum_body.html
+===================================================================
+--- ../../styles/prosilver/template/viewforum_body.html	(revision 10624)
++++ ../../styles/prosilver/template/viewforum_body.html	(working copy)
+@@ -139,7 +139,7 @@
+ 
+ 		<li class="row<!-- IF topicrow.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_POST_ANNOUNCE --> announce<!-- ENDIF --><!-- IF topicrow.S_POST_STICKY --> sticky<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
+ 			<dl class="icon" style="background-image: url({topicrow.TOPIC_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
+-				<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF --> title="{topicrow.TOPIC_FOLDER_IMG_ALT}"><!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}">{NEWEST_POST_IMG}</a> <!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
++				<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF --> title="{topicrow.TOPIC_FOLDER_IMG_ALT}"><!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}">{NEWEST_POST_IMG}</a> <!-- ENDIF --><!-- IF topicrow.SUBJECT_PREFIX --><span class="subjectprefix">{topicrow.SUBJECT_PREFIX}</span> <!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
+ 					<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
+ 					<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><br />
+ 					<!-- IF topicrow.PAGINATION --><strong class="pagination"><span>{topicrow.PAGINATION}</span></strong><!-- ENDIF -->
+Index: ../../viewforum.php
+===================================================================
+--- ../../viewforum.php	(revision 10624)
++++ ../../viewforum.php	(working copy)
+@@ -680,6 +680,11 @@
+ 			'S_TOPIC_TYPE_SWITCH'	=> ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test)
+ 		);
+ 
++		//-- Begin Subject Prefix
++		//-- Add:
++		subject_prefix_core::add_subject_prefix($row, 'topicrow');
++		//-- End Subject Prefix
++
+ 		$s_type_switch = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
+ 
+ 		if ($unread_topic)
