@@ -13,7 +13,7 @@ Index: ../../styles/prosilver/theme/common.css
 +	font-family: "Trebuchet MS", Helvetica, Arial, Sans-serif;
 +	font-size: 1.2em;
 +	font-weight: bold;
-+	color: #105289;
++	color: #000000;
 +	text-decoration: none;
 +}
 +/* End Subject Prefix
