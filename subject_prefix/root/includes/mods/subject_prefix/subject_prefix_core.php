@@ -36,11 +36,18 @@ abstract class subject_prefix_core
 		self::$sp_cache = new subject_prefix_cache();
 	}
 
-
-	public static function add_subject_prefix($topic, $blockname)
+	/**
+	* Add the prefix to the template.
+	*
+	* @param array	$topicdata	Array containing the topic data
+	* @param string	$blockname	The name of the block into which the prefix has to be merges
+	* 							the prefix will be added to the row that is last created.
+	* @return void
+	*/
+	public static function add_subject_prefix_to_blockrow($topicdata, $blockname)
 	{
 		// Topic doesn't have a prefix
-		if ($topic['subject_prefix_id'] == 0)
+		if ($topicdata['subject_prefix_id'] == 0)
 		{
 			return;
 		}
@@ -48,7 +55,7 @@ abstract class subject_prefix_core
 		// Get the prefixes
 		$prefixlist = self::$sp_cache->obtain_prefix_list();
 
-		if (!isset($prefixlist[$topic['subject_prefix_id']]))
+		if (!isset($prefixlist[$topicdata['subject_prefix_id']]))
 		{
 			return;
 		}
@@ -56,6 +63,13 @@ abstract class subject_prefix_core
 		// We have a prefix, alter the block array and add it
 		global $template;
 
-		$template->alter_block_array($blockname, array('SUBJECT_PREFIX' => $prefixlist[$topic['subject_prefix_id']]), true, 'change');
+		if ($blockname != '.')
+		{
+			$template->alter_block_array($blockname, array('SUBJECT_PREFIX' => $prefixlist[$topicdata['subject_prefix_id']]), true, 'change');
+		}
+		else
+		{
+			$template->assign_var('SUBJECT_PREFIX', $prefixlist[$topicdata['subject_prefix_id']]);
+		}
 	}
 }
