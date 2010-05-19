@@ -1,0 +1,9 @@
+# The main table
+CREATE TABLE subject_prefix (
+  prefix_id mediumint(8) NOT NULL AUTO_INCREMENT,
+  prefix_title varchar(255) NOT NULL,
+  PRIMARY KEY (prefix_id)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+# Add prefix column to phpbb_topics
+ALTER TABLE phpbb_topics ADD COLUMN subject_prefix_id mediumint(8) DEFAULT '0';
