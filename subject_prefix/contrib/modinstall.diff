@@ -1,3 +1,48 @@
+Index: styles/subsilver2/template/posting_body.html
+===================================================================
+--- styles/subsilver2/template/posting_body.html	(revision 10624)
++++ styles/subsilver2/template/posting_body.html	(working copy)
+@@ -171,7 +171,14 @@
+ 	<!-- ENDIF -->
+ <!-- ENDIF -->
+ 
++<!-- IF SUBJECT_PREFIX_DROPDOWN_OPTIONS -->
+ <tr>
++	<td class="row1" width="22%"><b class="genmed">{L_ACP_SUBJECT_PREFIX}</b></td>
++	<td class="row2" width="78%"><select name="prefixes" id="prefixes">{SUBJECT_PREFIX_DROPDOWN_OPTIONS}</select></td>
++</tr>
++<!-- ENDIF -->
++
++<tr>
+ 	<td class="row1" width="22%"><b class="genmed">{L_SUBJECT}:</b></td>
+ 	<td class="row2" width="78%"><input class="post" style="width:450px" type="text" name="subject" size="45" maxlength="<!-- IF S_NEW_MESSAGE -->60<!-- ELSE -->64<!-- ENDIF -->" tabindex="2" value="{SUBJECT}" /></td>
+ </tr>
+Index: styles/subsilver2/template/viewtopic_body.html
+===================================================================
+--- styles/subsilver2/template/viewtopic_body.html	(revision 10624)
++++ styles/subsilver2/template/viewtopic_body.html	(working copy)
+@@ -15,7 +15,7 @@
+ <!-- ENDIF -->
+ 
+ <div id="pageheader">
+-	<h2><a class="titles" href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a></h2>
++	<h2><!-- IF SUBJECT_PREFIX_TITLE --><span class="titles"<!-- IF SUBJECT_PREFIX_COLOUR --> style="color: #{SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF --><a class="titles" href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a></h2>
+ 
+ <!-- IF MODERATORS -->
+ 	<p class="moderators"><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->: {MODERATORS}</p>
+Index: styles/subsilver2/template/viewforum_body.html
+===================================================================
+--- styles/subsilver2/template/viewforum_body.html	(revision 10624)
++++ styles/subsilver2/template/viewforum_body.html	(working copy)
+@@ -192,7 +192,7 @@
+ 				<!-- ENDIF -->
+ 				<td class="row1">
+ 					<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}">{NEWEST_POST_IMG}</a><!-- ENDIF -->
+-					{topicrow.ATTACH_ICON_IMG} <!-- IF topicrow.S_HAS_POLL or topicrow.S_TOPIC_MOVED --><b>{topicrow.TOPIC_TYPE}</b> <!-- ENDIF --><a title="{L_POSTED}: {topicrow.FIRST_POST_TIME}" href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
++					{topicrow.ATTACH_ICON_IMG} <!-- IF topicrow.S_HAS_POLL or topicrow.S_TOPIC_MOVED --><b>{topicrow.TOPIC_TYPE}</b> <!-- ENDIF --><!-- IF topicrow.SUBJECT_PREFIX_TITLE --><b class="topictitle"<!-- IF topicrow.SUBJECT_PREFIX_COLOUR --> style="color: #{topicrow.SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{topicrow.SUBJECT_PREFIX_TITLE}</b> <!-- ENDIF --><a title="{L_POSTED}: {topicrow.FIRST_POST_TIME}" href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
+ 					<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED -->
+ 						<a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a>&nbsp;
+ 					<!-- ENDIF -->
 Index: styles/prosilver/theme/common.css
 ===================================================================
 --- styles/prosilver/theme/common.css	(revision 10624)
