@@ -27,12 +27,6 @@ if (!class_exists('acm'))
 */
 class subject_prefix_cache extends acm
 {
-	/** @#+
-	* Subject Prefix database tables
-	*/
-	const SUBJECT_PREFIX_TABLE = 'subject_prefix';
-	/**@#-*/
-
 	/**
 	* @var Array Array containing all prefixes from the database
 	*/

@@ -22,6 +22,12 @@ if (!defined('IN_PHPBB'))
 */
 abstract class subject_prefix_core
 {
+	/** @#+
+	* Subject Prefix database tables
+	*/
+	const SUBJECT_PREFIX_TABLE = 'subject_prefix';
+	/**@#-*/
+
 	/**
 	* @var subject_prefix_cache The Subject Prefix cache object
 	*/
