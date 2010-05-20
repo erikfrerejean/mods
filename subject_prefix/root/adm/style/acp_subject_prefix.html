@@ -1,0 +1,48 @@
+<!-- IF S_KEYWORD_VERSION -->
+<!--
+/**
+*
+* @author Erik Frèrejean (erikfrerejean@phpbb.com) http://www.erikfrerejean.nl
+*
+* @package acp
+* @copyright (c) 2010 Erik Frèrejean
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+//-->
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+<h1>{L_ACP_MANAGE_SUBJECT_PREFIX}</h1
+
+<p>{L_ACP_MANAGE_SUBJECT_PREFIX_EXPLAIN}</p>
+
+<!-- IF .prefixlist -->
+<form id="acp_ranks" method="post" action="{U_ACTION}">
+    <fieldset class="tabulated">
+	<legend>{L_ACP_MANAGE_SUBJECT_PREFIX}</legend>
+
+	<table cellspacing="1">
+	    <thead>
+	    <tr>
+		    <th>{L_PREFIX_TITLE}</th>
+		    <th>{L_ACTION}</th>
+	    </tr>
+	    </thead>
+	    <tbody>
+	    <!-- BEGIN prefixlist -->
+		<tr class="<!-- IF prefixlist.S_ROW_COUNT is even -->row1<!-- ELSE -->row2<!-- ENDIF -->">
+		    <td>{prefixlist.L_PREFIX_TITLE}</td>
+		    <td><a href="{prefixlist.U_EDIT}">{ICON_EDIT}</a> <a href="{prefixlist.U_DELETE}">{ICON_DELETE}</a></td>
+		</tr>
+	    <!-- END prefixlist -->
+	    </tbody>
+	</table>
+    </fieldset>
+</form>
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->
