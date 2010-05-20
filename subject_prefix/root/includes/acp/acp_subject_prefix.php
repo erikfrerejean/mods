@@ -37,20 +37,73 @@ class acp_subject_prefix
 	*/
 	public function main($mode, $id)
 	{
-		global $template;
+		global $db, $template, $user;
 
 		// Prep template
 		$this->tpl_name = 'acp_subject_prefix';
 		$this->page_title = 'ACP_SUBJECT_PREFIX';
 		add_form_key($this->form_key);
 
+		// Get some vars
+		$action		= request_var('action', '');
+		$prefix_id	= request_var('prefix_id', 0);
+
+		// Handle actions
+		switch ($action)
+		{
+			case 'delete' :
+				if (!$prefix_id)
+				{
+					trigger_error($user->lang['MUST_SELECT_PREFIX'] . adm_back_link($this->u_action), E_USER_WARNING);
+				}
+
+				if (confirm_box(true))
+				{
+					$error = '';
+
+					$db->sql_transaction('begin');
+
+					// Update all topics that use this prefix
+					$sql = 'UPDATE ' . TOPICS_TABLE . '
+						SET subject_prefix_id = 0
+						WHERE subject_prefix_id = ' . $prefix_id;
+					$db->sql_query($sql);
+
+					// Remove the prefix
+					$sql = 'DELETE FROM ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . '
+						WHERE prefix_id = ' . $prefix_id;
+					$db->sql_query($sql);
+
+					// Commit
+					$db->sql_transaction('commit');
+
+					// Remove the cache
+					subject_prefix_core::$sp_cache->destroy('_subject_prefix');
+				}
+				else
+				{
+					confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
+						'i'			=> $id,
+						'mode'		=> $mode,
+						'prefix_id'	=> $prefix_id,
+						'action'	=> 'delete',
+					)));
+				}
+			break;
+		}
+
 		// Create an overview of all prefixes there are available
 		$list = subject_prefix_core::$sp_cache->obtain_prefix_list();
-		foreach($list as $prefix)
+		if (!empty($list))
 		{
-			$template->assign_block_vars('prefixlist', array(
-				'L_PREFIX_TITLE' => $prefix,
-			));
+			foreach($list as $prefix_id => $prefix)
+			{
+				$template->assign_block_vars('prefixlist', array(
+					'L_PREFIX_TITLE' => $prefix,
+
+					'U_DELETE'	=> $this->u_action . '&amp;action=delete&amp;prefix_id=' . $prefix_id,
+				));
+			}
 		}
 	}
 }
