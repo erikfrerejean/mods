@@ -35,4 +35,50 @@ function load_subject_prefix_files(&$hook)
 	subject_prefix_core::init();
 }
 
+/**
+* A hook that hooks into template::display(). This hook will fill the prefix
+* dropdown.
+*/
+function add_prefix_dropdown_to_the_posting_page(&$hook)
+{
+	global $template, $user;
+	global $phpEx;
+
+	// Only on the posting page!
+	if ($user->page['page_name'] != 'posting.' . $phpEx)
+	{
+		return;
+	}
+
+	// For the time being only when creating a post. Might add prefixes for posts subjects later
+	if (strpos($user->page['query_string'], 'mode=post') === false)
+	{
+		return;
+	}
+
+	// Add lang file
+	$user->add_lang('mods/info_acp_subject_prefix');
+
+	$prefixlist = subject_prefix_core::$sp_cache->obtain_prefix_list();
+
+	// No prefixes defined
+	if (empty($prefixlist))
+	{
+		return;
+	}
+
+	// Build option list
+	$options = array("<option value='-1' selected='selected'>{$user->lang('SELECT_A_PREFIX')}</option>");
+	foreach ($prefixlist as $prefix_id => $prefix_title)
+	{
+		$options[] = "<option value='{$prefix_id}'>{$prefix_title}</options>";
+	}
+	$options = implode('', $options);
+
+	// Assign the list
+	$template->assign_var('SUBJECT_PREFIX_DROPDOWN_OPTIONS', $options);
+}
+
+// Register all the hooks
 $phpbb_hook->register('phpbb_user_session_handler', 'load_subject_prefix_files');
+$phpbb_hook->register(array('template', 'display'), 'add_prefix_dropdown_to_the_posting_page');

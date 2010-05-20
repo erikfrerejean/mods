@@ -51,4 +51,6 @@ $lang = array_merge($lang, array(
 	'PREFIX_ADDED'		=> 'The prefix was successfully added!',
 	'PREFIX_TITLE'		=> 'Prefix title',
 	'PREFIX_UPDATED'	=> 'The prefix was successfully updated!',
+
+	'SELECT_A_PREFIX'	=> 'Select a topic prefix',
 ));

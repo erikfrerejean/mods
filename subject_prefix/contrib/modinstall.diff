@@ -1,7 +1,7 @@
-Index: ../../styles/prosilver/theme/common.css
+Index: styles/prosilver/theme/common.css
 ===================================================================
---- ../../styles/prosilver/theme/common.css	(revision 10624)
-+++ ../../styles/prosilver/theme/common.css	(working copy)
+--- styles/prosilver/theme/common.css	(revision 10624)
++++ styles/prosilver/theme/common.css	(working copy)
 @@ -630,3 +630,19 @@
  	line-height: 1px;
  	background: transparent;
@@ -23,10 +23,26 @@ Index: ../../styles/prosilver/theme/common.css
 +/* End Subject Prefix
 +---------------------------------------- */
 \ No newline at end of file
-Index: ../../styles/prosilver/template/viewtopic_body.html
+Index: styles/prosilver/template/posting_editor.html
 ===================================================================
---- ../../styles/prosilver/template/viewtopic_body.html	(revision 10624)
-+++ ../../styles/prosilver/template/viewtopic_body.html	(working copy)
+--- styles/prosilver/template/posting_editor.html	(revision 10624)
++++ styles/prosilver/template/posting_editor.html	(working copy)
+@@ -100,6 +100,11 @@
+ 	</dl>
+ 	<!-- ENDIF -->
+ 
++	<!-- IF SUBJECT_PREFIX_DROPDOWN_OPTIONS -->
++		<dt><label for="prefixes">{L_ACP_SUBJECT_PREFIX}</label></dt>
++		<dd><select name="prefixes" id="prefixes">{SUBJECT_PREFIX_DROPDOWN_OPTIONS}</select></dd>
++	<!-- ENDIF -->
++
+ 	<!-- IF S_POST_ACTION or S_PRIVMSGS or S_EDIT_DRAFT -->
+ 	<dl style="clear: left;">
+ 		<dt><label for="subject">{L_SUBJECT}:</label></dt>
+Index: styles/prosilver/template/viewtopic_body.html
+===================================================================
+--- styles/prosilver/template/viewtopic_body.html	(revision 10624)
++++ styles/prosilver/template/viewtopic_body.html	(working copy)
 @@ -1,6 +1,6 @@
  <!-- INCLUDE overall_header.html -->
  <!-- IF U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
@@ -35,10 +51,10 @@ Index: ../../styles/prosilver/template/viewtopic_body.html
  <!-- NOTE: remove the style="display: none" when you want to have the forum description on the topic body -->
  <!-- IF FORUM_DESC --><div style="display: none !important;">{FORUM_DESC}<br /></div><!-- ENDIF -->
  
-Index: ../../styles/prosilver/template/viewforum_body.html
+Index: styles/prosilver/template/viewforum_body.html
 ===================================================================
---- ../../styles/prosilver/template/viewforum_body.html	(revision 10624)
-+++ ../../styles/prosilver/template/viewforum_body.html	(working copy)
+--- styles/prosilver/template/viewforum_body.html	(revision 10624)
++++ styles/prosilver/template/viewforum_body.html	(working copy)
 @@ -139,7 +139,7 @@
  
  		<li class="row<!-- IF topicrow.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_POST_ANNOUNCE --> announce<!-- ENDIF --><!-- IF topicrow.S_POST_STICKY --> sticky<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
@@ -48,10 +64,10 @@ Index: ../../styles/prosilver/template/viewforum_body.html
  					<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
  					<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><br />
  					<!-- IF topicrow.PAGINATION --><strong class="pagination"><span>{topicrow.PAGINATION}</span></strong><!-- ENDIF -->
-Index: ../../viewtopic.php
+Index: viewtopic.php
 ===================================================================
---- ../../viewtopic.php	(revision 10624)
-+++ ../../viewtopic.php	(working copy)
+--- viewtopic.php	(revision 10624)
++++ viewtopic.php	(working copy)
 @@ -585,6 +585,11 @@
  // Replace naughty words in title
  $topic_data['topic_title'] = censor_text($topic_data['topic_title']);
@@ -64,10 +80,31 @@ Index: ../../viewtopic.php
  // Send vars to template
  $template->assign_vars(array(
  	'FORUM_ID' 		=> $forum_id,
-Index: ../../viewforum.php
+Index: includes/functions_posting.php
 ===================================================================
---- ../../viewforum.php	(revision 10624)
-+++ ../../viewforum.php	(working copy)
+--- includes/functions_posting.php	(revision 10624)
++++ includes/functions_posting.php	(working copy)
+@@ -1956,11 +1956,17 @@
+ 		break;
+ 	}
+ 
++	//-- Begin Subject Prefix
++	//-- Add:
++	subject_prefix_core::add_prefix_to_posting_sql($post_mode, $sql_data);
++	//-- End Subject Prefix
++
+ 	// Submit new topic
+ 	if ($post_mode == 'post')
+ 	{
+ 		$sql = 'INSERT INTO ' . TOPICS_TABLE . ' ' .
+ 			$db->sql_build_array('INSERT', $sql_data[TOPICS_TABLE]['sql']);
+ 		$db->sql_query($sql);
+ 
+ 		$data['topic_id'] = $db->sql_nextid();
+Index: viewforum.php
+===================================================================
+--- viewforum.php	(revision 10624)
++++ viewforum.php	(working copy)
 @@ -680,6 +680,11 @@
  			'S_TOPIC_TYPE_SWITCH'	=> ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test)
  		);
