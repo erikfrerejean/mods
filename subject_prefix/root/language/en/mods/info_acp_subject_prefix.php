@@ -48,6 +48,7 @@ $lang = array_merge($lang, array(
 
 	'NO_PREFIX_TITLE'	=> 'You must provide a title for this prefix!',
 
-	'PREFIX_ADDED'	=> 'The prefix was successfully added!',
-	'PREFIX_TITLE'	=> 'Prefix title',
+	'PREFIX_ADDED'		=> 'The prefix was successfully added!',
+	'PREFIX_TITLE'		=> 'Prefix title',
+	'PREFIX_UPDATED'	=> 'The prefix was successfully updated!',
 ));

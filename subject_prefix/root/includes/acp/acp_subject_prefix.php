@@ -51,11 +51,18 @@ class acp_subject_prefix
 		// Handle actions
 		switch ($action)
 		{
-			// Build the add page
-			case 'add' :
+			// Build the add and edit pages
+			case 'add'	:
+			case 'edit'	:
+				$list = subject_prefix_core::$sp_cache->obtain_prefix_list();
+
 				$template->assign_vars(array(
 					'S_EDIT'	=> true,
+
+					'TITLE'	=> (isset($list[$prefix_id])) ? $list[$prefix_id] : '',
 				));
+
+				return;
 			break;
 
 			// Delete a prefix
@@ -106,6 +113,7 @@ class acp_subject_prefix
 					trigger_error($user->lang['FORM_INVALID']. adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
+				$list = subject_prefix_core::$sp_cache->obtain_prefix_list();
 				$prefix_title = utf8_normalize_nfc(request_var('title', '', true));
 
 				if (!$prefix_title)
@@ -113,16 +121,32 @@ class acp_subject_prefix
 					trigger_error($user->lang['NO_PREFIX_TITLE'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
+				// If there isn't a prefix with this ID, just add it
+				if (!isset($list[$prefix_id]))
+				{
+					$prefix_id = 0;
+				}
+
 				$data_ary = array(
 					'prefix_title'	=> $prefix_title,
 				);
 
-				$db->sql_query('INSERT INTO ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . ' ' . $db->sql_build_array('INSERT', $data_ary));
+				if (empty($prefix_id))
+				{
+					$db->sql_query('INSERT INTO ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . ' ' . $db->sql_build_array('INSERT', $data_ary));
+					$message = 'PREFIX_ADDED';
+				}
+				else
+				{
+					$db->sql_query('UPDATE ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $data_ary) . '
+						WHERE prefix_id = ' . $prefix_id);
+					$message = 'PREFIX_UPDATED';
+				}
 
 				// Update the cache
 				subject_prefix_core::$sp_cache->destroy('_subject_prefix');
 
-				trigger_error($user->lang('PREFIX_ADDED') . adm_back_link($this->u_action));
+				trigger_error($user->lang($message) . adm_back_link($this->u_action));
 			break;
 		}
 
@@ -136,6 +160,7 @@ class acp_subject_prefix
 					'L_PREFIX_TITLE' => $prefix,
 
 					'U_DELETE'	=> $this->u_action . '&amp;action=delete&amp;prefix_id=' . $prefix_id,
+					'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;prefix_id=' . $prefix_id,
 				));
 			}
 		}
