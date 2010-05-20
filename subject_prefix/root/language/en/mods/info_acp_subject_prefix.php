@@ -42,8 +42,12 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_SUBJECT_PREFIX'			=> 'Manage Subject Prefixes',
 	'ACP_MANAGE_SUBJECT_PREFIX_EXPLAIN'	=> 'Using this form you can add, edit, view and delete prefixes.',
 	'ACP_SUBJECT_PREFIX'				=> 'Subject Prefix',
+	'ADD_PREFIX'						=> 'Add prefix',
 
 	'MUST_SELECT_PREFIX'	=> 'You must select a prefix to delete!',
 
+	'NO_PREFIX_TITLE'	=> 'You must provide a title for this prefix!',
+
+	'PREFIX_ADDED'	=> 'The prefix was successfully added!',
 	'PREFIX_TITLE'	=> 'Prefix title',
 ));

@@ -20,8 +20,28 @@
 
 <p>{L_ACP_MANAGE_SUBJECT_PREFIX_EXPLAIN}</p>
 
-<!-- IF .prefixlist -->
-<form id="acp_ranks" method="post" action="{U_ACTION}">
+<form id="acp_subject_prefix" method="post" action="{U_ACTION}">
+
+<!-- IF S_EDIT -->
+
+    <fieldset>
+	<legend>{L_ACP_SUBJECT_PREFIX}</legend>
+
+	<dl>
+		<dt><label for="title">{L_PREFIX_TITLE}:</label></dt>
+		<dd><input name="title" type="text" id="title" value="" maxlength="255" /></dd>
+	</dl>
+
+	<p class="submit-buttons">
+	    <input type="hidden" name="action" value="save" />
+	    <input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+	    <input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	    {S_FORM_TOKEN}
+	</p>
+    </fieldset>
+
+<!-- ELSE -->
+
     <fieldset class="tabulated">
 	<legend>{L_ACP_MANAGE_SUBJECT_PREFIX}</legend>
 
@@ -41,8 +61,15 @@
 	    <!-- END prefixlist -->
 	    </tbody>
 	</table>
+
+	<p class="quick">
+		<input class="button2" name="add" type="submit" value="{L_ADD_PREFIX}" />
+		{S_FORM_TOKEN}
+	</p>
     </fieldset>
-</form>
+
 <!-- ENDIF -->
+
+</form>
 
 <!-- INCLUDE overall_footer.html -->

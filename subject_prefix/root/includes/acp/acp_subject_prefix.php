@@ -51,6 +51,14 @@ class acp_subject_prefix
 		// Handle actions
 		switch ($action)
 		{
+			// Build the add page
+			case 'add' :
+				$template->assign_vars(array(
+					'S_EDIT'	=> true,
+				));
+			break;
+
+			// Delete a prefix
 			case 'delete' :
 				if (!$prefix_id)
 				{
@@ -90,6 +98,32 @@ class acp_subject_prefix
 					)));
 				}
 			break;
+
+			// Save a prefix
+			case 'save' :
+				if (!check_form_key($this->form_key))
+				{
+					trigger_error($user->lang['FORM_INVALID']. adm_back_link($this->u_action), E_USER_WARNING);
+				}
+
+				$prefix_title = utf8_normalize_nfc(request_var('title', '', true));
+
+				if (!$prefix_title)
+				{
+					trigger_error($user->lang['NO_PREFIX_TITLE'] . adm_back_link($this->u_action), E_USER_WARNING);
+				}
+
+				$data_ary = array(
+					'prefix_title'	=> $prefix_title,
+				);
+
+				$db->sql_query('INSERT INTO ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . ' ' . $db->sql_build_array('INSERT', $data_ary));
+
+				// Update the cache
+				subject_prefix_core::$sp_cache->destroy('_subject_prefix');
+
+				trigger_error($user->lang('PREFIX_ADDED') . adm_back_link($this->u_action));
+			break;
 		}
 
 		// Create an overview of all prefixes there are available
@@ -105,5 +139,10 @@ class acp_subject_prefix
 				));
 			}
 		}
+
+		// Assign all remaining stuff
+		$template->assign_vars(array(
+			'U_ACTION'	=> $this->u_action . ((empty($action)) ? '&amp;action=add' : '&amp;action=' . $action),
+		));
 	}
 }
