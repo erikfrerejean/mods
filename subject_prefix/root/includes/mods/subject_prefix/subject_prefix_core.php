@@ -87,23 +87,19 @@ abstract class subject_prefix_core
 	*/
 	public static function add_prefix_to_posting_sql($post_mode, &$sql_ary)
 	{
-		// For now only $post_mode == post
-		if ($post_mode != 'post')
+		// Only when posting or editing the topic
+		if ($post_mode != 'post' && $post_mode != 'edit_topic' && $post_mode != 'edit_first_post')
 		{
 			return;
 		}
 
 		// Is there a prefix chosen?
-		$prefix_id = request_var('prefixes', -1);
-		if ($prefix_id < 1)
-		{
-			return;
-		}
+		$prefix_id = request_var('prefixes', 0);
 
 		$prefixlist = self::$sp_cache->obtain_prefix_list();
 
 		// Shouldn't be possible, but still
-		if (!isset($prefixlist[$prefix_id]))
+		if ($prefix_id > 0 && !isset($prefixlist[$prefix_id]))
 		{
 			return;
 		}

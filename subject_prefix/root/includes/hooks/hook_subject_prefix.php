@@ -41,7 +41,7 @@ function load_subject_prefix_files(&$hook)
 */
 function add_prefix_dropdown_to_the_posting_page(&$hook)
 {
-	global $template, $user;
+	global $db, $template, $user;
 	global $phpEx;
 
 	// Only on the posting page!
@@ -50,10 +50,31 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 		return;
 	}
 
-	// For the time being only when creating a post. Might add prefixes for posts subjects later
+	// For the time being only when creating a new topic, or editing the first post
+	// Might add prefixes for posts subjects later
+	$selected_prefix = 0;
 	if (strpos($user->page['query_string'], 'mode=post') === false)
 	{
-		return;
+		// First post in the topic?
+		if (strpos($user->page['query_string'], 'mode=edit') !== false)
+		{
+			$post_id = request_var('p', 0);
+			$sql = 'SELECT subject_prefix_id
+				FROM ' . TOPICS_TABLE . '
+				WHERE topic_first_post_id = ' . $post_id;
+			$result	= $db->sql_query_limit($sql, 1);
+			$selected_prefix = $db->sql_fetchfield('subject_prefix_id', false, $result);
+			$db->sql_freeresult($result);
+
+			if ($selected_prefix === false)
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
 	}
 
 	// Add lang file
@@ -68,10 +89,10 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 	}
 
 	// Build option list
-	$options = array("<option value='-1' selected='selected'>{$user->lang('SELECT_A_PREFIX')}</option>");
+	$options = array("<option value='0'" . (($selected_prefix < 0) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
 	foreach ($prefixlist as $prefix_id => $prefix_title)
 	{
-		$options[] = "<option value='{$prefix_id}'>{$prefix_title}</options>";
+		$options[] = "<option value='{$prefix_id}'" . (($prefix_id == $selected_prefix) ? " selected='selected'" : '') . ">{$prefix_title}</options>";
 	}
 	$options = implode('', $options);
 

@@ -10,4 +10,5 @@ INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,fou
 
 # Add prefix column to phpbb_topics
 ALTER TABLE phpbb_topics ADD COLUMN subject_prefix_id mediumint(8) DEFAULT '0';
+CREATE INDEX topic_first_post_id ON phpbb_topics (topic_first_post_id);
 CREATE INDEX subject_prefix_id ON phpbb_topics (subject_prefix_id);
