@@ -47,7 +47,7 @@ Index: styles/prosilver/template/viewtopic_body.html
  <!-- INCLUDE overall_header.html -->
  <!-- IF U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
 -<h2><a href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a></h2>
-+<h2><!-- IF SUBJECT_PREFIX --><span class="subjectprefix">{SUBJECT_PREFIX}</span> <!-- ENDIF --><a href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a></h2>
++<h2><!-- IF SUBJECT_PREFIX_TITLE --><span class="subjectprefix"<!-- IF SUBJECT_PREFIX_COLOUR --> style="color: #{SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF --><a href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a></h2>
  <!-- NOTE: remove the style="display: none" when you want to have the forum description on the topic body -->
  <!-- IF FORUM_DESC --><div style="display: none !important;">{FORUM_DESC}<br /></div><!-- ENDIF -->
  
@@ -60,7 +60,7 @@ Index: styles/prosilver/template/viewforum_body.html
  		<li class="row<!-- IF topicrow.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_POST_ANNOUNCE --> announce<!-- ENDIF --><!-- IF topicrow.S_POST_STICKY --> sticky<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
  			<dl class="icon" style="background-image: url({topicrow.TOPIC_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
 -				<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF --> title="{topicrow.TOPIC_FOLDER_IMG_ALT}"><!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}">{NEWEST_POST_IMG}</a> <!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
-+				<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF --> title="{topicrow.TOPIC_FOLDER_IMG_ALT}"><!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}">{NEWEST_POST_IMG}</a> <!-- ENDIF --><!-- IF topicrow.SUBJECT_PREFIX --><span class="subjectprefix">{topicrow.SUBJECT_PREFIX}</span> <!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
++				<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF --> title="{topicrow.TOPIC_FOLDER_IMG_ALT}"><!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}">{NEWEST_POST_IMG}</a> <!-- ENDIF --><!-- IF topicrow.SUBJECT_PREFIX_TITLE --><span class="subjectprefix"<!-- IF topicrow.SUBJECT_PREFIX_COLOUR --> style="color: #{topicrow.SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{topicrow.SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
  					<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
  					<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><br />
  					<!-- IF topicrow.PAGINATION --><strong class="pagination"><span>{topicrow.PAGINATION}</span></strong><!-- ENDIF -->
@@ -84,7 +84,7 @@ Index: includes/functions_posting.php
 ===================================================================
 --- includes/functions_posting.php	(revision 10624)
 +++ includes/functions_posting.php	(working copy)
-@@ -1956,11 +1956,17 @@
+@@ -1956,6 +1956,11 @@
  		break;
  	}
  
@@ -96,11 +96,6 @@ Index: includes/functions_posting.php
  	// Submit new topic
  	if ($post_mode == 'post')
  	{
- 		$sql = 'INSERT INTO ' . TOPICS_TABLE . ' ' .
- 			$db->sql_build_array('INSERT', $sql_data[TOPICS_TABLE]['sql']);
- 		$db->sql_query($sql);
- 
- 		$data['topic_id'] = $db->sql_nextid();
 Index: viewforum.php
 ===================================================================
 --- viewforum.php	(revision 10624)

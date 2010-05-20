@@ -53,7 +53,10 @@ class subject_prefix_cache extends acm
 			$result	= $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
-				self::$prefixlist[$row['prefix_id']] = $row['prefix_title'];
+				self::$prefixlist[$row['prefix_id']] = array(
+					'title'		=> $row['prefix_title'],
+					'colour'	=> $row['prefix_colour'],
+				);
 			}
 			$db->sql_query($sql);
 

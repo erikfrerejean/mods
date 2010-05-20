@@ -38,6 +38,7 @@ class acp_subject_prefix
 	public function main($mode, $id)
 	{
 		global $db, $template, $user;
+		global $phpbb_admin_path, $phpEx;
 
 		// Prep template
 		$this->tpl_name = 'acp_subject_prefix';
@@ -59,7 +60,10 @@ class acp_subject_prefix
 				$template->assign_vars(array(
 					'S_EDIT'	=> true,
 
-					'TITLE'	=> (isset($list[$prefix_id])) ? $list[$prefix_id] : '',
+					'U_SWATCH'	=> append_sid($phpbb_admin_path . 'swatch.' . $phpEx, array('form' => 'acp_subject_prefix', 'name' => 'prefix_colour')),
+
+					'COLOUR'	=> (isset($list[$prefix_id])) ? $list[$prefix_id]['colour'] : '',
+					'TITLE'		=> (isset($list[$prefix_id])) ? $list[$prefix_id]['title'] : '',
 				));
 
 				return;
@@ -114,7 +118,8 @@ class acp_subject_prefix
 				}
 
 				$list = subject_prefix_core::$sp_cache->obtain_prefix_list();
-				$prefix_title = utf8_normalize_nfc(request_var('title', '', true));
+				$prefix_colour	= request_var('prefix_colour', '');
+				$prefix_title	= utf8_normalize_nfc(request_var('prefix_title', '', true));
 
 				if (!$prefix_title)
 				{
@@ -129,6 +134,7 @@ class acp_subject_prefix
 
 				$data_ary = array(
 					'prefix_title'	=> $prefix_title,
+					'prefix_colour'	=> $prefix_colour,
 				);
 
 				if (empty($prefix_id))
@@ -157,7 +163,8 @@ class acp_subject_prefix
 			foreach($list as $prefix_id => $prefix)
 			{
 				$template->assign_block_vars('prefixlist', array(
-					'L_PREFIX_TITLE' => $prefix,
+					'PREFIX_COLOUR'	=> $prefix['colour'],
+					'PREFIX_TITLE' 	=> $prefix['title'],
 
 					'U_DELETE'	=> $this->u_action . '&amp;action=delete&amp;prefix_id=' . $prefix_id,
 					'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;prefix_id=' . $prefix_id,

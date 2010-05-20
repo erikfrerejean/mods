@@ -71,11 +71,17 @@ abstract class subject_prefix_core
 
 		if ($blockname != '.')
 		{
-			$template->alter_block_array($blockname, array('SUBJECT_PREFIX' => $prefixlist[$topicdata['subject_prefix_id']]), true, 'change');
+			$template->alter_block_array($blockname, array(
+				'SUBJECT_PREFIX_TITLE'	=> $prefixlist[$topicdata['subject_prefix_id']]['title'],
+				'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$topicdata['subject_prefix_id']]['colour'],
+			), true, 'change');
 		}
 		else
 		{
-			$template->assign_var('SUBJECT_PREFIX', $prefixlist[$topicdata['subject_prefix_id']]);
+			$template->assign_vars(array(
+				'SUBJECT_PREFIX_TITLE'	=> $prefixlist[$topicdata['subject_prefix_id']]['title'],
+				'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$topicdata['subject_prefix_id']]['colour'],
+			));
 		}
 	}
 

@@ -90,9 +90,9 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 
 	// Build option list
 	$options = array("<option value='0'" . (($selected_prefix < 0) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
-	foreach ($prefixlist as $prefix_id => $prefix_title)
+	foreach ($prefixlist as $prefix_id => $prefix)
 	{
-		$options[] = "<option value='{$prefix_id}'" . (($prefix_id == $selected_prefix) ? " selected='selected'" : '') . ">{$prefix_title}</options>";
+		$options[] = "<option value='{$prefix_id}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix_id == $selected_prefix) ? " selected='selected'" : '') . ">{$prefix['title']}</options>";
 	}
 	$options = implode('', $options);
 

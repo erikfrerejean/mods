@@ -2,6 +2,7 @@
 CREATE TABLE subject_prefix (
   prefix_id mediumint(8) NOT NULL AUTO_INCREMENT,
   prefix_title varchar(255) NOT NULL,
+  prefix_colour varchar(6) DEFAULT NULL,
   PRIMARY KEY (prefix_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

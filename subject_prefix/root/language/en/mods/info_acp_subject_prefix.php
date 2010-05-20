@@ -48,9 +48,11 @@ $lang = array_merge($lang, array(
 
 	'NO_PREFIX_TITLE'	=> 'You must provide a title for this prefix!',
 
-	'PREFIX_ADDED'		=> 'The prefix was successfully added!',
-	'PREFIX_TITLE'		=> 'Prefix title',
-	'PREFIX_UPDATED'	=> 'The prefix was successfully updated!',
+	'PREFIX_ADDED'			=> 'The prefix was successfully added!',
+	'PREFIX_COLOUR'			=> 'Prefix colour',
+	'PREFIX_COLOUR_EXPLAIN'	=> 'Defines the colour this prefix will appear in. Leave blank for the default colour.',
+	'PREFIX_TITLE'			=> 'Prefix title',
+	'PREFIX_UPDATED'		=> 'The prefix was successfully updated!',
 
 	'SELECT_A_PREFIX'	=> 'Select a topic prefix',
 ));

@@ -28,8 +28,12 @@
 	<legend>{L_ACP_SUBJECT_PREFIX}</legend>
 
 	<dl>
-		<dt><label for="title">{L_PREFIX_TITLE}:</label></dt>
-		<dd><input name="title" type="text" id="title" value="{TITLE}" maxlength="255" /></dd>
+	    <dt><label for="prefix_title">{L_PREFIX_TITLE}:</label></dt>
+	    <dd><input name="prefix_title" type="text" id="prefix_title" value="{TITLE}" maxlength="255" /></dd>
+	</dl>
+	<dl>
+	    <dt><label for="prefix_colour">{L_PREFIX_COLOUR}:</label><br /><span>{L_PREFIX_COLOUR_EXPLAIN}</span></dt>
+	    <dd><input name="prefix_colour" type="text" id="prefix_colour" value="{COLOUR}" size="6" maxlength="6" /><!-- IF COLOUR -->&nbsp;<span style="background-color: #{COLOUR}">&nbsp; &nbsp;</span><!-- ENDIF -->&nbsp;&nbsp;<span>[ <a href="{U_SWATCH}" onclick="popup(this.href, 636, 150, '_swatch'); return false">{L_COLOUR_SWATCH}</a> ]</span></dd>
 	</dl>
 
 	<p class="submit-buttons">
@@ -55,7 +59,7 @@
 	    <tbody>
 	    <!-- BEGIN prefixlist -->
 		<tr class="<!-- IF prefixlist.S_ROW_COUNT is even -->row1<!-- ELSE -->row2<!-- ENDIF -->">
-		    <td>{prefixlist.L_PREFIX_TITLE}</td>
+		    <td style="color: #{prefixlist.PREFIX_COLOUR}">{prefixlist.PREFIX_TITLE}</td>
 		    <td><a href="{prefixlist.U_EDIT}">{ICON_EDIT}</a> <a href="{prefixlist.U_DELETE}">{ICON_DELETE}</a></td>
 		</tr>
 	    <!-- END prefixlist -->
