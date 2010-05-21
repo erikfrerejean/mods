@@ -172,8 +172,16 @@ class acp_subject_prefix
 
 				// Compute the forums that will be added/removed
 				$current_forums = subject_prefix_core::$sp_cache->obtain_forum_prefix_list($prefix_id);
-				$add_forums		= array_diff($prefix_forums, $current_forums);
-				$remove_forums	= array_diff($current_forums, $prefix_forums);
+				if (!empty($current_forums))
+				{
+					$add_forums		= array_diff($prefix_forums, $current_forums);
+					$remove_forums	= array_diff($current_forums, $prefix_forums);
+				}
+				else
+				{
+					// only have to add stuff here
+					$add_forums = $prefix_forums;
+				}
 
 				// Insert the prefix into the prefix table
 				if (empty($prefix_id))
