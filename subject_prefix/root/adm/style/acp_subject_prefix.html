@@ -35,6 +35,10 @@
 	    <dt><label for="prefix_colour">{L_PREFIX_COLOUR}:</label><br /><span>{L_PREFIX_COLOUR_EXPLAIN}</span></dt>
 	    <dd><input name="prefix_colour" type="text" id="prefix_colour" value="{COLOUR}" size="6" maxlength="6" /><!-- IF COLOUR -->&nbsp;<span style="background-color: #{COLOUR}">&nbsp; &nbsp;</span><!-- ENDIF -->&nbsp;&nbsp;<span>[ <a href="{U_SWATCH}" onclick="popup(this.href, 636, 150, '_swatch'); return false">{L_COLOUR_SWATCH}</a> ]</span></dd>
 	</dl>
+	<dl>
+	    <dt><label for="prefix_forums">{L_PREFIX_FORUMS}:</label><br /><span>{L_PREFIX_FORUMS_EXPLAIN}</span></dt>
+	    <dd><select id="prefix_forums" name="prefix_forums_id[]" multiple="multiple" size="10">{PREFIX_FORUMS_OPTIONS}</select></dd>
+	</dl>
 
 	<p class="submit-buttons">
 	    <input type="hidden" name="action" value="save" />

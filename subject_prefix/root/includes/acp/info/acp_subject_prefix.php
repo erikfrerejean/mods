@@ -29,7 +29,8 @@ class acp_subject_prefix_info
 			'title'		=> 'ACP_SUBJECT_PREFIX',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'subject_prefix'	=> array('title' => 'ACP_SUBJECT_PREFIX', 'auth' => 'acl_a_subject_prefix', 'cat' => array('ACP_SUBJECT_PREFIX')),
+				'subject_prefix'		=> array('title' => 'ACP_SUBJECT_PREFIX', 'auth' => 'acl_a_subject_prefix', 'cat' => array('ACP_SUBJECT_PREFIX')),
+//				'subject_prefix_forums'	=> array('title' => 'ACP_SUBJECT_PREFIX_FORUMS', 'auth' => 'acl_a_subject_prefix', 'cat' => array('ACP_SUBJECT_PREFIX')),
 			),
 		);
 	}

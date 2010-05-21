@@ -80,19 +80,21 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 	// Add lang file
 	$user->add_lang('mods/info_acp_subject_prefix');
 
-	$prefixlist = subject_prefix_core::$sp_cache->obtain_prefix_list();
-
-	// No prefixes defined
-	if (empty($prefixlist))
+	// Any prefixes for this forum?
+	$allowed	= subject_prefix_core::$sp_cache->obtain_prefix_forum_list($user->page['forum']);
+	if (empty($allowed))
 	{
 		return;
 	}
 
+//	$prefixlist = subject_prefix_core::$sp_cache->obtain_prefix_list();
+	$prefixlist	= subject_prefix_core::get_prefixes($allowed);
+
 	// Build option list
-	$options = array("<option value='0'" . (($selected_prefix < 0) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
-	foreach ($prefixlist as $prefix_id => $prefix)
+	$options = array("<option value='0'" . (($selected_prefix == 0) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
+	foreach ($prefixlist as $prefix)
 	{
-		$options[] = "<option value='{$prefix_id}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix_id == $selected_prefix) ? " selected='selected'" : '') . ">{$prefix['title']}</options>";
+		$options[] = "<option value='{$prefix['id']}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix['id'] == $selected_prefix) ? " selected='selected'" : '') . ">{$prefix['title']}</options>";
 	}
 	$options = implode('', $options);
 

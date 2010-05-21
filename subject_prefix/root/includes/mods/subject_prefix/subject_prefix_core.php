@@ -25,7 +25,8 @@ abstract class subject_prefix_core
 	/** @#+
 	* Subject Prefix database tables
 	*/
-	const SUBJECT_PREFIX_TABLE = 'subject_prefix';
+	const SUBJECT_PREFIX_TABLE 			= 'subject_prefix';
+	const SUBJECT_PREFIX_FORUMS_TABLE	= 'subject_prefix_forums';
 	/**@#-*/
 
 	/**
@@ -112,5 +113,24 @@ abstract class subject_prefix_core
 
 		// Add the prefix to the $sql_ary
 		$sql_ary[TOPICS_TABLE]['sql']['subject_prefix_id'] = $prefix_id;
+	}
+
+	public static function get_prefixes($allowed)
+	{
+		$all = self::$sp_cache->obtain_prefix_list();
+
+		// remove all non allowed
+		$list = array();
+		foreach ($all as $prefix_id => $prefix)
+		{
+			if (!in_array($prefix_id, $allowed))
+			{
+				continue;
+			}
+
+			$list[] = $prefix;
+		}
+
+		return $list;
 	}
 }

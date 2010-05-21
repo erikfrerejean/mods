@@ -42,6 +42,7 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_SUBJECT_PREFIX'			=> 'Manage Subject Prefixes',
 	'ACP_MANAGE_SUBJECT_PREFIX_EXPLAIN'	=> 'Using this form you can add, edit, view and delete prefixes.',
 	'ACP_SUBJECT_PREFIX'				=> 'Subject Prefix',
+	'ACP_SUBJECT_PREFIX_FORUMS'			=> 'Subject Prefixes per forum',
 	'ADD_PREFIX'						=> 'Add prefix',
 
 	'MUST_SELECT_PREFIX'	=> 'You must select a prefix to delete!',
@@ -51,6 +52,8 @@ $lang = array_merge($lang, array(
 	'PREFIX_ADDED'			=> 'The prefix was successfully added!',
 	'PREFIX_COLOUR'			=> 'Prefix colour',
 	'PREFIX_COLOUR_EXPLAIN'	=> 'Defines the colour this prefix will appear in. Leave blank for the default colour.',
+	'PREFIX_FORUMS'			=> 'Prefix forums',
+	'PREFIX_FORUMS_EXPLAIN'	=> 'Select the forums in which this prefix can be used',
 	'PREFIX_TITLE'			=> 'Prefix title',
 	'PREFIX_UPDATED'		=> 'The prefix was successfully updated!',
 
