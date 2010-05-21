@@ -102,6 +102,10 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 	$template->assign_var('SUBJECT_PREFIX_DROPDOWN_OPTIONS', $options);
 }
 
+/**
+* Load the prefix into viewtopic
+* @return void
+*/
 function add_prefix_to_viewtopic()
 {
 	global $user;
