@@ -67,22 +67,12 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 		}
 	}
 
-	// Any prefixes for this forum?
-	$allowed = subject_prefix_core::$sp_cache->obtain_prefix_forum_list($user->page['forum']);
-	if (empty($allowed))
+	// Build option list
+	$options = subject_prefix_core::make_prefix_select_options($user->page['forum'], $selected_prefix);
+	if (empty($options))
 	{
 		return;
 	}
-
-	$prefixlist	= subject_prefix_core::get_prefixes($allowed);
-
-	// Build option list
-	$options = array("<option value='0'" . (($selected_prefix == 0) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
-	foreach ($prefixlist as $prefix)
-	{
-		$options[] = "<option value='{$prefix['id']}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix['id'] == $selected_prefix) ? " selected='selected'" : '') . ">{$prefix['title']}</options>";
-	}
-	$options = implode('', $options);
 
 	// Assign the list
 	$template->assign_var('SUBJECT_PREFIX_DROPDOWN_OPTIONS', $options);
@@ -112,13 +102,6 @@ function add_prefix_to_viewtopic()
 	global $template;
 	subject_prefix_core::add_subject_prefix_to_blockrow($topic_data, '.');
 
-	// Any prefixes for this forum?
-	$allowed	= subject_prefix_core::$sp_cache->obtain_prefix_forum_list($user->page['forum']);
-	if (empty($allowed))
-	{
-		return;
-	}
-
 	// Get the currently selected prefix
 	$sql = 'SELECT subject_prefix_id
 		FROM ' . TOPICS_TABLE . '
@@ -127,15 +110,11 @@ function add_prefix_to_viewtopic()
 	$selected_prefix = $db->sql_fetchfield('subject_prefix_id', false, $result);
 	$db->sql_freeresult($result);
 
-	$prefixlist	= subject_prefix_core::get_prefixes($allowed);
-
-	// Build option list
-	$options = array("<option value='0'" . (($selected_prefix == false) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
-	foreach ($prefixlist as $prefix)
+	$options = subject_prefix_core::make_prefix_select_options($forum_id, $selected_prefix);
+	if (empty($options))
 	{
-		$options[] = "<option value='{$prefix['id']}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix['id'] == $selected_prefix) ? " selected='selected'" : '') . ">{$prefix['title']}</options>";
+		return;
 	}
-	$options = implode('', $options);
 
 	// Throw the quickchange box in the mix
 	$template->assign_vars(array(

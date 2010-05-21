@@ -179,4 +179,25 @@ abstract class subject_prefix_core
 
 		return $selected_prefix;
 	}
+
+	public function make_prefix_select_options($fid, $selected)
+	{
+		// Any prefixes for this forum?
+		$allowed = subject_prefix_core::$sp_cache->obtain_prefix_forum_list($fid);
+		if (empty($allowed))
+		{
+			return array();
+		}
+
+		$prefixlist	= subject_prefix_core::get_prefixes($allowed);
+
+		$options = array("<option value='0'" . (($selected == 0) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
+		foreach ($prefixlist as $prefix)
+		{
+			$options[] = "<option value='{$prefix['id']}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix['id'] == $selected) ? " selected='selected'" : '') . ">{$prefix['title']}</options>";
+		}
+		$options = implode('', $options);
+
+		return $options;
+	}
 }
