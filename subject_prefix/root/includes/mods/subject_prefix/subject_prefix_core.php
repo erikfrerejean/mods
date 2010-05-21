@@ -39,8 +39,13 @@ abstract class subject_prefix_core
 	*/
 	public static function init()
 	{
+		global $user;
+
 		// Load the cache
 		self::$sp_cache = new subject_prefix_cache();
+
+		// Include the language file
+		$user->add_lang('mods/subject_prefix/subject_prefix_common');
 	}
 
 	/**

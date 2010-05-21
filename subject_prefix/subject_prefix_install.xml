@@ -44,6 +44,7 @@
 				<changelog lang="en">
 					<change>[Add] Add the ability to use tags only in certain forums.</change>
 					<change>No edits required to viewtopic.php with the current setup.</change>
+					<change>Merge all language entries into one file.</change>
 				</changelog>
 			</entry>
 			<entry>
@@ -79,7 +80,7 @@
 			<file from="root/includes/acp/acp_subject_prefix.php" to="includes/acp/acp_subject_prefix.php" />
 			<file from="root/includes/acp/info/acp_subject_prefix.php" to="includes/acp/info/acp_subject_prefix.php" />
 			<file from="root/includes/mods/subject_prefix/*.*" to="includes/mods/subject_prefix/*.*" />
-			<file from="root/language/en/mods/info_acp_subject_prefix.php" to="language/en/mods/info_acp_subject_prefix.php" />
+			<file from="root/language/en/mods/subject_prefix/subject_prefix_common.php" to="language/en/mods/subject_prefix/subject_prefix_common.php" />
 		</copy>
 
 		<!-- File edits -->

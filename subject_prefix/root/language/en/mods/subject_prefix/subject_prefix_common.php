@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* info_acp_subject_prefix [English]
+* subject_prefix_common [English]
 *
 * @package language
 * @copyright (c) 2010 Erik Frèrejean
@@ -39,6 +39,14 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
+	'PREFIX_UPDATE_FAILED'		=> 'Couldn\'t update the subject prefix!',
+	'PREFIX_UPDATE_SUCCESSFULL'	=> 'Subject prefix updated successfully!',
+));
+
+/*
+* info_acp_subject_prefix
+*/
+$lang = array_merge($lang, array(
 	'ACP_MANAGE_SUBJECT_PREFIX'			=> 'Manage Subject Prefixes',
 	'ACP_MANAGE_SUBJECT_PREFIX_EXPLAIN'	=> 'Using this form you can add, edit, view and delete prefixes.',
 	'ACP_SUBJECT_PREFIX'				=> 'Subject Prefix',
@@ -59,4 +67,24 @@ $lang = array_merge($lang, array(
 
 	'SELECT_A_PREFIX'				=> 'Select a topic prefix',
 	'SUBJECT_PREFIX_QUICK_CHANGE'	=> 'Change the topic prefix',
+));
+
+/*
+* info_mcp_subject_prefix
+*/
+$lang = array_merge($lang, array(
+	'MCP_SUBJECT_PREFIX'	=> 'Subject Prefix Quick Change',
+));
+
+/*
+* permissions_subject_prefix
+*/
+// The ACP permissions
+$lang = array_merge($lang, array(
+	'acl_a_subject_prefix' => array('lang'	=> 'Can manage Subject Prefixes', 'cat' => 'misc'),
+));
+
+// The MCP permissions
+$lang = array_merge($lang, array(
+	'acl_m_subject_prefix_qc' => array('lang' => 'Can use subject prefix quick change', 'cat' => 'topic_actions'),
 ));
