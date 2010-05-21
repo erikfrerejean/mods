@@ -102,6 +102,21 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 	$template->assign_var('SUBJECT_PREFIX_DROPDOWN_OPTIONS', $options);
 }
 
+function add_prefix_to_viewtopic()
+{
+	global $user;
+	global $phpEx;
+
+	if ($user->page['page_name'] != 'viewtopic.' . $phpEx)
+	{
+		return;
+	}
+
+	global $topic_data;
+	subject_prefix_core::add_subject_prefix_to_blockrow($topic_data, '.');
+}
+
 // Register all the hooks
 $phpbb_hook->register('phpbb_user_session_handler', 'load_subject_prefix_files');
 $phpbb_hook->register(array('template', 'display'), 'add_prefix_dropdown_to_the_posting_page');
+$phpbb_hook->register(array('template', 'display'), 'add_prefix_to_viewtopic');
