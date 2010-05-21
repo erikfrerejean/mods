@@ -108,16 +108,60 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 */
 function add_prefix_to_viewtopic()
 {
-	global $user;
-	global $phpEx;
+	global $auth, $db, $user, $topic_data;
+	global $phpbb_root_path, $phpEx;
 
 	if ($user->page['page_name'] != 'viewtopic.' . $phpEx)
 	{
 		return;
 	}
 
-	global $topic_data;
+	// Only display to topic starter or those with the mod permission
+	if ($user->data['user_id'] != $topic_data['topic_poster'] && $auth->acl_get('!m_subject_prefix_qc'))
+	{
+		return;
+	}
+
+	global $forum_id, $topic_id, $viewtopic_url;
+	global $template;
 	subject_prefix_core::add_subject_prefix_to_blockrow($topic_data, '.');
+
+	// Add lang file
+	$user->add_lang('mods/info_acp_subject_prefix');
+
+	// Any prefixes for this forum?
+	$allowed	= subject_prefix_core::$sp_cache->obtain_prefix_forum_list($user->page['forum']);
+	if (empty($allowed))
+	{
+		return;
+	}
+
+	// Get the currently selected prefix
+	$sql = 'SELECT subject_prefix_id
+		FROM ' . TOPICS_TABLE . '
+		WHERE topic_id = ' . $topic_id;
+	$result	= $db->sql_query_limit($sql, 1);
+	$selected_prefix = $db->sql_fetchfield('subject_prefix_id', false, $result);
+	$db->sql_freeresult($result);
+
+	$prefixlist	= subject_prefix_core::get_prefixes($allowed);
+
+	// Build option list
+	$options = array("<option value='0'" . (($selected_prefix == false) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
+	foreach ($prefixlist as $prefix)
+	{
+		$options[] = "<option value='{$prefix['id']}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix['id'] == $selected_prefix) ? " selected='selected'" : '') . ">{$prefix['title']}</options>";
+	}
+	$options = implode('', $options);
+
+//var_dump($forum_id, $topic_id, $viewtopic_url, $user->session_id, append_sid($phpbb_root_path . 'mcp.' . $phpEx, array('f' => $forum_id, 't' => $topic_id, 'i' => 'main', 'mode' => 'subject_prefix', 'redirect' => urlencode(str_replace('&amp;', '&', $viewtopic_url))), true, $user->session_id));exit;
+
+	// Throw the quickchange box in the mix
+	$template->assign_vars(array(
+		'S_SUBJECT_PREFIX_QUICK_CHANGE_OPTIONS'	=> $options,
+//		'U_SUBJECT_PREFIX_QUICK_CHANGE_ACTION'	=> append_sid($phpbb_root_path . 'mcp.' . $phpEx, array('f' => $forum_id, 't' => $topic_id, 'i' => 'main', 'mode' => 'subject_prefix', 'redirect' => urlencode(str_replace('&amp;', '&', $viewtopic_url))), true, $user->session_id),
+		'U_SUBJECT_PREFIX_QUICK_CHANGE_ACTION'	=> append_sid($phpbb_root_path . 'mcp.' . $phpEx, array('i' => 'subject_prefix', 'mode' => 'subject_prefix_qc', 'f' => $forum_id, 't' => $topic_id, 'redirect' => urlencode(str_replace('&amp;', '&', $viewtopic_url))), true, $user->session_id),
+	));
 }
 
 // Register all the hooks

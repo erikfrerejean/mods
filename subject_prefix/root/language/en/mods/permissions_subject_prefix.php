@@ -65,5 +65,10 @@ if (empty($lang) || !is_array($lang))
 
 // The ACP permissions
 $lang = array_merge($lang, array(
-	'acl_a_subject_prefix'	=> array('lang'	=> 'Can manage Subject Prefixes', 'cat' => 'misc'),
+	'acl_a_subject_prefix' => array('lang'	=> 'Can manage Subject Prefixes', 'cat' => 'misc'),
+));
+
+// The MCP permissions
+$lang = array_merge($lang, array(
+	'acl_m_subject_prefix_qc' => array('lang' => 'Can use subject prefix quick change', 'cat' => 'topic_actions'),
 ));
