@@ -120,6 +120,10 @@ abstract class subject_prefix_core
 		$sql_ary[TOPICS_TABLE]['sql']['subject_prefix_id'] = $prefix_id;
 	}
 
+	/**
+	* Get all prefixes that are allowed
+	* @param Array $allowed Array with the allowed prefix ids
+	*/
 	public static function get_prefixes($allowed)
 	{
 		$all = self::$sp_cache->obtain_prefix_list();
@@ -137,5 +141,42 @@ abstract class subject_prefix_core
 		}
 
 		return $list;
+	}
+
+	/**
+	* Get the current prefix of a topic
+	* @param	int		$topic_id	The id of the topic
+	* @param	int		$post_id	The id of a post in the topic
+	* @return	int					The id of the prefix
+	*/
+	public function get_prefix($topic_id = 0, $post_id = 0)
+	{
+		global $db;
+
+		// Empty call
+		if ($topic_id == 0 && $post_id == 0)
+		{
+			return;
+		}
+
+		// If only a post id is given fetch the corresponding topic
+		if ($topic_id == 0)
+		{
+			$sql = 'SELECT topic_id
+				FROM ' . POSTS_TABLE . '
+				WHERE post_id = ' . $post_id;
+			$result		= $db->sql_query_limit($sql, 1);
+			$topic_id	= $db->sql_fetchfield('topic_id', false, $result);
+			$db->sql_freeresult($result);
+		}
+
+		$sql = 'SELECT subject_prefix_id
+			FROM ' . TOPICS_TABLE . '
+			WHERE topic_id = ' . $topic_id;
+		$result	= $db->sql_query_limit($sql, 1);
+		$selected_prefix = $db->sql_fetchfield('subject_prefix_id', false, $result);
+		$db->sql_freeresult($result);
+
+		return $selected_prefix;
 	}
 }

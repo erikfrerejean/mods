@@ -28,35 +28,17 @@ class acp_subject_prefix
 	public $u_action = '';
 
 	/**
-	* @var string form_key
-	*/
-	private $form_key = 'acp_subject_prefix';
-
-	/**
 	* Main method, is called by p_master to run the module
 	*/
 	public function main($mode, $id)
 	{
+		global $db, $template, $user;
+		global $phpbb_admin_path, $phpbb_root_path, $phpEx;
+
 		// Prep template
 		$this->tpl_name = 'acp_subject_prefix';
 		$this->page_title = 'ACP_SUBJECT_PREFIX';
-		add_form_key($this->form_key . '_' . $id);
-
-		// Call the correct method
-		if (!method_exists($this, 'mode_' . $id))
-		{
-			trigger_error('NO_MODE');
-		}
-		call_user_func(array($this, 'mode_' . $id), $mode, $id);
-	}
-
-	/**
-	* When in subject_prefix mode
-	*/
-	private function mode_subject_prefix($mode, $id)
-	{
-		global $db, $template, $user;
-		global $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		add_form_key('acp_subject_prefix');
 
 		// Get some vars
 		$action		= request_var('action', '');
@@ -127,9 +109,7 @@ class acp_subject_prefix
 						WHERE prefix_id = ' . $prefix_id;
 
 					// Remove the cache
-					subject_prefix_core::$sp_cache->destroy('_subject_prefix');
-					subject_prefix_core::$sp_cache->destroy('_subject_prefix_forums');
-					subject_prefix_core::$sp_cache->destroy('_subject_forums_prefix');
+					subject_prefix_core::$sp_cache->destroy_all();
 				}
 				else
 				{
@@ -144,7 +124,7 @@ class acp_subject_prefix
 
 			// Save a prefix
 			case 'save' :
-				if (!check_form_key($this->form_key . '_subject_prefix'))
+				if (!check_form_key('acp_subject_prefix'))
 				{
 					trigger_error($user->lang['FORM_INVALID']. adm_back_link($this->u_action), E_USER_WARNING);
 				}
@@ -171,7 +151,7 @@ class acp_subject_prefix
 				);
 
 				// Compute the forums that will be added/removed
-				$current_forums = subject_prefix_core::$sp_cache->obtain_forum_prefix_list($prefix_id);
+				$current_forums = subject_prefix_core::$sp_cache->obtain_prefix_forum_list(false, $prefix_id);
 				if (!empty($current_forums))
 				{
 					$add_forums		= array_diff($prefix_forums, $current_forums);
@@ -188,7 +168,8 @@ class acp_subject_prefix
 				{
 					$db->sql_query('INSERT INTO ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . '
 										' . $db->sql_build_array('INSERT', $data_ary));
-					$message = 'PREFIX_ADDED';
+					$message	= 'PREFIX_ADDED';
+					$prefix_id	= $db->sql_nextid();
 				}
 				else
 				{
@@ -229,9 +210,7 @@ class acp_subject_prefix
 				}
 
 				// Update the cache
-				subject_prefix_core::$sp_cache->destroy('_subject_prefix');
-				subject_prefix_core::$sp_cache->destroy('_subject_prefix_forums');
-				subject_prefix_core::$sp_cache->destroy('_subject_forums_prefix');
+				subject_prefix_core::$sp_cache->destroy_all();
 
 				trigger_error($user->lang($message) . adm_back_link($this->u_action));
 			break;

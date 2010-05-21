@@ -28,14 +28,12 @@ if (!class_exists('acm'))
 class subject_prefix_cache extends acm
 {
 	/**
-	* @var Array Array containing all prefixis for a given forum
+	* @var Array Array that is used to store all prefix -> forum and forum -> prefix relationships
 	*/
-	private static $forumprefixlist = array();
-
-	/**
-	* @var Array Array containing all forums for a given prefix
-	*/
-	private static $prefixforumlist = array();
+	private static $prefixforumlist = array(
+		'fid'	=> array(),
+		'pid'	=> array(),
+	);
 
 	/**
 	* @var Array Array containing all prefixes from the database
@@ -75,81 +73,69 @@ class subject_prefix_cache extends acm
 	}
 
 	/**
-	* Get a list of all prefixes for a given forum
-	* @param int $fid The forum id
-	* @return Array The data array
+	* Get a list of consisting of all forums for a given prefix, or all
+	* prefixes for a given forum.
+	* @param	mixed	$fid	Forum id of which all prefixes will be returned
+	* @param	mixed	$pid	Prefix id of which all forums will be returned
+	* @return	array			The data array
 	*/
-	public function obtain_prefix_forum_list($fid = false)
+	public function obtain_prefix_forum_list($fid = false, $pid = false)
 	{
-		if (empty(self::$forumprefixlist))
+		// Both false?
+		if ($fid === false && $pid === false)
+		{
+			return array();
+		}
+
+		// Where to look in the array
+		$sub_ary		= ($fid !== false) ? 'fid' : 'pid';
+		$sub_ary_key	= ($fid !== false) ? $fid : $pid;
+
+		// Need to do a lookup?
+		if (empty(self::$prefixforumlist[$sub_ary]))
 		{
 			global $db;
 
-			if ((self::$forumprefixlist = $this->get('_subject_prefix_forums')) === false)
+			if ((self::$prefixforumlist[$sub_ary] = $this->get('_subject_prefix_list_' . $sub_ary)) === false)
 			{
+				$resultkey		= ($fid !== false) ? 'forum_id' : 'prefix_id';
+				$resultvalue	= ($fid !== false) ? 'prefix_id' : 'forum_id';
+
 				$sql = 'SELECT *
 					FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE;
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
-					if (!isset(self::$forumprefixlist[$row['forum_id']]))
+					if (!isset(self::$prefixforumlist[$sub_ary][$row[$resultkey]]))
 					{
-						self::$forumprefixlist[$row['forum_id']] = array();
+						self::$prefixforumlist[$sub_ary][$row[$resultkey]] = array();
 					}
-					self::$forumprefixlist[$row['forum_id']][] = $row['prefix_id'];
+
+					self::$prefixforumlist[$sub_ary][$row[$resultkey]][] = $row[$resultvalue];
 				}
 				$db->sql_freeresult($result);
+
+				$this->put('_subject_prefix_list_' . $sub_ary, self::$prefixforumlist[$sub_ary]);
 			}
 		}
 
-		if ($fid !== false)
+		if (isset(self::$prefixforumlist[$sub_ary][$sub_ary_key]))
 		{
-			return self::$forumprefixlist[$fid];
+			return self::$prefixforumlist[$sub_ary][$sub_ary_key];
 		}
 		else
 		{
-			return self::$forumprefixlist;
+			return array();
 		}
 	}
 
 	/**
-	* Get a list of all prefixes for a given forum
-	* @param int $fid The forum id
-	* @return Array The data array
+	* Quick way to clear the whole subject_prefix cache
 	*/
-	public function obtain_forum_prefix_list($pid = false)
+	public function destroy_all()
 	{
-		if (empty(self::$prefixforumlist))
-		{
-			global $db;
-
-			if ((self::$prefixforumlist = $this->get('_subject_forums_prefix')) === false)
-			{
-				$sql = 'SELECT *
-					FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE;
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					if (!isset(self::$prefixforumlist[$row['prefix_id']]))
-					{
-						self::$prefixforumlist[$row['prefix_id']] = array();
-					}
-
-					self::$prefixforumlist[$row['prefix_id']][] = $row['forum_id'];
-				}
-				$db->sql_freeresult($result);
-
-				$this->put('_subject_forums_prefix', self::$prefixforumlist);
-			}
-		}
-
-		if ($pid !== false)
-		{
-			return self::$prefixforumlist[$pid];
-		}
-		else
-		{
-			return self::$prefixforumlist;
-		}
+		$this->destroy('_subject_prefix');
+		$this->destroy('_subject_prefix_forums');
+		$this->destroy('_subject_forums_prefix');
 	}
 }

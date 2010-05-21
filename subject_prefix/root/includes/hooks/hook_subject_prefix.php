@@ -59,17 +59,7 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 		if (strpos($user->page['query_string'], 'mode=edit') !== false)
 		{
 			$post_id = request_var('p', 0);
-			$sql = 'SELECT subject_prefix_id
-				FROM ' . TOPICS_TABLE . '
-				WHERE topic_first_post_id = ' . $post_id;
-			$result	= $db->sql_query_limit($sql, 1);
-			$selected_prefix = $db->sql_fetchfield('subject_prefix_id', false, $result);
-			$db->sql_freeresult($result);
-
-			if ($selected_prefix === false)
-			{
-				return;
-			}
+			$selected_prefix = subject_prefix_core::get_prefix(0, $post_id);
 		}
 		else
 		{
@@ -78,7 +68,7 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 	}
 
 	// Any prefixes for this forum?
-	$allowed	= subject_prefix_core::$sp_cache->obtain_prefix_forum_list($user->page['forum']);
+	$allowed = subject_prefix_core::$sp_cache->obtain_prefix_forum_list($user->page['forum']);
 	if (empty($allowed))
 	{
 		return;
