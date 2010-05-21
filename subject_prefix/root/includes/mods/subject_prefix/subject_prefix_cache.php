@@ -48,30 +48,27 @@ class subject_prefix_cache extends acm
 	*/
 	public function obtain_prefix_list()
 	{
-		global $db;
-
-		// Might be needed more than once
-		if (!empty(self::$prefixlist))
+		if (empty(self::$prefixlist))
 		{
-			return self::$prefixlist;
-		}
+			global $db;
 
-		if ((self::$prefixlist = $this->get('_subject_prefix')) === false)
-		{
-			$sql = 'SELECT *
-				FROM ' . subject_prefix_core::SUBJECT_PREFIX_TABLE;
-			$result	= $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
+			if ((self::$prefixlist = $this->get('_subject_prefix')) === false)
 			{
-				self::$prefixlist[$row['prefix_id']] = array(
-					'id'		=> $row['prefix_id'],
-					'title'		=> $row['prefix_title'],
-					'colour'	=> $row['prefix_colour'],
-				);
-			}
-			$db->sql_freeresult($result);
+				$sql = 'SELECT *
+					FROM ' . subject_prefix_core::SUBJECT_PREFIX_TABLE;
+				$result	= $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					self::$prefixlist[$row['prefix_id']] = array(
+						'id'		=> $row['prefix_id'],
+						'title'		=> $row['prefix_title'],
+						'colour'	=> $row['prefix_colour'],
+					);
+				}
+				$db->sql_freeresult($result);
 
-			$this->put('_subject_prefix', self::$prefixlist);
+				$this->put('_subject_prefix', self::$prefixlist);
+			}
 		}
 
 		return self::$prefixlist;
@@ -84,34 +81,25 @@ class subject_prefix_cache extends acm
 	*/
 	public function obtain_prefix_forum_list($fid = false)
 	{
-		global $db;
-
-		if (!empty(self::$forumprefixlist))
+		if (empty(self::$forumprefixlist))
 		{
-			if ($fid !== false)
-			{
-				return self::$forumprefixlist[$fid];
-			}
-			else
-			{
-				return self::$forumprefixlist;
-			}
-		}
+			global $db;
 
-		if ((self::$forumprefixlist = $this->get('_subject_prefix_forums')) === false)
-		{
-			$sql = 'SELECT *
-				FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE;
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
+			if ((self::$forumprefixlist = $this->get('_subject_prefix_forums')) === false)
 			{
-				if (!isset(self::$forumprefixlist[$row['forum_id']]))
+				$sql = 'SELECT *
+					FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE;
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
 				{
-					self::$forumprefixlist[$row['forum_id']] = array();
+					if (!isset(self::$forumprefixlist[$row['forum_id']]))
+					{
+						self::$forumprefixlist[$row['forum_id']] = array();
+					}
+					self::$forumprefixlist[$row['forum_id']][] = $row['prefix_id'];
 				}
-				self::$forumprefixlist[$row['forum_id']][] = $row['prefix_id'];
+				$db->sql_freeresult($result);
 			}
-			$db->sql_freeresult($result);
 		}
 
 		if ($fid !== false)
@@ -131,37 +119,28 @@ class subject_prefix_cache extends acm
 	*/
 	public function obtain_forum_prefix_list($pid = false)
 	{
-		global $db;
-		
-		if (!empty(self::$prefixforumlist))
+		if (empty(self::$prefixforumlist))
 		{
-			if ($pid !== false)
-			{
-				return self::$prefixforumlist[$pid];
-			}
-			else
-			{
-				return self::$prefixforumlist;
-			}
-		}
+			global $db;
 
-		if ((self::$prefixforumlist = $this->get('_subject_forums_prefix')) === false)
-		{
-			$sql = 'SELECT *
-				FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE;
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
+			if ((self::$prefixforumlist = $this->get('_subject_forums_prefix')) === false)
 			{
-				if (!isset(self::$prefixforumlist[$row['prefix_id']]))
+				$sql = 'SELECT *
+					FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE;
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
 				{
-					self::$prefixforumlist[$row['prefix_id']] = array();
+					if (!isset(self::$prefixforumlist[$row['prefix_id']]))
+					{
+						self::$prefixforumlist[$row['prefix_id']] = array();
+					}
+
+					self::$prefixforumlist[$row['prefix_id']][] = $row['forum_id'];
 				}
+				$db->sql_freeresult($result);
 
-				self::$prefixforumlist[$row['prefix_id']][] = $row['forum_id'];
+				$this->put('_subject_forums_prefix', self::$prefixforumlist);
 			}
-			$db->sql_freeresult($result);
-
-			$this->put('_subject_forums_prefix', self::$prefixforumlist);
 		}
 
 		if ($pid !== false)
