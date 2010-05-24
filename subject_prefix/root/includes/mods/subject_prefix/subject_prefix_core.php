@@ -182,6 +182,8 @@ abstract class subject_prefix_core
 
 	public function make_prefix_select_options($fid, $selected)
 	{
+		global $user;
+
 		// Any prefixes for this forum?
 		$allowed = subject_prefix_core::$sp_cache->obtain_prefix_forum_list($fid);
 		if (empty($allowed))
