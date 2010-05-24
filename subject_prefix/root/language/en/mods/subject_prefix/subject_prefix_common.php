@@ -53,6 +53,8 @@ $lang = array_merge($lang, array(
 	'ACP_SUBJECT_PREFIX_FORUMS'			=> 'Subject Prefixes per forum',
 	'ADD_PREFIX'						=> 'Add prefix',
 
+	'CONFIRM_PREFIX_DELETE'	=> 'Are you sure that you want to delete this subject prefix?',
+
 	'MUST_SELECT_PREFIX'	=> 'You must select a prefix to delete!',
 
 	'NO_PREFIX_TITLE'	=> 'You must provide a title for this prefix!',

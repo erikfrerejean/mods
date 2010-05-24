@@ -113,7 +113,7 @@ class acp_subject_prefix
 				}
 				else
 				{
-					confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
+					confirm_box(false, $user->lang['CONFIRM_PREFIX_DELETE'], build_hidden_fields(array(
 						'i'			=> $id,
 						'mode'		=> $mode,
 						'prefix_id'	=> $prefix_id,
