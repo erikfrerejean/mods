@@ -29,7 +29,7 @@
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0-a1</mod-version>
+		<mod-version>1.0.0-a2</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -38,6 +38,17 @@
 		</installation>
 
 		<history>
+			<entry>
+				<date>2010-05-28</date>
+				<rev-version>1.0.0-a2</rev-version>
+				<changelog lang="en">
+					<change>[Add] User based permission.</change>
+					<change>[Add] A quick change box for moderators to change the topic prefix.</change>
+					<change>[Add] Full SubSilver2 support.</change>
+					<change>[Change] Don't move prefixes to forums where this prefix can't be used.</change>
+					<change>[Fix] Added missing prefix support in viewtopic print.</change>
+				</changelog>
+			</entry>
 			<entry>
 				<date>2010-05-20</date>
 				<rev-version>1.0.0-a1</rev-version>
@@ -89,6 +100,16 @@
 				<inline-edit>
 					<inline-find><![CDATA[<h2>]]></inline-find>
 					<inline-action type="after-add"><![CDATA[<!-- IF SUBJECT_PREFIX_TITLE --><span class="titles"<!-- IF SUBJECT_PREFIX_COLOUR --> style="color: #{SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF -->]]></inline-action>
+				</inline-edit>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/viewtopic_print.html">
+			<edit>
+				<find><![CDATA[<td><span class="topic">{TOPIC_TITLE}</span><br /><span class="gensmall"><a href="{U_TOPIC}">{U_TOPIC}</a></span></td>]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[{TOPIC_TITLE}]]></inline-find>
+					<inline-action type="before-add"><![CDATA[<!-- IF SUBJECT_PREFIX_TITLE -->{SUBJECT_PREFIX_TITLE} <!-- ENDIF -->]]></inline-action>
 				</inline-edit>
 			</edit>
 		</open>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<?xml-stylesheet type="text/xsl" href="contrib/modx.prosilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="./contrib/modx.prosilver.en.xsl"?>
 <!--
 	For security purposes, please check: http://www.phpbb.com/mods/
 	for the latest version of this MOD. Although MODs are checked
@@ -29,7 +29,7 @@
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0-a1</mod-version>
+		<mod-version>1.0.0-a2</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -39,12 +39,14 @@
 
 		<history>
 			<entry>
-				<date></date>
+				<date>2010-05-28</date>
 				<rev-version>1.0.0-a2</rev-version>
 				<changelog lang="en">
-					<change>[Add] Add the ability to use tags only in certain forums.</change>
-					<change>No edits required to viewtopic.php with the current setup.</change>
-					<change>Merge all language entries into one file.</change>
+					<change>[Add] User based permission.</change>
+					<change>[Add] A quick change box for moderators to change the topic prefix.</change>
+					<change>[Add] Full SubSilver2 support.</change>
+					<change>[Change] Don't move prefixes to forums where this prefix can't be used.</change>
+					<change>[Fix] Added missing prefix support in viewtopic print.</change>
 				</changelog>
 			</entry>
 			<entry>
@@ -70,6 +72,8 @@
   PRIMARY KEY (prefix_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;]]></sql>
 		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'a_subject_prefix','1','0','0');]]></sql>
+		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'m_subject_prefix_qc','1','0','0');]]></sql>
+		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'u_subject_prefix','1','0','0');]]></sql>
 		<sql><![CDATA[ALTER TABLE phpbb_topics ADD COLUMN subject_prefix_id mediumint(8) DEFAULT '0';]]></sql>
 		<sql><![CDATA[CREATE INDEX topic_first_post_id ON phpbb_topics (topic_first_post_id);]]></sql>
 		<sql><![CDATA[CREATE INDEX subject_prefix_id ON phpbb_topics (subject_prefix_id);]]></sql>
@@ -77,13 +81,30 @@
 		<!-- File copy -->
 		<copy>
 			<file from="root/adm/style/acp_subject_prefix.html" to="adm/style/acp_subject_prefix.html" />
-			<file from="root/includes/acp/acp_subject_prefix.php" to="includes/acp/acp_subject_prefix.php" />
 			<file from="root/includes/acp/info/acp_subject_prefix.php" to="includes/acp/info/acp_subject_prefix.php" />
+			<file from="root/includes/acp/acp_subject_prefix.php" to="includes/acp/acp_subject_prefix.php" />
+			<file from="root/includes/hooks/hook_subject_prefix.php" to="includes/hooks/hook_subject_prefix.php" />
+			<file from="root/includes/mcp/info/mcp_subject_prefix.php" to="includes/mcp/info/mcp_subject_prefix.php" />
+			<file from="root/includes/mcp/mcp_subject_prefix.php" to="includes/mcp/mcp_subject_prefix.php" />
 			<file from="root/includes/mods/subject_prefix/*.*" to="includes/mods/subject_prefix/*.*" />
 			<file from="root/language/en/mods/subject_prefix/subject_prefix_common.php" to="language/en/mods/subject_prefix/subject_prefix_common.php" />
 		</copy>
 
 		<!-- File edits -->
+		<open src="includes/functions_admin.php">
+			<edit>
+				<find>unset($table_ary);</find>
+				<action type="after-add">	//-- Begin Subject Prefix
+	//-- Add:
+	global $phpbb_hook;
+	if (!empty($phpbb_hook))
+	{
+		$phpbb_hook->call_hook('subject_prefix_move_hook', $topic_ids, $forum_id);
+	}
+	//-- End Subject Prefix</action>
+			</edit>
+		</open>
+
 		<open src="includes/functions_posting.php">
 			<edit>
 				<find>// Submit new topic</find>
@@ -127,6 +148,16 @@
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/template/viewforum_body.html">
+			<edit>
+				<find><![CDATA[<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image:]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">]]></inline-find>
+					<inline-action type="before-add"><![CDATA[<!-- IF topicrow.SUBJECT_PREFIX_TITLE --><span class="subjectprefix"<!-- IF topicrow.SUBJECT_PREFIX_COLOUR --> style="color: #{topicrow.SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{topicrow.SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF -->]]></inline-action>
+				</inline-edit>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/viewtopic_body.html">
 			<edit>
 				<find><![CDATA[<h2><a href="{U_VIEW_TOPIC}">]]></find>
@@ -135,14 +166,26 @@
 					<inline-action type="after-add"><![CDATA[<!-- IF SUBJECT_PREFIX_TITLE --><span class="subjectprefix"<!-- IF SUBJECT_PREFIX_COLOUR --> style="color: #{SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF -->]]></inline-action>
 				</inline-edit>
 			</edit>
+			<edit>
+				<find><![CDATA[<!-- IF S_DISPLAY_ONLINE_LIST -->]]></find>
+				<action type="before-add"><![CDATA[<!-- IF U_SUBJECT_PREFIX_QUICK_CHANGE_ACTION -->
+	<!-- IF S_TOPIC_MOD --><br class="clear" /><!-- ENDIF -->
+	<form method="post" action="{U_SUBJECT_PREFIX_QUICK_CHANGE_ACTION}">
+	<fieldset class="quickmod">
+		<label for="quick-prefix-change-select">{L_SUBJECT_PREFIX_QUICK_CHANGE}:</label> <select name="prefixid" id="quick-prefix-change-select">{S_SUBJECT_PREFIX_QUICK_CHANGE_OPTIONS}</select> <input type="submit" value="{L_GO}" class="button2" />
+		{S_FORM_TOKEN}
+	</fieldset>
+	</form>
+<!-- ENDIF -->]]></action>
+			</edit>
 		</open>
 
-		<open src="styles/prosilver/template/viewforum_body.html">
+		<open src="style/prosilver/template/viewtopic_print.html">
 			<edit>
-				<find><![CDATA[<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image:]]></find>
+				<find><![CDATA[<h2>{TOPIC_TITLE}</h2>]]></find>
 				<inline-edit>
-					<inline-find><![CDATA[<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">]]></inline-find>
-					<inline-action type="before-add"><![CDATA[<!-- IF topicrow.SUBJECT_PREFIX_TITLE --><span class="subjectprefix"<!-- IF topicrow.SUBJECT_PREFIX_COLOUR --> style="color: #{topicrow.SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{topicrow.SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF -->]]></inline-action>
+					<inline-find><![CDATA[{TOPIC_TITLE}]]></inline-find>
+					<inline-action type="before-add"><![CDATA[<!-- IF SUBJECT_PREFIX_TITLE --><span class="subjectprefix">{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF -->]]></inline-action>
 				</inline-edit>
 			</edit>
 		</open>
@@ -156,5 +199,7 @@
 		//-- End Subject Prefix</action>
 			</edit>
 		</open>
+
+		<diy-instructions lang="en">Purge the board cache and refresh the templates.</diy-instructions>
 	</action-group>
 </mod>
