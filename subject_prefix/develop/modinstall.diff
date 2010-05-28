@@ -1,3 +1,16 @@
+Index: styles/subsilver2/template/viewtopic_print.html
+===================================================================
+--- styles/subsilver2/template/viewtopic_print.html	(revision 10624)
++++ styles/subsilver2/template/viewtopic_print.html	(working copy)
+@@ -79,7 +79,7 @@
+ 	<td colspan="2"><br /></td>
+ </tr>
+ <tr>
+-	<td><span class="topic">{TOPIC_TITLE}</span><br /><span class="gensmall"><a href="{U_TOPIC}">{U_TOPIC}</a></span></td>
++	<td><span class="topic"><!-- IF SUBJECT_PREFIX_TITLE -->{SUBJECT_PREFIX_TITLE} <!-- ENDIF -->{TOPIC_TITLE}</span><br /><span class="gensmall"><a href="{U_TOPIC}">{U_TOPIC}</a></span></td>
+ 	<td align="{S_CONTENT_FLOW_END}" valign="bottom"><span class="gensmall">{PAGE_NUMBER}</span></td>
+ </tr>
+ </table>
 Index: styles/subsilver2/template/posting_body.html
 ===================================================================
 --- styles/subsilver2/template/posting_body.html	(revision 10624)
@@ -77,6 +90,19 @@ Index: styles/prosilver/theme/common.css
 +/* End Subject Prefix
 +---------------------------------------- */
 \ No newline at end of file
+Index: styles/prosilver/template/viewtopic_print.html
+===================================================================
+--- styles/prosilver/template/viewtopic_print.html	(revision 10624)
++++ styles/prosilver/template/viewtopic_print.html	(working copy)
+@@ -26,7 +26,7 @@
+ 		<h1>{SITENAME}</h1>
+ 		<p>{SITE_DESCRIPTION}<br /><a href="{U_FORUM}">{U_FORUM}</a></p>
+ 
+-		<h2>{TOPIC_TITLE}</h2>
++		<h2><!-- IF SUBJECT_PREFIX_TITLE --><span class="subjectprefix">{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF -->{TOPIC_TITLE}</h2>
+ 		<p><a href="{U_TOPIC}">{U_TOPIC}</a></p>
+ 	</div>
+ 
 Index: styles/prosilver/template/posting_editor.html
 ===================================================================
 --- styles/prosilver/template/posting_editor.html	(revision 10624)
