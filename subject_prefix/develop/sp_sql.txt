@@ -6,6 +6,14 @@ CREATE TABLE subject_prefix (
   PRIMARY KEY (prefix_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+# Forums table
+CREATE TABLE subject_prefix_forums (
+  prefix_id mediumint(8) NOT NULL DEFAULT '0',
+  forum_id mediumint(8) NOT NULL DEFAULT '0',
+  KEY prefix_id (prefix_id),
+  KEY forum_id (forum_id)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 # Add permission
 INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'a_subject_prefix','1','0','0');
 INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'m_subject_prefix_qc','1','0','0');
