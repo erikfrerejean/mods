@@ -20,6 +20,8 @@ if (!defined('IN_PHPBB'))
 /**
 * A hook to setup the subject prefix file while phpBB is loaded.
 * By utalising the hook system no file edits have to be made for this ;)
+* @param phpbb_hook $hook The phpBB hook object
+* @return void
 */
 function load_subject_prefix_files(&$hook)
 {
@@ -44,6 +46,8 @@ function load_subject_prefix_files(&$hook)
 /**
 * A hook that hooks into template::display(). This hook will fill the prefix
 * dropdown.
+* @param phpbb_hook $hook The phpBB hook object
+* @return void
 */
 function add_prefix_dropdown_to_the_posting_page(&$hook)
 {
@@ -86,6 +90,7 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 
 /**
 * Load the prefix into viewtopic
+* @param phpbb_hook $hook The phpBB hook object
 * @return void
 */
 function add_prefix_to_viewtopic()
@@ -129,7 +134,59 @@ function add_prefix_to_viewtopic()
 	));
 }
 
+/**
+* When moving topics the prefixes must be checked to see whether they are allowed
+* in the new forum
+* @param	phpbb_hook	The phpBB hook object
+* @param	array		Array containing all forum ids that are being moved
+* @param	integer		The destination forum id
+* @return 	void
+*/
+function move_hook_function(&$hook, $topic_ids, $forum_id)
+{
+	global $db;
+
+	// Do we move any prefixes to forums where they aren't allowed?
+	$allowed = subject_prefix_core::$sp_cache->obtain_prefix_forum_list($forum_id);
+	$current = array();
+	$sql = 'SELECT topic_id, subject_prefix_id
+		FROM ' . TOPICS_TABLE . '
+		WHERE ' . $db->sql_in_set('topic_id', $topic_ids);
+	$result = $db->sql_query($sql);
+	while ($prefix = $db->sql_fetchrow($result))
+	{
+		$current['topic_id'] = $prefix['subject_prefix_id'];
+	}
+	$db->sql_freeresult($result);
+
+	// Any prefixes in $current but not in $allowed must be changed
+	$conflicted = array_diff($current, $allowed);
+	$conflicted = array_unique($conflicted);
+
+	if (empty($conflicted))
+	{
+		return;
+	}
+
+	// First remove the conflicted prefixes, we'll ask the user what to do with them later
+	$sql = 'UPDATE ' . TOPICS_TABLE . '
+		SET subject_prefix_id = ' . 0 . '
+		WHERE ' . $db->sql_in_set('topic_id', $topic_ids) . '
+			AND ' . $db->sql_in_set('subject_prefix_id', $conflicted);
+	$db->sql_query($sql);
+
+	/**
+	* @todo In some future version add something that allows the user to define
+	* 		which prefix he wants to use for the conflicting topics.
+	* 		for now simply remove them
+	*/
+}
+
+// Add our custom hooks
+$phpbb_hook->add_hook('subject_prefix_move_hook');
+
 // Register all the hooks
 $phpbb_hook->register('phpbb_user_session_handler', 'load_subject_prefix_files');
 $phpbb_hook->register(array('template', 'display'), 'add_prefix_dropdown_to_the_posting_page');
 $phpbb_hook->register(array('template', 'display'), 'add_prefix_to_viewtopic');
+$phpbb_hook->register('subject_prefix_move_hook', 'move_hook_function');
