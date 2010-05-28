@@ -51,11 +51,17 @@ function load_subject_prefix_files(&$hook)
 */
 function add_prefix_dropdown_to_the_posting_page(&$hook)
 {
-	global $db, $template, $user;
+	global $auth, $db, $template, $user;
 	global $phpEx;
 
 	// Only on the posting page!
 	if ($user->page['page_name'] != 'posting.' . $phpEx)
+	{
+		return;
+	}
+
+	// User is allowed?
+	if ($auth->acl_get('!u_subject_prefix', $user->page['forum']))
 	{
 		return;
 	}

@@ -90,3 +90,8 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'acl_m_subject_prefix_qc' => array('lang' => 'Can use subject prefix quick change', 'cat' => 'topic_actions'),
 ));
+
+// The User permissions
+$lang = array_merge($lang, array(
+	'acl_u_subject_prefix' => array('lang' => 'Can use Subject Prefixes', 'cat' => 'post'),
+));

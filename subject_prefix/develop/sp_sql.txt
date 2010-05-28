@@ -9,6 +9,7 @@ CREATE TABLE subject_prefix (
 # Add permission
 INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'a_subject_prefix','1','0','0');
 INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'m_subject_prefix_qc','1','0','0');
+INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'u_subject_prefix','1','0','0');
 
 # Add prefix column to phpbb_topics
 ALTER TABLE phpbb_topics ADD COLUMN subject_prefix_id mediumint(8) DEFAULT '0';
