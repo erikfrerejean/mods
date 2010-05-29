@@ -30,7 +30,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0-a2</mod-version>
+		<mod-version>1.0.0-rc1</mod-version>
 
 		<installation>
 			<level>easy</level>

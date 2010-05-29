@@ -30,7 +30,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0-a2</mod-version>
+		<mod-version>1.0.0-rc1</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -74,26 +74,6 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 	</header>
 
 	<action-group>
-		<!-- Queries -->
-		<sql><![CDATA[CREATE TABLE subject_prefix (
-  prefix_id mediumint(8) NOT NULL AUTO_INCREMENT,
-  prefix_title varchar(255) NOT NULL,
-  prefix_colour varchar(6) DEFAULT NULL,
-  PRIMARY KEY (prefix_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;]]></sql>
-		<sql><![CDATA[CREATE TABLE subject_prefix_forums (
-  prefix_id mediumint(8) NOT NULL DEFAULT '0',
-  forum_id mediumint(8) NOT NULL DEFAULT '0',
-  KEY prefix_id (prefix_id),
-  KEY forum_id (forum_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;]]></sql>
-		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'a_subject_prefix','1','0','0');]]></sql>
-		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'m_subject_prefix','1','0','0');]]></sql>
-		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'u_subject_prefix','1','0','0');]]></sql>
-		<sql><![CDATA[ALTER TABLE phpbb_topics ADD COLUMN subject_prefix_id mediumint(8) DEFAULT '0';]]></sql>
-		<sql><![CDATA[CREATE INDEX topic_first_post_id ON phpbb_topics (topic_first_post_id);]]></sql>
-		<sql><![CDATA[CREATE INDEX subject_prefix_id ON phpbb_topics (subject_prefix_id);]]></sql>
-
 		<!-- File copy -->
 		<copy>
 			<file from="root/adm/style/acp_subject_prefix.html" to="adm/style/acp_subject_prefix.html" />
@@ -104,6 +84,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			<file from="root/includes/mcp/mcp_subject_prefix.php" to="includes/mcp/mcp_subject_prefix.php" />
 			<file from="root/includes/mods/subject_prefix/*.*" to="includes/mods/subject_prefix/*.*" />
 			<file from="root/language/en/mods/subject_prefix/subject_prefix_common.php" to="language/en/mods/subject_prefix/subject_prefix_common.php" />
+			<file from="root/mod_install/install.php" to="mod_install/install.php" />
 		</copy>
 
 		<!-- File edits -->
@@ -216,6 +197,10 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</edit>
 		</open>
 
-		<diy-instructions lang="en">Purge the board cache and refresh the templates.</diy-instructions>
+		<!-- Installer -->
+		<php-installer>mod_install/install.php</php-installer>
+
+		<!-- Do it yourself -->
+		<diy-instructions lang="en">Purge the board cache and refresh the templates, and remove the install file "mod_install/install.php"</diy-instructions>
 	</action-group>
 </mod>
