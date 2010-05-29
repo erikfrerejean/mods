@@ -110,7 +110,7 @@ function add_prefix_to_viewtopic()
 	}
 
 	// Only display to topic starter or those with the mod permission
-	if ($user->data['user_id'] != $topic_data['topic_poster'] && $auth->acl_get('!m_subject_prefix_qc'))
+	if ($user->data['user_id'] != $topic_data['topic_poster'] && $auth->acl_get('!m_subject_prefix'))
 	{
 		return;
 	}

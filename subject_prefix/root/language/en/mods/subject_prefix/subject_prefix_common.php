@@ -88,7 +88,7 @@ $lang = array_merge($lang, array(
 
 // The MCP permissions
 $lang = array_merge($lang, array(
-	'acl_m_subject_prefix_qc' => array('lang' => 'Can use subject prefix quick change', 'cat' => 'topic_actions'),
+	'acl_m_subject_prefix' => array('lang' => 'Can use subject prefix quick change', 'cat' => 'topic_actions'),
 ));
 
 // The User permissions

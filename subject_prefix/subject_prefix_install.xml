@@ -45,6 +45,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 				<changelog lang="en">
 					<change>[Change] Increased minimum requirements to php 5.1.0.</change>
 					<change>[Change] Some small speed improvements.</change>
+					<change>[Change] Unified permission names.</change>
 				</changelog>
 			</entry>
 			<entry>
@@ -87,7 +88,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
   KEY forum_id (forum_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;]]></sql>
 		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'a_subject_prefix','1','0','0');]]></sql>
-		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'m_subject_prefix_qc','1','0','0');]]></sql>
+		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'m_subject_prefix','1','0','0');]]></sql>
 		<sql><![CDATA[INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'u_subject_prefix','1','0','0');]]></sql>
 		<sql><![CDATA[ALTER TABLE phpbb_topics ADD COLUMN subject_prefix_id mediumint(8) DEFAULT '0';]]></sql>
 		<sql><![CDATA[CREATE INDEX topic_first_post_id ON phpbb_topics (topic_first_post_id);]]></sql>

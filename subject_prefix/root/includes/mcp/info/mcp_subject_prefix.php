@@ -29,7 +29,7 @@ class mcp_subject_prefix_info
 			'title'		=> 'MCP_SUBJECT_PREFIX',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'subject_prefix_qc' => array('title' => 'MCP_SUBJECT_PREFIX', 'auth' => 'acl_m_subject_prefix_qc',  'display' => false, 'cat' => array('MCP_MAIN')),
+				'subject_prefix_qc' => array('title' => 'MCP_SUBJECT_PREFIX', 'auth' => 'acl_m_subject_prefix',  'display' => false, 'cat' => array('MCP_MAIN')),
 			),
 		);
 	}
