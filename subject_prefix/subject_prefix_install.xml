@@ -16,7 +16,8 @@
 
 		<description lang="en">A MOD that allows users to easily give topics a subject prefix. This may be through a dropdown menu, radio boxes, a custom text input field, etc where a user can select the appropriate option and have it appended to the front of the topic title. </description>
 
-		<author-notes lang="en">This MOD is part of the MOD teams "Summer of MODs"</author-notes>
+		<author-notes lang="en">This MOD is part of the MOD teams "Summer of MODs".
+Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 
 		<author-group>
 			<author>
@@ -38,6 +39,14 @@
 		</installation>
 
 		<history>
+			<entry>
+				<date>2010-05-00</date>
+				<rev-version>1.0.0-rc1</rev-version>
+				<changelog lang="en">
+					<change>[Change] Increased minimum requirements to php 5.1.0.</change>
+					<change>[Change] Some small speed improvements.</change>
+				</changelog>
+			</entry>
 			<entry>
 				<date>2010-05-28</date>
 				<rev-version>1.0.0-a2</rev-version>

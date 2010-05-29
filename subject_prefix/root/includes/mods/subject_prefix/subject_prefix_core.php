@@ -7,6 +7,7 @@
 * @copyright (c) 2010 Erik Frèrejean
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
+* Minimum Requirement: PHP 5.1.0
 */
 
 /**
@@ -15,6 +16,11 @@
 if (!defined('IN_PHPBB'))
 {
 	exit;
+}
+
+if (version_compare(PHP_VERSION, '5.1.0', '<'))
+{
+	die ("Subject Prefix requires at least php 5.1.0 to run!.<br />You are running php: " . PHP_VERSION);
 }
 
 /**
@@ -128,17 +134,8 @@ abstract class subject_prefix_core
 	{
 		$all = self::$sp_cache->obtain_prefix_list();
 
-		// remove all non allowed
-		$list = array();
-		foreach ($all as $prefix_id => $prefix)
-		{
-			if (!in_array($prefix_id, $allowed))
-			{
-				continue;
-			}
-
-			$list[] = $prefix;
-		}
+		$allowed	= array_flip($allowed);	// Must flip this for intersect!
+		$list		= array_intersect_key($all, $allowed);
 
 		return $list;
 	}
@@ -180,6 +177,12 @@ abstract class subject_prefix_core
 		return $selected_prefix;
 	}
 
+	/**
+	* Create the select options with all allowed prefixes.
+	* @param	Integer	$fid		The forum the user is looking at.
+	* @param	Integer $selected	ID of the current selected prefix.
+	* @return	String
+	*/
 	public function make_prefix_select_options($fid, $selected)
 	{
 		global $user;
