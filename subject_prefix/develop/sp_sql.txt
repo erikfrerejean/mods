@@ -14,6 +14,9 @@ CREATE TABLE subject_prefix_forums (
   KEY forum_id (forum_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+# Add demo row
+INSERT INTO subject_prefix(prefix_id, prefix_title, prefix_colour) VALUES (NULL, 'LOC_PREFIX', '');
+
 # Add permission
 INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'a_subject_prefix','1','0','0');
 INSERT INTO phpbb_acl_options (auth_option_id,auth_option,is_global,is_local,founder_only) VALUES (NULL,'m_subject_prefix','1','0','0');

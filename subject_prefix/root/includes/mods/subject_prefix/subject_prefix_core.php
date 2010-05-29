@@ -64,6 +64,8 @@ abstract class subject_prefix_core
 	*/
 	public static function add_subject_prefix_to_blockrow($topicdata, $blockname)
 	{
+		global $user;
+
 		// Topic doesn't have a prefix
 		if ($topicdata['subject_prefix_id'] == 0)
 		{
@@ -84,14 +86,14 @@ abstract class subject_prefix_core
 		if ($blockname != '.')
 		{
 			$template->alter_block_array($blockname, array(
-				'SUBJECT_PREFIX_TITLE'	=> $prefixlist[$topicdata['subject_prefix_id']]['title'],
+				'SUBJECT_PREFIX_TITLE'	=> (isset($user->lang['SP_' . $prefixlist[$topicdata['subject_prefix_id']]['title']])) ? $user->lang['SP_' . $prefixlist[$topicdata['subject_prefix_id']]['title']] : $prefixlist[$topicdata['subject_prefix_id']]['title'],
 				'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$topicdata['subject_prefix_id']]['colour'],
 			), true, 'change');
 		}
 		else
 		{
 			$template->assign_vars(array(
-				'SUBJECT_PREFIX_TITLE'	=> $prefixlist[$topicdata['subject_prefix_id']]['title'],
+				'SUBJECT_PREFIX_TITLE'	=> (isset($user->lang['SP_' . $prefixlist[$topicdata['subject_prefix_id']]['title']])) ? $user->lang['SP_' . $prefixlist[$topicdata['subject_prefix_id']]['title']] : $prefixlist[$topicdata['subject_prefix_id']]['title'],
 				'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$topicdata['subject_prefix_id']]['colour'],
 			));
 		}
@@ -199,7 +201,7 @@ abstract class subject_prefix_core
 		$options = array("<option value='0'" . (($selected == 0) ? " selected='selected'" : '') . ">{$user->lang('SELECT_A_PREFIX')}</option>");
 		foreach ($prefixlist as $prefix)
 		{
-			$options[] = "<option value='{$prefix['id']}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix['id'] == $selected) ? " selected='selected'" : '') . ">{$prefix['title']}</options>";
+			$options[] = "<option value='{$prefix['id']}'" . ((!empty($prefix['colour'])) ? " style='color: #{$prefix['colour']};'" : '') . (($prefix['id'] == $selected) ? " selected='selected'" : '') . '>' . ((isset($user->lang['SP_' . $prefix['title']])) ? $user->lang['SP_' . $prefix['title']] : $prefix['title']) . '</options>';
 		}
 		$options = implode('', $options);
 

@@ -115,6 +115,9 @@ if (confirm_box(true))
 
 		$umil->table_index_add('TOPICS_TABLE', 'subject_prefix_id', 'subject_prefix_id');
 
+		// Add the demo row
+		$umil->db->sql_query('INSERT INTO ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . "(prefix_id, prefix_title, prefix_colour) VALUES (NULL, 'LOC_PREFIX', '')");
+
 		// Our final action, we purge the board cache
 		$umil->cache_purge();
 	}

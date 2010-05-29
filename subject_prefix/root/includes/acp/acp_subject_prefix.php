@@ -224,7 +224,7 @@ class acp_subject_prefix
 			{
 				$template->assign_block_vars('prefixlist', array(
 					'PREFIX_COLOUR'	=> $prefix['colour'],
-					'PREFIX_TITLE' 	=> $prefix['title'],
+					'PREFIX_TITLE' 	=> (isset($user->lang['SP_' . $prefix['title']])) ? $user->lang['SP_' . $prefix['title']] : $prefix['title'],
 
 					'U_DELETE'	=> $this->u_action . '&amp;action=delete&amp;prefix_id=' . $prefix_id,
 					'U_EDIT'	=> $this->u_action . '&amp;action=edit&amp;prefix_id=' . $prefix_id,
