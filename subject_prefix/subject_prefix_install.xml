@@ -86,7 +86,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			<file from="root/includes/mcp/mcp_subject_prefix.php" to="includes/mcp/mcp_subject_prefix.php" />
 			<file from="root/includes/mods/subject_prefix/*.*" to="includes/mods/subject_prefix/*.*" />
 			<file from="root/language/en/mods/subject_prefix/subject_prefix_common.php" to="language/en/mods/subject_prefix/subject_prefix_common.php" />
-			<file from="root/install/index.php" to="install/index.php" />
+			<file from="root/install/*.*" to="install/*.*" />
 		</copy>
 
 		<!-- File edits -->
