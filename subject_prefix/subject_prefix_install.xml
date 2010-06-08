@@ -178,7 +178,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</edit>
 		</open>
 
-		<open src="style/prosilver/template/viewtopic_print.html">
+		<open src="styles/prosilver/template/viewtopic_print.html">
 			<edit>
 				<find><![CDATA[<h2>{TOPIC_TITLE}</h2>]]></find>
 				<inline-edit>
