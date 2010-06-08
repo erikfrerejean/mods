@@ -115,3 +115,13 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'acl_u_subject_prefix' => array('lang' => 'Can use Subject Prefixes', 'cat' => 'post'),
 ));
+
+// The installer
+$lang = array_merge($lang, array(
+	'INSTALL_SUBJECTPREFIX'				=> 'Install Subject Prefix',
+	'INSTALL_SUBJECTPREFIX_CONFIRM'		=> 'Do you really want to install Subject Prefix',
+	'UPDATE_SUBJECTPREFIX'				=> 'Update Subject Prefix',
+	'UPDATE_SUBJECTPREFIX_CONFIRM'		=> 'Do you really want to update Subject Prefix',
+	'UNINSTALL_SUBJECTPREFIX'			=> 'Remove Subject Prefix',
+	'UNINSTALL_SUBJECTPREFIX_CONFIRM'	=> 'Do you really want to remove Subject Prefix',
+));
