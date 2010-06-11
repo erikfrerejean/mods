@@ -81,6 +81,9 @@ class acp_subject_prefix
 					'TITLE'					=> (isset($list[$prefix_id])) ? $list[$prefix_id]['title'] : '',
 				));
 
+				// Remove the cache
+				subject_prefix_core::$sp_cache->destroy_all();
+
 				return;
 			break;
 
