@@ -221,8 +221,5 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 
 		<!-- Installer -->
 		<php-installer>install/index.php</php-installer>
-
-		<!-- Do it yourself -->
-		<diy-instructions lang="en">Purge the board cache and refresh the templates.</diy-instructions>
 	</action-group>
 </mod>
