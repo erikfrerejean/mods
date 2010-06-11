@@ -39,7 +39,7 @@ $versions = array(
 		// Add the modules
 		'module_add' => array(
 			// ACP Module
-			array('acp', 'ACP_CAT_MODS', array(
+			array('acp', 'ACP_CAT_DOT_MODS', array(
 				'module_enabled'	=> 1,
 				'module_display'	=> 1,
 				'module_langname'	=> 'ACP_SUBJECT_PREFIX',
@@ -71,9 +71,9 @@ $versions = array(
 		'table_add'	=> array(
 			array(subject_prefix_core::SUBJECT_PREFIX_TABLE, array(
 				'COLUMNS' => array(
-					'prefix_id'		=> array('UINT', 0, 'auto_increment'),
+					'prefix_id'		=> array('UINT', NULL, 'auto_increment'),
 					'prefix_title'	=> array('VCHAR:255', ''),
-					'prefix_colour'	=> array('VCHAR:6', 000000),
+					'prefix_colour'	=> array('VCHAR:6', '000000'),
 				),
 
 				'PRIMARY_KEY' => array('prefix_id', ''),
@@ -94,13 +94,13 @@ $versions = array(
 
 		// Add columns
 		'table_column_add' => array(
-			array('TOPICS_TABLE', 'subject_prefix_id', array('UINT', '0'))
+			array(TOPICS_TABLE, 'subject_prefix_id', array('UINT', '0'))
 		),
 
 		// Add index
 		'table_index_add' => array(
-			array('TOPICS_TABLE', 'topic_first_post_id', 'topic_first_post_id'),
-			array('TOPICS_TABLE', 'subject_prefix_id', 'subject_prefix_id'),
+			array(TOPICS_TABLE, 'topic_first_post_id', 'topic_first_post_id'),
+			array(TOPICS_TABLE, 'subject_prefix_id', 'subject_prefix_id'),
 		),
 	),
 );

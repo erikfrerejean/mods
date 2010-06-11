@@ -33,6 +33,12 @@ if (!file_exists($phpbb_root_path . 'umil/umil_auto.' . $phpEx))
 	trigger_error('Please download the latest UMIL (Unified MOD Install Library) from: <a href="http://www.phpbb.com/mods/umil/">phpBB.com/mods/umil</a>', E_USER_ERROR);
 }
 
+// Force the hook. Its possible that the file isn't loaded at this point
+if (!function_exists('add_prefix_to_viewtopic'))
+{
+	include ($phpbb_root_path . 'includes/hooks/hook_subject_prefix.' . $phpEx);
+}
+
 // The name of the mod to be displayed during installation.
 $mod_name = 'SUBJECTPREFIX';
 
@@ -53,7 +59,7 @@ $version_config_name = 'subject_prefix_version';
 * 'UNINSTALL_' . $mod_name
 * 'UNINSTALL_' . $mod_name . '_CONFIRM'
 */
-$language_file = 'mods/subject_prefix/subject_prefix_common.php';
+$language_file = 'mods/subject_prefix/subject_prefix_common';
 
 // Get version info
 include($phpbb_root_path . 'install/install_versions.' . $phpEx);
