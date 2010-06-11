@@ -76,7 +76,7 @@ $versions = array(
 					'prefix_colour'	=> array('VCHAR:6', '000000'),
 				),
 
-				'PRIMARY_KEY' => array('prefix_id', ''),
+				'PRIMARY_KEY' => 'prefix_id',
 			)),
 
 			array(SUBJECT_PREFIX_FORUMS_TABLE, array(
