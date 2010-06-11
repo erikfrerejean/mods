@@ -30,11 +30,6 @@ class mcp_subject_prefix
 		global $db, $user;
 		global $phpEx;
 
-		if (!check_form_key('posting'))
-		{
-			trigger_error($user->lang['FORM_INVALID']);
-		}
-
 		// Fetch all the data
 		$fid	= request_var('f', 0);
 		$pid	= request_var('prefixid', 0);

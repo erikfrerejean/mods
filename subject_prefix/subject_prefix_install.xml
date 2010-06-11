@@ -30,7 +30,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0-b1</mod-version>
+		<mod-version>1.0.0-rc1</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -39,6 +39,13 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 		</installation>
 
 		<history>
+			<entry>
+				<date></date>
+				<rev-version>1.0.0-rc1</rev-version>
+				<changelog lang="en">
+					<change>[Fix] Resolve invalid form errors when QR is disabled and the topic doesn't has a poll.</change>
+				</changelog>
+			</entry>
 			<entry>
 				<date>2010-05-00</date>
 				<rev-version>1.0.0-b1</rev-version>
@@ -172,7 +179,6 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 	<form method="post" action="{U_SUBJECT_PREFIX_QUICK_CHANGE_ACTION}">
 	<fieldset class="quickmod">
 		<label for="quick-prefix-change-select">{L_SUBJECT_PREFIX_QUICK_CHANGE}:</label> <select name="prefixid" id="quick-prefix-change-select">{S_SUBJECT_PREFIX_QUICK_CHANGE_OPTIONS}</select> <input type="submit" value="{L_GO}" class="button2" />
-		{S_FORM_TOKEN}
 	</fieldset>
 	</form>
 <!-- ENDIF -->]]></action>
