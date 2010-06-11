@@ -70,7 +70,10 @@ include($phpbb_root_path . 'umil/umil_auto.' . $phpEx);
 // Add demo prefix
 $umil->db->sql_query('INSERT INTO ' . SUBJECT_PREFIX_TABLE . "(prefix_id, prefix_title, prefix_colour) VALUES (NULL, 'LOC_PREFIX', '')");
 
-
 // clear cache
-cache_purge('', 0);
-cache_purge('auth', 0);
+$umil->cache_purge(array(
+	array(''),
+	array('auth'),
+	array('template'),
+	array('theme'),
+));
