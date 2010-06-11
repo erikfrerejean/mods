@@ -43,7 +43,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0-rc1</mod-version>
+		<mod-version>1.0.0-rc2</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -52,6 +52,13 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 		</installation>
 
 		<history>
+			<entry>
+				<date>2010-06-11</date>
+				<rev-version>1.0.0-rc2</rev-version>
+				<changelog lang="en">
+					<change>[Fix] Fix a critical issue that would break the installer.</change>
+				</changelog>
+			</entry>
 			<entry>
 				<date>2010-06-11</date>
 				<rev-version>1.0.0-rc1</rev-version>
