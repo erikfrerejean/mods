@@ -69,7 +69,7 @@ $versions = array(
 
 		// Add tables
 		'table_add'	=> array(
-			array(subject_prefix_core::SUBJECT_PREFIX_TABLE, array(
+			array(SUBJECT_PREFIX_TABLE, array(
 				'COLUMNS' => array(
 					'prefix_id'		=> array('UINT', NULL, 'auto_increment'),
 					'prefix_title'	=> array('VCHAR:255', ''),
@@ -79,7 +79,7 @@ $versions = array(
 				'PRIMARY_KEY' => array('prefix_id', ''),
 			)),
 
-			array(subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE, array(
+			array(SUBJECT_PREFIX_FORUMS_TABLE, array(
 				'COLUMNS' => array(
 					'prefix_id'	=> array('UINT', 0),
 					'forum_id'	=> array('UINT', 0),

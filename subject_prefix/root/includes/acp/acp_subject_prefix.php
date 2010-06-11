@@ -62,7 +62,7 @@ class acp_subject_prefix
 				if ($prefix_id > 0)
 				{
 					$sql = 'SELECT *
-						FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE . '
+						FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . '
 						WHERE prefix_id = ' . $prefix_id;
 					$result = $db->sql_query($sql);
 					while ($fid = $db->sql_fetchrow($result))
@@ -103,12 +103,12 @@ class acp_subject_prefix
 					$db->sql_query($sql);
 
 					// Remove the prefix
-					$sql = 'DELETE FROM ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . '
+					$sql = 'DELETE FROM ' . SUBJECT_PREFIX_TABLE . '
 						WHERE prefix_id = ' . $prefix_id;
 					$db->sql_query($sql);
 
 					// Delete forum ids
-					$sql = 'DELETE FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE . '
+					$sql = 'DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . '
 						WHERE prefix_id = ' . $prefix_id;
 
 					// Remove the cache
@@ -169,14 +169,14 @@ class acp_subject_prefix
 				// Insert the prefix into the prefix table
 				if (empty($prefix_id))
 				{
-					$db->sql_query('INSERT INTO ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . '
+					$db->sql_query('INSERT INTO ' . SUBJECT_PREFIX_TABLE . '
 										' . $db->sql_build_array('INSERT', $data_ary));
 					$message	= 'PREFIX_ADDED';
 					$prefix_id	= $db->sql_nextid();
 				}
 				else
 				{
-					$db->sql_query('UPDATE ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . '
+					$db->sql_query('UPDATE ' . SUBJECT_PREFIX_TABLE . '
 										SET ' . $db->sql_build_array('UPDATE', $data_ary) . '
 										WHERE prefix_id = ' . $prefix_id);
 					$message = 'PREFIX_UPDATED';
@@ -185,7 +185,7 @@ class acp_subject_prefix
 				// Remove no longer used prefixis
 				if (!empty($remove_forums))
 				{
-					$db->sql_query('DELETE FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE . '
+					$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . '
 											WHERE prefix_id = ' . $prefix_id . '
 												AND ' . $db->sql_in_set('forum_id', $remove_forums));
 					if ($db->sql_affectedrows() > -1)
@@ -209,7 +209,7 @@ class acp_subject_prefix
 							'forum_id'	=> $forum_id,
 						);
 					}
-					$db->sql_multi_insert(subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE, $insert_data);
+					$db->sql_multi_insert(SUBJECT_PREFIX_FORUMS_TABLE, $insert_data);
 				}
 
 				// Update the cache

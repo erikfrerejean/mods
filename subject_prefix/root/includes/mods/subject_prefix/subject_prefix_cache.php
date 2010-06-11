@@ -53,7 +53,7 @@ class subject_prefix_cache extends acm
 			if ((self::$prefixlist = $this->get('_subject_prefix')) === false)
 			{
 				$sql = 'SELECT *
-					FROM ' . subject_prefix_core::SUBJECT_PREFIX_TABLE;
+					FROM ' . SUBJECT_PREFIX_TABLE;
 				$result	= $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -102,7 +102,7 @@ class subject_prefix_cache extends acm
 				$resultvalue	= ($fid !== false) ? 'prefix_id' : 'forum_id';
 
 				$sql = 'SELECT *
-					FROM ' . subject_prefix_core::SUBJECT_PREFIX_FORUMS_TABLE;
+					FROM ' . SUBJECT_PREFIX_FORUMS_TABLE;
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{

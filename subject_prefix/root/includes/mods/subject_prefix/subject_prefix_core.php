@@ -23,18 +23,18 @@ if (version_compare(PHP_VERSION, '5.1.0', '<'))
 	die ("Subject Prefix requires at least php 5.1.0 to run!.<br />You are running php: " . PHP_VERSION);
 }
 
+/** @#+
+* Subject Prefix database tables
+*/
+define('SUBJECT_PREFIX_TABLE', $table_prefix . 'subject_prefix');
+define('SUBJECT_PREFIX_FORUMS_TABLE', $table_prefix . 'subject_prefix_forums');
+/**@#-*/
+
 /**
 * The main Subject Prefix class
 */
 abstract class subject_prefix_core
 {
-	/** @#+
-	* Subject Prefix database tables
-	*/
-	const SUBJECT_PREFIX_TABLE 			= 'subject_prefix';
-	const SUBJECT_PREFIX_FORUMS_TABLE	= 'subject_prefix_forums';
-	/**@#-*/
-
 	/**
 	* @var subject_prefix_cache The Subject Prefix cache object
 	*/

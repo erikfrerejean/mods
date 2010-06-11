@@ -56,6 +56,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 				<date></date>
 				<rev-version>1.0.0-rc1</rev-version>
 				<changelog lang="en">
+					<change>[Change] Use the normal phpBB schema for table names.</change>
 					<change>[Fix] Resolve invalid form errors when QR is disabled and the topic doesn't has a poll.</change>
 				</changelog>
 			</entry>

@@ -68,7 +68,7 @@ include($phpbb_root_path . 'install/install_versions.' . $phpEx);
 include($phpbb_root_path . 'umil/umil_auto.' . $phpEx);
 
 // Add demo prefix
-$umil->db->sql_query('INSERT INTO ' . subject_prefix_core::SUBJECT_PREFIX_TABLE . "(prefix_id, prefix_title, prefix_colour) VALUES (NULL, 'LOC_PREFIX', '')");
+$umil->db->sql_query('INSERT INTO ' . SUBJECT_PREFIX_TABLE . "(prefix_id, prefix_title, prefix_colour) VALUES (NULL, 'LOC_PREFIX', '')");
 
 
 // clear cache
