@@ -53,7 +53,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 
 		<history>
 			<entry>
-				<date></date>
+				<date>2010-06-11</date>
 				<rev-version>1.0.0-rc1</rev-version>
 				<changelog lang="en">
 					<change>[Change] Use the normal phpBB schema for table names.</change>
@@ -61,7 +61,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 				</changelog>
 			</entry>
 			<entry>
-				<date>2010-05-00</date>
+				<date>2010-06-09</date>
 				<rev-version>1.0.0-b1</rev-version>
 				<changelog lang="en">
 					<change>[Add] Added the ability to localise Subject prefixes.</change>
