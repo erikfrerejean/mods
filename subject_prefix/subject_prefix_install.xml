@@ -28,6 +28,19 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 					<contributions status="current" from="2010-05-19" position="Developer" />
 				</contributions-group>
 			</author>
+			<author>
+				<realname>Tabitha</realname>
+				<username>t_backoff</username>
+				<contributions-group>
+					<contributions status="current" from="2010-05-19" position="Tester" />
+				</contributions-group>
+			</author>
+			<author>
+				<username>VSE</username>
+				<contributions-group>
+					<contributions status="current" from="2010-05-19" position="Tester" />
+				</contributions-group>
+			</author>
 		</author-group>
 
 		<mod-version>1.0.0-rc1</mod-version>
