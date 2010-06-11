@@ -26,6 +26,7 @@ if (version_compare(PHP_VERSION, '5.1.0', '<'))
 /** @#+
 * Subject Prefix database tables
 */
+global $table_prefix;
 define('SUBJECT_PREFIX_TABLE', $table_prefix . 'subject_prefix');
 define('SUBJECT_PREFIX_FORUMS_TABLE', $table_prefix . 'subject_prefix_forums');
 /**@#-*/
