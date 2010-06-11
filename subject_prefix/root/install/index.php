@@ -24,6 +24,13 @@ define('IN_INSTALL', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
+
+// Force the hook. Its possible that the file isn't loaded at this point
+if (!function_exists('add_prefix_to_viewtopic'))
+{
+	include ($phpbb_root_path . 'includes/hooks/hook_subject_prefix.' . $phpEx);
+}
+
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
@@ -31,12 +38,6 @@ $user->setup();
 if (!file_exists($phpbb_root_path . 'umil/umil_auto.' . $phpEx))
 {
 	trigger_error('Please download the latest UMIL (Unified MOD Install Library) from: <a href="http://www.phpbb.com/mods/umil/">phpBB.com/mods/umil</a>', E_USER_ERROR);
-}
-
-// Force the hook. Its possible that the file isn't loaded at this point
-if (!function_exists('add_prefix_to_viewtopic'))
-{
-	include ($phpbb_root_path . 'includes/hooks/hook_subject_prefix.' . $phpEx);
 }
 
 // The name of the mod to be displayed during installation.
