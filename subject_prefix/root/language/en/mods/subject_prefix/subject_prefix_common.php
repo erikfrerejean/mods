@@ -79,9 +79,10 @@ $lang = array_merge($lang, array(
 
 	'NO_PREFIX_TITLE'	=> 'You must provide a title for this prefix!',
 
-	'PREFIX_ADDED'			=> 'The prefix was successfully added!',
+	'PREFIX_ADDED'			=> 'The prefix was successfully added',
 	'PREFIX_COLOUR'			=> 'Prefix colour',
 	'PREFIX_COLOUR_EXPLAIN'	=> 'Defines the colour this prefix will appear in. Leave blank for the default colour.',
+	'PREFIX_DELETED'		=> 'The prefix was successfully removed',
 	'PREFIX_FORUMS'			=> 'Prefix forums',
 	'PREFIX_FORUMS_EXPLAIN'	=> 'Select the forums in which this prefix can be used',
 	'PREFIX_TITLE'			=> 'Prefix title',

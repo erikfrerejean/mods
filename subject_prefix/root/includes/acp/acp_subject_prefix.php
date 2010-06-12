@@ -113,6 +113,9 @@ class acp_subject_prefix
 
 					// Remove the cache
 					subject_prefix_core::$sp_cache->destroy_all();
+
+					// Redirect
+					trigger_error($user->lang('PREFIX_DELETED') . adm_back_link($this->u_action));
 				}
 				else
 				{
