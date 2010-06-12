@@ -109,15 +109,15 @@ function add_prefix_to_viewtopic()
 		return;
 	}
 
+	global $forum_id, $topic_id, $viewtopic_url;
+	global $template;
+	subject_prefix_core::add_subject_prefix_to_blockrow($topic_data, '.');
+
 	// Only display to topic starter or those with the mod permission
 	if ($user->data['user_id'] != $topic_data['topic_poster'] && $auth->acl_get('!m_subject_prefix'))
 	{
 		return;
 	}
-
-	global $forum_id, $topic_id, $viewtopic_url;
-	global $template;
-	subject_prefix_core::add_subject_prefix_to_blockrow($topic_data, '.');
 
 	// Get the currently selected prefix
 	$sql = 'SELECT subject_prefix_id
