@@ -135,7 +135,7 @@ class subject_prefix_cache extends acm
 	public function destroy_all()
 	{
 		$this->destroy('_subject_prefix');
-		$this->destroy('_subject_prefix_forums');
-		$this->destroy('_subject_forums_prefix');
+		$this->destroy('_subject_prefix_list_fid');
+		$this->destroy('_subject_prefix_list_pid');
 	}
 }
