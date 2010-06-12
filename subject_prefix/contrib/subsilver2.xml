@@ -43,7 +43,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0-rc2</mod-version>
+		<mod-version>1.0.0</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -52,6 +52,15 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 		</installation>
 
 		<history>
+			<entry>
+				<date>2010-06-12</date>
+				<rev-version>1.0.0</rev-version>
+				<changelog lang="en">
+					<change>[Fix] Display prefixes in viewtopic when the user is no moderator and isn't the topic starter.</change>
+					<change>[Fix] ACP page triggers an error when adding a prefix directly after a prefix was removed.</change>
+					<change>[Fix] Correctly update the cached data.</change>
+				</changelog>
+			</entry>
 			<entry>
 				<date>2010-06-11</date>
 				<rev-version>1.0.0-rc2</rev-version>
