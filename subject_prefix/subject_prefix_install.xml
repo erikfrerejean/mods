@@ -43,7 +43,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0</mod-version>
+		<mod-version>1.0.0.a</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -52,6 +52,13 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 		</installation>
 
 		<history>
+			<entry>
+				<date></date>
+				<rev-version>1.0.0.a</rev-version>
+				<changelog lang="en">
+					<change>[Fix] Correctly display/remember prefixes when using post preview (Bug #2).</change>
+				</changelog>
+			</entry>
 			<entry>
 				<date>2010-06-12</date>
 				<rev-version>1.0.0</rev-version>
@@ -191,6 +198,16 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/template/posting_preview.html">
+			<edit>
+				<find><![CDATA[<h3>{L_PREVIEW}: {PREVIEW_SUBJECT}</h3>]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[{PREVIEW_SUBJECT}]]></inline-find>
+					<inline-action type="before-add"><![CDATA[<!-- IF SUBJECT_PREFIX_TITLE --><span class="subjectprefix"<!-- IF SUBJECT_PREFIX_COLOUR --> style="color: #{SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF --> ]]></inline-action>
+				</inline-edit>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/viewforum_body.html">
 			<edit>
 				<find><![CDATA[<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image:]]></find>
@@ -237,7 +254,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 				<find>$s_type_switch = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;</find>
 				<action type="before-add">		//-- Begin Subject Prefix
 		//-- Add:
-		subject_prefix_core::add_subject_prefix_to_blockrow($row, 'topicrow');
+		subject_prefix_core::add_subject_prefix_to_blockrow($row['subject_prefix_id'], 'topicrow');
 		//-- End Subject Prefix</action>
 			</edit>
 		</open>

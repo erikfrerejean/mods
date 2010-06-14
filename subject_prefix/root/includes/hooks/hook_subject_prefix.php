@@ -83,6 +83,15 @@ function add_prefix_dropdown_to_the_posting_page(&$hook)
 		}
 	}
 
+	// When previewing display the latest selected prefix
+	if (isset($_POST['preview']))
+	{
+		$selected_prefix = request_var('prefixes', 0);
+
+		// Assign the current selected prefix to the preview template
+		subject_prefix_core::add_subject_prefix_to_blockrow($selected_prefix, '.');
+	}
+
 	// Build option list
 	$options = subject_prefix_core::make_prefix_select_options($user->page['forum'], $selected_prefix);
 	if (empty($options))
@@ -111,7 +120,7 @@ function add_prefix_to_viewtopic()
 
 	global $forum_id, $topic_id, $viewtopic_url;
 	global $template;
-	subject_prefix_core::add_subject_prefix_to_blockrow($topic_data, '.');
+	subject_prefix_core::add_subject_prefix_to_blockrow($topic_data['subject_prefix_id'], '.');
 
 	// Only display to topic starter or those with the mod permission
 	if ($user->data['user_id'] != $topic_data['topic_poster'] && $auth->acl_get('!m_subject_prefix'))

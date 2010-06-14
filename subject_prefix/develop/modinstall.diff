@@ -43,6 +43,15 @@ Index: styles/subsilver2/template/viewtopic_body.html
  
  <!-- IF MODERATORS -->
  	<p class="moderators"><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->: {MODERATORS}</p>
+@@ -347,7 +347,7 @@
+ 
+ <table width="100%" cellspacing="1">
+ <tr>
+-	<td width="40%" valign="top" nowrap="nowrap" align="{S_CONTENT_FLOW_BEGIN}"><!-- IF S_TOPIC_MOD --><form method="post" action="{S_MOD_ACTION}"><span class="gensmall">{L_QUICK_MOD}:</span> {S_TOPIC_MOD} <input class="btnlite" type="submit" value="{L_GO}" /></form><!-- ENDIF --></td>
++	<td width="40%" valign="top" nowrap="nowrap" align="{S_CONTENT_FLOW_BEGIN}"><!-- IF S_TOPIC_MOD --><form method="post" action="{S_MOD_ACTION}"><span class="gensmall">{L_QUICK_MOD}:</span> {S_TOPIC_MOD} <input class="btnlite" type="submit" value="{L_GO}" /></form><!-- ENDIF --><!-- IF U_SUBJECT_PREFIX_QUICK_CHANGE_ACTION --><!-- IF S_TOPIC_MOD --><br class="clear" /><!-- ENDIF --><form method="post" action="{U_SUBJECT_PREFIX_QUICK_CHANGE_ACTION}"><label for="quick-prefix-change-select">{L_SUBJECT_PREFIX_QUICK_CHANGE}:</label> <select name="prefixid" id="quick-prefix-change-select">{S_SUBJECT_PREFIX_QUICK_CHANGE_OPTIONS}</select> <input type="submit" value="{L_GO}" class="button2" /></td>
+ 	<td align="{S_CONTENT_FLOW_END}" valign="top" nowrap="nowrap"><span class="gensmall"><!-- BEGIN rules -->{rules.RULE}<br /><!-- END rules --></span></td>
+ </tr>
+ </table>
 Index: styles/subsilver2/template/viewforum_body.html
 ===================================================================
 --- styles/subsilver2/template/viewforum_body.html	(revision 10624)
@@ -161,6 +170,19 @@ Index: styles/prosilver/template/viewforum_body.html
  					<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
  					<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><br />
  					<!-- IF topicrow.PAGINATION --><strong class="pagination"><span>{topicrow.PAGINATION}</span></strong><!-- ENDIF -->
+Index: styles/prosilver/template/posting_preview.html
+===================================================================
+--- styles/prosilver/template/posting_preview.html	(revision 10624)
++++ styles/prosilver/template/posting_preview.html	(working copy)
+@@ -25,7 +25,7 @@
+ <!-- ENDIF -->
+ 
+ 	<div class="postbody">
+-		<h3>{L_PREVIEW}: {PREVIEW_SUBJECT}</h3>
++		<h3>{L_PREVIEW}:<!-- IF SUBJECT_PREFIX_TITLE --> <span class="subjectprefix"<!-- IF SUBJECT_PREFIX_COLOUR --> style="color: #{SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF --> {PREVIEW_SUBJECT}</h3>
+ 
+ 		<div class="content">{PREVIEW_MESSAGE}</div>
+ 
 Index: includes/functions_posting.php
 ===================================================================
 --- includes/functions_posting.php	(revision 10624)
@@ -207,7 +229,7 @@ Index: viewforum.php
  
 +		//-- Begin Subject Prefix
 +		//-- Add:
-+		subject_prefix_core::add_subject_prefix_to_blockrow($row, 'topicrow');
++		subject_prefix_core::add_subject_prefix_to_blockrow($row['subject_prefix_id'], 'topicrow');
 +		//-- End Subject Prefix
 +
  		$s_type_switch = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;

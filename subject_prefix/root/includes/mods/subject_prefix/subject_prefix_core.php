@@ -58,17 +58,17 @@ abstract class subject_prefix_core
 	/**
 	* Add the prefix to the template.
 	*
-	* @param array	$topicdata	Array containing the topic data
+	* @param array	$prefix_id	Prefix id
 	* @param string	$blockname	The name of the block into which the prefix has to be merges
 	* 							the prefix will be added to the row that is last created.
 	* @return void
 	*/
-	public static function add_subject_prefix_to_blockrow($topicdata, $blockname)
+	public static function add_subject_prefix_to_blockrow($prefix_id, $blockname)
 	{
 		global $user;
 
 		// Topic doesn't have a prefix
-		if ($topicdata['subject_prefix_id'] == 0)
+		if ($prefix_id == 0)
 		{
 			return;
 		}
@@ -76,7 +76,7 @@ abstract class subject_prefix_core
 		// Get the prefixes
 		$prefixlist = self::$sp_cache->obtain_prefix_list();
 
-		if (!isset($prefixlist[$topicdata['subject_prefix_id']]))
+		if (!isset($prefixlist[$prefix_id]))
 		{
 			return;
 		}
@@ -87,15 +87,15 @@ abstract class subject_prefix_core
 		if ($blockname != '.')
 		{
 			$template->alter_block_array($blockname, array(
-				'SUBJECT_PREFIX_TITLE'	=> (isset($user->lang['SP_' . $prefixlist[$topicdata['subject_prefix_id']]['title']])) ? $user->lang['SP_' . $prefixlist[$topicdata['subject_prefix_id']]['title']] : $prefixlist[$topicdata['subject_prefix_id']]['title'],
-				'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$topicdata['subject_prefix_id']]['colour'],
+				'SUBJECT_PREFIX_TITLE'	=> (isset($user->lang['SP_' . $prefixlist[$prefix_id]['title']])) ? $user->lang['SP_' . $prefixlist[$prefix_id]['title']] : $prefixlist[$prefix_id]['title'],
+				'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$prefix_id]['colour'],
 			), true, 'change');
 		}
 		else
 		{
 			$template->assign_vars(array(
-				'SUBJECT_PREFIX_TITLE'	=> (isset($user->lang['SP_' . $prefixlist[$topicdata['subject_prefix_id']]['title']])) ? $user->lang['SP_' . $prefixlist[$topicdata['subject_prefix_id']]['title']] : $prefixlist[$topicdata['subject_prefix_id']]['title'],
-				'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$topicdata['subject_prefix_id']]['colour'],
+				'SUBJECT_PREFIX_TITLE'	=> (isset($user->lang['SP_' . $prefixlist[$prefix_id]['title']])) ? $user->lang['SP_' . $prefixlist[$prefix_id]['title']] : $prefixlist[$prefix_id]['title'],
+				'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$prefix_id]['colour'],
 			));
 		}
 	}
