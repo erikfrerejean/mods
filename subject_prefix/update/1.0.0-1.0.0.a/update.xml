@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml-stylesheet type="text/xsl" href="./modx.prosilver.en.xsl"?>
+<!--
+	For security purposes, please check: http://www.phpbb.com/mods/
+	for the latest version of this MOD. Although MODs are checked
+	before being allowed in the MODs Database there is no guarantee
+	that there are no security problems within the MOD. No support
+	will be given for MODs not found within the MODs Database which
+	can be found at http://www.phpbb.com/mods/
+-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="en">Subject Prefix</title>
+
+		<description lang="en">A MOD that allows users to easily give topics a subject prefix. This may be through a dropdown menu, radio boxes, a custom text input field, etc where a user can select the appropriate option and have it appended to the front of the topic title. </description>
+
+		<author-notes lang="en">This MOD is part of the MOD teams "Summer of MODs".
+Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
+
+		<author-group>
+			<author>
+				<realname>Erik Frèrejean</realname>
+				<username>Erik Frèrejean</username>
+				<homepage>http://www.erikfrerejean.nl</homepage>
+				<contributions-group>
+					<contributions status="current" from="2010-05-19" position="Developer" />
+				</contributions-group>
+			</author>
+			<author>
+				<realname>Tabitha</realname>
+				<username>t_backoff</username>
+				<contributions-group>
+					<contributions status="current" from="2010-05-19" position="Tester" />
+				</contributions-group>
+			</author>
+			<author>
+				<username>VSE</username>
+				<contributions-group>
+					<contributions status="current" from="2010-05-19" position="Tester" />
+				</contributions-group>
+			</author>
+		</author-group>
+
+		<mod-version>1.0.0.a</mod-version>
+
+		<installation>
+			<level>easy</level>
+			<time>160</time>
+			<target-version>3.0.7-PL1</target-version>
+		</installation>
+
+		<history>
+			<entry>
+				<date></date>
+				<rev-version>1.0.0.a</rev-version>
+				<changelog lang="en">
+					<change>[Fix] Correctly display/remember prefixes when using post preview (Bug #2).</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-06-12</date>
+				<rev-version>1.0.0</rev-version>
+				<changelog lang="en">
+					<change>Up the version number.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-06-12</date>
+				<rev-version>1.0.0-rc3</rev-version>
+				<changelog lang="en">
+					<change>[Fix] Display prefixes in viewtopic when the user is no moderator and isn't the topic starter.</change>
+					<change>[Fix] ACP page triggers an error when adding a prefix directly after a prefix was removed.</change>
+					<change>[Fix] Correctly update the cached data.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-06-11</date>
+				<rev-version>1.0.0-rc2</rev-version>
+				<changelog lang="en">
+					<change>[Fix] Fix a critical issue that would break the installer.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-06-11</date>
+				<rev-version>1.0.0-rc1</rev-version>
+				<changelog lang="en">
+					<change>[Change] Use the normal phpBB schema for table names.</change>
+					<change>[Fix] Resolve invalid form errors when QR is disabled and the topic doesn't has a poll.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-06-09</date>
+				<rev-version>1.0.0-b1</rev-version>
+				<changelog lang="en">
+					<change>[Add] Added the ability to localise Subject prefixes.</change>
+					<change>[Add] MOD installer.</change>
+					<change>[Change] Increased minimum requirements to php 5.1.0.</change>
+					<change>[Change] Some small speed improvements.</change>
+					<change>[Change] Unified permission names.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-05-28</date>
+				<rev-version>1.0.0-a2</rev-version>
+				<changelog lang="en">
+					<change>[Add] User based permission.</change>
+					<change>[Add] A quick change box for moderators to change the topic prefix.</change>
+					<change>[Add] Full SubSilver2 support.</change>
+					<change>[Change] Don't move prefixes to forums where this prefix can't be used.</change>
+					<change>[Fix] Added missing prefix support in viewtopic print.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-05-20</date>
+				<rev-version>1.0.0-a1</rev-version>
+				<changelog lang="en">
+					<change>First Alpha release</change>
+				</changelog>
+			</entry>
+		</history>
+
+		<link-group>
+			<link type="template" realname="SubSilver2" href="./update_subsilver2.xml" lang="en">Update SubSilver2</link>
+		</link-group>
+	</header>
+
+	<action-group>
+		<open src="styles/prosilver/template/posting_preview.html">
+			<edit>
+				<find><![CDATA[<h3>{L_PREVIEW}: {PREVIEW_SUBJECT}</h3>]]></find>
+					<inline-edit>
+						<inline-find><![CDATA[{PREVIEW_SUBJECT}]]></inline-find>
+						<inline-action type="before-add"><![CDATA[<!-- IF SUBJECT_PREFIX_TITLE --><span class="subjectprefix"<!-- IF SUBJECT_PREFIX_COLOUR --> style="color: #{SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF --> ]]></inline-action>
+					</inline-edit>
+			</edit>
+		</open>
+
+		<open src="viewforum.php">
+			<edit>
+				<find>subject_prefix_core::add_subject_prefix_to_blockrow($row, 'topicrow');</find>
+				<inline-edit>
+					<inline-find>$row</inline-find>
+					<inline-action type="replace-with">$row['subject_prefix_id']</inline-action>
+				</inline-edit>
+			</edit>
+		</open>
+	</action-group>
+</mod>

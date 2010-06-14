@@ -111,4 +111,6 @@ $versions = array(
 			array(TOPICS_TABLE, 'subject_prefix_id', 'subject_prefix_id'),
 		),
 	),
+	'1.0.0'		=> array(),
+	'1.0.0.a'	=> array(),
 );
