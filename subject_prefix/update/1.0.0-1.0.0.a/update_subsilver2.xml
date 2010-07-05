@@ -53,7 +53,7 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 
 		<history>
 			<entry>
-				<date></date>
+				<date>2010-07-05</date>
 				<rev-version>1.0.0.a</rev-version>
 				<changelog lang="en">
 					<change>[Fix] Correctly display/remember prefixes when using post preview (Bug #2).</change>
