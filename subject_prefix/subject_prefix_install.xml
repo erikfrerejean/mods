@@ -208,6 +208,23 @@ Please note that this MOD requires at least php 5.1.0 to run.</author-notes>
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/template/search_results.html">
+			<edit>
+				<find><![CDATA[<a href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a> {searchresults.ATTACH_ICON_IMG}]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[{searchresults.U_VIEW_TOPIC}]]></inline-find>
+					<inline-action type="before-add"><![CDATA[<!-- IF searchresults.SUBJECT_PREFIX_TITLE --><span class="subjectprefix"<!-- IF searchresults.SUBJECT_PREFIX_COLOUR --> style="color: #{searchresults.SUBJECT_PREFIX_COLOUR};"<!-- ENDIF -->>{searchresults.SUBJECT_PREFIX_TITLE}</span> <!-- ENDIF -->]]></inline-action>
+				</inline-edit>
+			</edit>
+			<edit>
+				<find><![CDATA[<dd>{L_TOPIC}: <a href="{searchresults.U_VIEW_TOPIC}">{searchresults.TOPIC_TITLE}</a></dd>]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[{L_TOPIC}:]]></inline-find>
+					<inline-action type="after-add"><![CDATA[<!-- IF searchresults.SUBJECT_PREFIX_TITLE--><!-- IF searchresults.SUBJECT_PREFIX_COLOUR --><span style="color: #{searchresults.SUBJECT_PREFIX_COLOUR};"><!-- ENDIF --> {searchresults.SUBJECT_PREFIX_TITLE}<!-- IF searchresults.SUBJECT_PREFIX_COLOUR --></span><!-- ENDIF --><!-- ENDIF -->]]></inline-action>
+				</inline-edit>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/viewforum_body.html">
 			<edit>
 				<find><![CDATA[<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image:]]></find>

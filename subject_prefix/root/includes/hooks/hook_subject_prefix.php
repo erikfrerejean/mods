@@ -197,6 +197,59 @@ function move_hook_function(&$hook, $topic_ids, $forum_id)
 	*/
 }
 
+/**
+* Add the subject prefix to the search results
+* @param phpbb_hook $hook The phpBB hook object
+* @return void
+*/
+function add_prefix_to_search_results(&$hook)
+{
+	global $db, $template, $user;
+	global $phpEx;
+
+	if ($user->page['page_name'] != 'search.' . $phpEx || ($submit = request_var('submit', false)) !== true)
+	{
+		return;
+	}
+
+	// Collect all topic ids
+	$topic_ids = array();
+	foreach ($template->_tpldata['searchresults'] as $row => $_tpldata)
+	{
+		$topic_ids[$row] = $_tpldata['TOPIC_ID'];
+	}
+
+	// Select the relevant prefixes
+	$topic_prefix = array();
+	$sql = 'SELECT topic_id, subject_prefix_id
+		FROM ' . TOPICS_TABLE . '
+		WHERE ' . $db->sql_in_set('topic_id', array_unique($topic_ids));
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$topic_prefix[$row['topic_id']] = $row['subject_prefix_id'];
+	}
+	$db->sql_freeresult($result);
+
+	// Get all the prefixes from the cache
+	$prefixlist = subject_prefix_core::$sp_cache->obtain_prefix_list();
+
+	// Now lets assign the prefixes to the results
+	foreach ($topic_ids as $tplrow => $topic_id)
+	{
+		if ($topic_prefix[$topic_id] == 0)
+		{
+			continue;
+		}
+
+		$prefix_id = $topic_prefix[$topic_id];
+		$template->alter_block_array('searchresults', array(
+			'SUBJECT_PREFIX_TITLE'	=> (isset($user->lang['SP_' . $prefixlist[$prefix_id]['title']])) ? $user->lang['SP_' . $prefixlist[$prefix_id]['title']] : $prefixlist[$prefix_id]['title'],
+			'SUBJECT_PREFIX_COLOUR'	=> $prefixlist[$prefix_id]['colour'],
+		), $tplrow, 'change');
+	}
+}
+
 // Add our custom hooks
 $phpbb_hook->add_hook('subject_prefix_move_hook');
 
@@ -204,4 +257,5 @@ $phpbb_hook->add_hook('subject_prefix_move_hook');
 $phpbb_hook->register('phpbb_user_session_handler', 'load_subject_prefix_files');
 $phpbb_hook->register(array('template', 'display'), 'add_prefix_dropdown_to_the_posting_page');
 $phpbb_hook->register(array('template', 'display'), 'add_prefix_to_viewtopic');
+$phpbb_hook->register(array('template', 'display'), 'add_prefix_to_search_results');
 $phpbb_hook->register('subject_prefix_move_hook', 'move_hook_function');
