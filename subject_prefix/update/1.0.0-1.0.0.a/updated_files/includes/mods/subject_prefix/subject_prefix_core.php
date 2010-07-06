@@ -39,12 +39,12 @@ abstract class subject_prefix_core
 	/**
 	* @var subject_prefix_cache The Subject Prefix cache object
 	*/
-	public static $sp_cache = null;
+	static public $sp_cache = null;
 
 	/**
 	* Initialise the MOD
 	*/
-	public static function init()
+	static public function init()
 	{
 		global $user;
 
@@ -63,7 +63,7 @@ abstract class subject_prefix_core
 	* 							the prefix will be added to the row that is last created.
 	* @return void
 	*/
-	public static function add_subject_prefix_to_blockrow($prefix_id, $blockname)
+	static public function add_subject_prefix_to_blockrow($prefix_id, $blockname)
 	{
 		global $user;
 
@@ -106,7 +106,7 @@ abstract class subject_prefix_core
 	* @param	array	$sql_ary	The sql data for this post
 	* @return void
 	*/
-	public static function add_prefix_to_posting_sql($post_mode, &$sql_ary)
+	static public function add_prefix_to_posting_sql($post_mode, &$sql_ary)
 	{
 		// Only when posting or editing the topic
 		if ($post_mode != 'post' && $post_mode != 'edit_topic' && $post_mode != 'edit_first_post')
@@ -133,7 +133,7 @@ abstract class subject_prefix_core
 	* Get all prefixes that are allowed
 	* @param Array $allowed Array with the allowed prefix ids
 	*/
-	public static function get_prefixes($allowed)
+	static public function get_prefixes($allowed)
 	{
 		$all = self::$sp_cache->obtain_prefix_list();
 
