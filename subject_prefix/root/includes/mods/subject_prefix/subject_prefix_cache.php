@@ -30,7 +30,7 @@ class subject_prefix_cache extends acm
 	/**
 	* @var Array Array that is used to store all prefix -> forum and forum -> prefix relationships
 	*/
-	private static $prefixforumlist = array(
+	static private $prefixforumlist = array(
 		'fid'	=> array(),
 		'pid'	=> array(),
 	);
@@ -38,7 +38,7 @@ class subject_prefix_cache extends acm
 	/**
 	* @var Array Array containing all prefixes from the database
 	*/
-	private static $prefixlist = array();
+	static private $prefixlist = array();
 
 	/**
 	* Get all the prefixes from the database
