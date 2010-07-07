@@ -42,7 +42,7 @@ abstract class sp_hook
 		if (!class_exists('sp_phpbb'))
 		{
 			global $phpbb_root_path, $phpEx;
-			require($phpbb_root_path . 'includes/mods/subject_prefix/phpbb.' . $phpEx);
+			require($phpbb_root_path . 'includes/mods/subject_prefix/sp_phpbb.' . $phpEx);
 			sp_phpbb::init();
 		}
 	}
