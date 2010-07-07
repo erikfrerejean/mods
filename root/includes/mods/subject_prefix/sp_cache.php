@@ -61,6 +61,14 @@ class sp_cache extends \cache
 
 		return $this->subject_prefixes;
 	}
+
+	/**
+	 * One method all gone
+	 */
+	static public function subject_prefix_quick_clear()
+	{
+		$this->destroy('_subject_prefixes');
+	}
 }
 
 // Drop the phpBB cache and overwrite it with the custom cache
