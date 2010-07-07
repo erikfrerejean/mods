@@ -29,5 +29,12 @@ abstract class sp_core
 
 		// We're going to need this data anyways, better to have the cache class fetch it now
 		sp_phpbb::$cache->obtain_subject_prefixes();
+
+		// Add some language files
+		if (sp_phpbb::$user->page['page_dir'] == 'adm' && sp_phpbb::$user->page['page_name'] == 'index.' . PHP_EXT)
+		{
+			// Include the acp langauge file
+			sp_phpbb::$user->add_lang('mods/subject_prefix/info_acp_subject_prefix');
+		}
 	}
 }
