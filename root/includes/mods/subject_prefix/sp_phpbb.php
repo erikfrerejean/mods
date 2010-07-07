@@ -45,9 +45,9 @@ abstract class sp_phpbb
 		// Set the phpBB objects
 		global $cache, $db, $template, $user;
 		self::$cache	= &$cache;
-		self::$db		= $db;
-		self::$template	= $template;
-		self::$user		= $user;
+		self::$db		= &$db;
+		self::$template	= &$template;
+		self::$user		= &$user;
 
 		// Create constants out of $phpbb_root_path and $phpEx
 		global $phpbb_root_path, $phpEx;

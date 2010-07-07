@@ -26,7 +26,41 @@ if (!class_exists('acm'))
  */
 class sp_cache extends \cache
 {
+	/**
+	 * @var array All prefix data so it will only be fetched once
+	 */
+	private $subject_prefixes = array();
 
+	/**
+	 * Fetch the Subject Prefixes from the database
+	 * @return	Array	All Subject Prefixes
+	 */
+	public function obtain_subject_prefixes()
+	{
+		if (!empty($this->subject_prefixes))
+		{
+			return $this->subject_prefixes;
+		}
+
+		// In cache?
+		if (($this->subject_prefixes = $this->get('_subject_prefixes')) === false)
+		{
+			$sql = 'SELECT *
+				FROM ' . SUBJECT_PREFIX_TABLE;
+			$result = sp_phpbb::$db->sql_query($sql);
+			while ($prefix = sp_phpbb::$db->sql_fetchrow($result))
+			{
+				$this->subject_prefixes[$prefix['id']] = array(
+					'id'		=> $prefix['id'],
+					'title'		=> $prefix['title'],
+					'colour'	=> $prefix['colour'],
+				);
+			}
+			sp_phpbb::$db->sql_freeresult($result);
+		}
+
+		return $this->subject_prefixes;
+	}
 }
 
 // Drop the phpBB cache and overwrite it with the custom cache

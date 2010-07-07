@@ -56,6 +56,7 @@ abstract class sp_hook
 		if (!class_exists('sp_core'))
 		{
 			require PHPBB_ROOT_PATH . 'includes/mods/subject_prefix/sp_core.' . PHP_EXT;
+			sp_core::init();
 		}
 	}
 }

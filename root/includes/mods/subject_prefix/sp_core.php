@@ -21,5 +21,15 @@ if (!defined('IN_PHPBB'))
  */
 abstract class sp_core
 {
+	static public function init()
+	{
+		// Define the database tables
+		global $table_prefix;
+		define('SUBJECT_PREFIX_TABLE', $table_prefix . 'subject_prefixes');
 
+		// We're going to need this data anyways, better to have the cache class fetch it now
+		sp_phpbb::$cache->obtain_subject_prefixes();
+
+		echo'<pre>';var_dump(sp_phpbb::$cache);exit;
+	}
 }
