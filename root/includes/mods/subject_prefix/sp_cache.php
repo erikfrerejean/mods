@@ -15,3 +15,20 @@ if (!defined('IN_PHPBB'))
 {
 	exit;
 }
+
+if (!class_exists('acm'))
+{
+	require PHPBB_ROOT_PATH . 'includes/acm/acm_' . $acm_type . '.' . PHP_EXT;
+}
+
+/**
+ * Class that is used to handle all Subject Prefix related caching
+ */
+class sp_cache extends \cache
+{
+
+}
+
+// Drop the phpBB cache and overwrite it with the custom cache
+sp_phpbb::$cache = null;
+sp_phpbb::$cache = new sp_cache();

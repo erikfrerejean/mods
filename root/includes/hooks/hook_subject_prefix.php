@@ -45,6 +45,12 @@ abstract class sp_hook
 			require($phpbb_root_path . 'includes/mods/subject_prefix/sp_phpbb.' . $phpEx);
 			sp_phpbb::init();
 		}
+
+		// Load the Subject Prefix cache
+		if (!class_exists('sp_cache'))
+		{
+			require PHPBB_ROOT_PATH . 'includes/mods/subject_prefix/sp_cache.' . PHP_EXT;
+		}
 	}
 }
 
