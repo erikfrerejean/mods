@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 /**
  * A wrapper class for the most common phpBB stuff
  */
-abstract class phpbb
+abstract class sp_phpbb
 {
 	/**@#+
 	 * @var mixed all the phpBB common used objects

@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 /**
  * Class that contains all hooked methods
  */
-abstract class subject_prefix_hook
+abstract class sp_hook
 {
 	/**
 	 * Register all subject prefix hooks
@@ -28,7 +28,7 @@ abstract class subject_prefix_hook
 	 */
 	static public function register(&$phpbb_hook)
 	{
-		$phpbb_hook->register('phpbb_user_session_handler', 'self::subject_prefix_init');
+		$phpbb_hook->register('phpbb_user_session_handler', 'subjectprefix\sp_hook::subject_prefix_init');
 	}
 
 	/**
@@ -36,11 +36,17 @@ abstract class subject_prefix_hook
 	 * @param	phpbb_hook	$phpbb_hook	The phpBB hook object
 	 * @return	void
 	 */
-	static private function subject_prefix_init(&$hook)
+	static public function subject_prefix_init(&$hook)
 	{
-
+		// Load the phpBB class
+		if (!class_exists('sp_phpbb'))
+		{
+			global $phpbb_root_path, $phpEx;
+			require($phpbb_root_path . 'includes/mods/subject_prefix/phpbb.' . $phpEx);
+			sp_phpbb::init();
+		}
 	}
 }
 
 // Register
-subject_prefix_hook::register($phpbb_hook);
+sp_hook::register($phpbb_hook);
