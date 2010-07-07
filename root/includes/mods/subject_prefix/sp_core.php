@@ -29,7 +29,5 @@ abstract class sp_core
 
 		// We're going to need this data anyways, better to have the cache class fetch it now
 		sp_phpbb::$cache->obtain_subject_prefixes();
-
-		echo'<pre>';var_dump(sp_phpbb::$cache);exit;
 	}
 }
