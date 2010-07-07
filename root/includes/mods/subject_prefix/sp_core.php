@@ -16,3 +16,10 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+/**
+ * The main Subject Prefix class
+ */
+abstract class sp_core
+{
+
+}

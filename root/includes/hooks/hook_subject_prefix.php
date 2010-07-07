@@ -51,6 +51,12 @@ abstract class sp_hook
 		{
 			require PHPBB_ROOT_PATH . 'includes/mods/subject_prefix/sp_cache.' . PHP_EXT;
 		}
+
+		// Load the Subject Prefix core
+		if (!class_exists('sp_core'))
+		{
+			require PHPBB_ROOT_PATH . 'includes/mods/subject_prefix/sp_core.' . PHP_EXT;
+		}
 	}
 }
 
