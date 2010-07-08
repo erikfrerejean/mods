@@ -70,10 +70,10 @@ class sp_cache extends \cache
 	 */
 	static public function obtain_prefix_forum_tree(&$data, &$forums)
 	{
-		static $_pft = null;
+		static $_pft = array();
 
 		// Only read from cache once
-		if ($_pft === null)
+		if (empty($_pft['data']))
 		{
 			$_pft = sp_phpbb::$cache->get('_prefix_forum_tree');
 		}
