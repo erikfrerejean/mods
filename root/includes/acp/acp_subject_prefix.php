@@ -28,10 +28,27 @@ class acp_subject_prefix
 		// Set some stuff we *really* need
 		$this->tpl_name = 'acp_subject_prefix';
 		add_form_key('acp_subject_prefix');
+		$action	= request_var('action', '');
+
+		// Quick actions
+		switch ($action)
+		{
+			case 'move_down' :
+			case 'move_up'	 :
+				$field_order = request_var('prefix_order', 0);
+				$fid		 = request_var('f', 0);
+				$order_total = $field_order * 2 + (($action == 'move_up') ? -1 : 1);
+
+				$sql = 'UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . "
+					SET prefix_order = $order_total - prefix_order
+					WHERE prefix_order IN ($field_order, " . (($action == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
+				subjectprefix\sp_phpbb::$db->sql_query($sql);
+			break;
+		}
 
 		$data = $forums = array();
 		$sql_ary = array(
-			'SELECT'	=> 'f.forum_id, f.forum_name, sp.*',
+			'SELECT'	=> 'f.forum_id, f.forum_name, sp.*, spt.prefix_order',
 			'FROM'		=> array(
 				SUBJECT_PREFIX_TABLE		=> 'sp',
 				SUBJECT_PREFIX_FORUMS_TABLE	=> 'spt',
@@ -45,7 +62,7 @@ class acp_subject_prefix
 				),
 			),
 			'WHERE'		=> 'spt.prefix_id = sp.prefix_id',
-			'ORDER_BY'	=> 'spt.order',
+			'ORDER_BY'	=> 'spt.prefix_order',
 		);
 		$result	= subjectprefix\sp_phpbb::$db->sql_query(subjectprefix\sp_phpbb::$db->sql_build_query('SELECT', $sql_ary));
 		while ($row = subjectprefix\sp_phpbb::$db->sql_fetchrow($result))
@@ -57,11 +74,10 @@ class acp_subject_prefix
 			}
 
 			$data[$row['forum_id']][] = array(
-//				'forum_id'		=> $row['forum_id'],
-//				'forum_name'	=> $row['forum_name'],
 				'prefix_id'		=> $row['prefix_id'],
 				'prefix_title'	=> $row['prefix_title'],
 				'prefix_colour'	=> $row['prefix_colour'],
+				'prefix_order'	=> $row['prefix_order'],
 			);
 		}
 		subjectprefix\sp_phpbb::$db->sql_freeresult($result);
@@ -81,6 +97,10 @@ class acp_subject_prefix
 					'PREFIX_ID'		=> $prefix['prefix_id'],
 					'PREFIX_NAME'	=> $prefix['prefix_title'],
 					'PREFIX_COLOUR'	=> $prefix['prefix_colour'],
+
+					// Actions
+					'U_MOVE_DOWN'	=> $this->u_action . '&amp;action=move_down&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
+					'U_MOVE_UP'		=> $this->u_action . '&amp;action=move_up&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
 				));
 			}
 		}
