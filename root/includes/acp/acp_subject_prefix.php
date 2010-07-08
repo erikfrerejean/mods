@@ -33,7 +33,7 @@ class acp_subject_prefix
 		// Quick actions
 		if (method_exists($this, 'qa_' . $action))
 		{
-			call_user_func($this, 'qa_' . $action);
+			call_user_func(array($this, 'qa_' . $action));
 		}
 
 		$data = $forums = array();
@@ -80,7 +80,7 @@ class acp_subject_prefix
 	 * Reorder the prefixes
 	 * @return void
 	 */
-	private function aq_move()
+	private function qa_move()
 	{
 		$direction	 = ($_GET['direction'] == 'down') ? 'down' : 'up';
 		$field_order = request_var('prefix_order', 0);
