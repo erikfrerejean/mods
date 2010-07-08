@@ -39,27 +39,30 @@ class acp_subject_prefix
 		$data = $forums = array();
 		subjectprefix\sp_phpbb::$cache->obtain_prefix_forum_tree($data, $forums);
 
-		// Output the list
-		foreach ($data as $forum_id => $prefixes)
+		if (is_array($data) && is_array($forums))
 		{
-			// The forum block
-			subjectprefix\sp_phpbb::$template->assign_block_vars('forumrow', array(
-				'FORUMNAME'	=> $forums[$forum_id],
-			));
-
-			// The prefixes
-			foreach ($prefixes as $prefix)
+			// Output the list
+			foreach ($data as $forum_id => $prefixes)
 			{
-				subjectprefix\sp_phpbb::$template->assign_block_vars('forumrow.prefixrow', array(
-					'PREFIX_ID'		=> $prefix['prefix_id'],
-					'PREFIX_NAME'	=> $prefix['prefix_title'],
-					'PREFIX_COLOUR'	=> $prefix['prefix_colour'],
-
-					// Actions
-					'U_DELETE'		=> $this->u_action . '&amp;action=delete&amp;pid=' . $prefix['prefix_id'],
-					'U_MOVE_DOWN'	=> $this->u_action . '&amp;action=move&amp;direction=down&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
-					'U_MOVE_UP'		=> $this->u_action . '&amp;action=move&amp;direction=up&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
+				// The forum block
+				subjectprefix\sp_phpbb::$template->assign_block_vars('forumrow', array(
+					'FORUMNAME'	=> $forums[$forum_id],
 				));
+
+				// The prefixes
+				foreach ($prefixes as $prefix)
+				{
+					subjectprefix\sp_phpbb::$template->assign_block_vars('forumrow.prefixrow', array(
+						'PREFIX_ID'		=> $prefix['prefix_id'],
+						'PREFIX_NAME'	=> $prefix['prefix_title'],
+						'PREFIX_COLOUR'	=> $prefix['prefix_colour'],
+
+						// Actions
+						'U_DELETE'		=> $this->u_action . '&amp;action=delete&amp;pid=' . $prefix['prefix_id'],
+						'U_MOVE_DOWN'	=> $this->u_action . '&amp;action=move&amp;direction=down&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
+						'U_MOVE_UP'		=> $this->u_action . '&amp;action=move&amp;direction=up&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
+					));
+				}
 			}
 		}
 	}

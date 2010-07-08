@@ -40,4 +40,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'ACP_SUBJECT_PREFIX'	=> 'Subject Prefix',
+
+	'NO_PREFIXES'			=> 'You haven\'t created any subject prefixes yet',
 ));
