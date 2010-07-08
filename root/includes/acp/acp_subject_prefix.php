@@ -31,25 +31,9 @@ class acp_subject_prefix
 		$action	= request_var('action', '');
 
 		// Quick actions
-		switch ($action)
+		if (method_exists($this, 'qa_' . $action))
 		{
-			case 'delete'	 :
-				$pid = request_var('pid', 0);
-				subjectprefix\sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE prefix_id = ' . $pid);
-				subjectprefix\sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . ' WHERE prefix_id = ' . $pid);
-			break;
-
-			case 'move_down' :
-			case 'move_up'	 :
-				$field_order = request_var('prefix_order', 0);
-				$fid		 = request_var('f', 0);
-				$order_total = $field_order * 2 + (($action == 'move_up') ? -1 : 1);
-
-				$sql = 'UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . "
-					SET prefix_order = $order_total - prefix_order
-					WHERE prefix_order IN ($field_order, " . (($action == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
-				subjectprefix\sp_phpbb::$db->sql_query($sql);
-			break;
+			call_user_func($this, 'qa_' . $action);
 		}
 
 		$data = $forums = array();
@@ -70,7 +54,7 @@ class acp_subject_prefix
 			'WHERE'		=> 'spt.prefix_id = sp.prefix_id',
 			'ORDER_BY'	=> 'spt.prefix_order',
 		);
-		$result	= subjectprefix\sp_phpbb::$db->sql_query(subjectprefix\sp_phpbb::$db->sql_build_query('SELECT', $sql_ary));
+		$result	= subjectprefix\sp_phpbb::$db->sql_query(subjectprefix\sp_phpbb::$db->sql_build_query('SELECT', $sql_ary), time());
 		while ($row = subjectprefix\sp_phpbb::$db->sql_fetchrow($result))
 		{
 			if (!isset($data[$row['forum_id']]))
@@ -106,10 +90,39 @@ class acp_subject_prefix
 
 					// Actions
 					'U_DELETE'		=> $this->u_action . '&amp;action=delete&amp;pid=' . $prefix['prefix_id'],
-					'U_MOVE_DOWN'	=> $this->u_action . '&amp;action=move_down&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
-					'U_MOVE_UP'		=> $this->u_action . '&amp;action=move_up&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
+					'U_MOVE_DOWN'	=> $this->u_action . '&amp;action=move&amp;direction=down&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
+					'U_MOVE_UP'		=> $this->u_action . '&amp;action=move&amp;direction=up&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
 				));
 			}
 		}
+	}
+
+	/**
+	 * Delete a prefix
+	 * @return void
+	 */
+	private function qa_delete()
+	{
+		$pid = request_var('pid', 0);
+		subjectprefix\sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE prefix_id = ' . $pid);
+		subjectprefix\sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . ' WHERE prefix_id = ' . $pid);
+	}
+
+	/**
+	 * Reorder the prefixes
+	 * @return void
+	 */
+	private function aq_move()
+	{
+		$direction	 = ($_GET['direction'] == 'down') ? 'down' : 'up';
+		$field_order = request_var('prefix_order', 0);
+		$fid		 = request_var('f', 0);
+		$order_total = $field_order * 2 + (($direction == 'up') ? -1 : 1);
+
+		$sql = 'UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . "
+			SET prefix_order = $order_total - prefix_order
+			WHERE prefix_order IN ($field_order, " . (($direction == 'up') ? $field_order - 1 : $field_order + 1) . ')
+				AND forum_id = ' . $fid;
+		subjectprefix\sp_phpbb::$db->sql_query($sql);
 	}
 }
