@@ -19,12 +19,13 @@
 <!-- BEGIN forumrow -->
     <table cellpadding="1">
 	<thead>
+	    <!-- <tr onclick="displayPrefixRow({forumrow.FORUM_ID});"> -->
 	    <tr>
 		<th>{forumrow.FORUMNAME}</th>
 		<th>{L_OPTIONS}</th>
 	    </tr>
 	</thead>
-	<tbody>
+	<tbody class="prefixrowbody" id="prefixrowbody-{forumrow.FORUM_ID}">
 	    <!-- BEGIN prefixrow -->
 	    <tr>
 		<td>{prefixrow.PREFIX_NAME}</td>
@@ -49,5 +50,51 @@
 <!-- BEGINELSE -->
     <p>{L_NO_PREFIXES}</p>
 <!-- END forumrow -->
+
+<script type="text/javascript">
+/**
+ * Function by: http://www.dustindiaz.com/getelementsbyclass/
+ */
+function getElementsByClass(searchClass,node,tag) {
+    var classElements = new Array();
+    if ( node == null )
+	node = document;
+    if ( tag == null )
+	tag = '*';
+    var els = node.getElementsByTagName(tag);
+    var elsLen = els.length;
+    var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+    for (i = 0, j = 0; i < elsLen; i++) {
+	if ( pattern.test(els[i].className) ) {
+	    classElements[j] = els[i];
+	    j++;
+	}
+    }
+    return classElements;
+}
+
+// Hide all prefix bodies
+function hideAllPrefixRows()
+{
+    var rows = getElementsByClass('prefixrowbody');
+    for (i = 0; i < rows.length; i++)
+    {
+	rows[i].style.display = 'none';
+    }
+}
+
+// Display a given prefix row
+function displayPrefixRow(id)
+{
+    var el = 'prefixrowbody-' + id;
+
+    // First make them all dissapear
+    hideAllPrefixRows();
+
+    dE(el, 1);
+}
+
+hideAllPrefixRows();
+</script>
 
 <!-- INCLUDE overall_footer.html -->

@@ -48,6 +48,7 @@ class acp_subject_prefix
 				// The forum block
 				subjectprefix\sp_phpbb::$template->assign_block_vars('forumrow', array(
 					'FORUMNAME'	=> $forums[$forum_id],
+					'FORUM_ID'	=> $forum_id,
 				));
 
 				// The prefixes
