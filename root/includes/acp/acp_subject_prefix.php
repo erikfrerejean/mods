@@ -37,40 +37,7 @@ class acp_subject_prefix
 		}
 
 		$data = $forums = array();
-		$sql_ary = array(
-			'SELECT'	=> 'f.forum_id, f.forum_name, sp.*, spt.prefix_order',
-			'FROM'		=> array(
-				SUBJECT_PREFIX_TABLE		=> 'sp',
-				SUBJECT_PREFIX_FORUMS_TABLE	=> 'spt',
-			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(
-						FORUMS_TABLE	=> 'f',
-					),
-					'ON'	=> 'f.forum_id = spt.forum_id',
-				),
-			),
-			'WHERE'		=> 'spt.prefix_id = sp.prefix_id',
-			'ORDER_BY'	=> 'spt.prefix_order',
-		);
-		$result	= subjectprefix\sp_phpbb::$db->sql_query(subjectprefix\sp_phpbb::$db->sql_build_query('SELECT', $sql_ary), time());
-		while ($row = subjectprefix\sp_phpbb::$db->sql_fetchrow($result))
-		{
-			if (!isset($data[$row['forum_id']]))
-			{
-				$data[$row['forum_id']]		= array();
-				$forums[$row['forum_id']]	= $row['forum_name'];
-			}
-
-			$data[$row['forum_id']][] = array(
-				'prefix_id'		=> $row['prefix_id'],
-				'prefix_title'	=> $row['prefix_title'],
-				'prefix_colour'	=> $row['prefix_colour'],
-				'prefix_order'	=> $row['prefix_order'],
-			);
-		}
-		subjectprefix\sp_phpbb::$db->sql_freeresult($result);
+		subjectprefix\sp_phpbb::$cache->obtain_prefix_forum_tree($data, $forums);
 
 		// Output the list
 		foreach ($data as $forum_id => $prefixes)
