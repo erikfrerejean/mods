@@ -38,6 +38,7 @@ class acp_subject_prefix
 
 		$data = $forums = array();
 		subjectprefix\sp_phpbb::$cache->obtain_prefix_forum_tree($data, $forums);
+		ksort($data);
 
 		if (is_array($data) && is_array($forums))
 		{
