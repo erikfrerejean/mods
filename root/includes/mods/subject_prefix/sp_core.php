@@ -26,6 +26,7 @@ abstract class sp_core
 		// Define the database tables
 		global $table_prefix;
 		define('SUBJECT_PREFIX_TABLE', $table_prefix . 'subject_prefixes');
+		define('SUBJECT_PREFIX_FORUMS_TABLE', $table_prefix . 'subject_prefix_forums');
 
 		// We're going to need this data anyways, better to have the cache class fetch it now
 		sp_phpbb::$cache->obtain_subject_prefixes();

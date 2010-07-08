@@ -25,15 +25,28 @@ if (!defined('IN_PHPBB'))
 $versions = array(
 	// Version Alpha 1
 	'1.2.0-A1'	=> array(
-		// The main Subject Prefix table
-		array(SUBJECT_PREFIX_TABLE, array(
-			'COLUMNS' => array(
-				'prefix_id'		=> array('UINT', NULL, 'auto_increment'),
-				'prefix_title'	=> array('VCHAR:255', ''),
-				'prefix_colour'	=> array('VCHAR:6', '000000'),
-			),
+		'table_add' => array(
+			// The main Subject Prefix table
+			array(SUBJECT_PREFIX_TABLE, array(
+				'COLUMNS'	=> array(
+					'prefix_id'		=> array('UINT', NULL, 'auto_increment'),
+					'prefix_title'	=> array('VCHAR:255', ''),
+					'prefix_colour'	=> array('VCHAR:6', '000000'),
+				),
+				'PRIMARY_KEY' => 'prefix_id',
+			)),
 
-			'PRIMARY_KEY' => 'prefix_id',
-		)),
+			// The prefix-forum table
+			array(SUBJECT_PREFIX_FORUMS_TABLE, array(
+				'COLUMNS'	=> array(
+					'prefix_id'	=> array('UINT', 0),
+					'forum_id'	=> array('UINT', 0),
+				),
+				'KEYS'		=> array(
+					'pid'	=> array('INDEX', array('prefix_id')),
+					'fid'	=> array('INDEX', array('forum_id')),
+				)
+			)),
+		),
 	),
 );
