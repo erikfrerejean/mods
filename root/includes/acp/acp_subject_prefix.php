@@ -45,6 +45,7 @@ class acp_subject_prefix
 				),
 			),
 			'WHERE'		=> 'spt.prefix_id = sp.prefix_id',
+			'ORDER_BY'	=> 'spt.order',
 		);
 		$result	= subjectprefix\sp_phpbb::$db->sql_query(subjectprefix\sp_phpbb::$db->sql_build_query('SELECT', $sql_ary));
 		while ($row = subjectprefix\sp_phpbb::$db->sql_fetchrow($result))
