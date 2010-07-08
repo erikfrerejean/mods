@@ -39,8 +39,9 @@ $versions = array(
 			// The prefix-forum table
 			array(SUBJECT_PREFIX_FORUMS_TABLE, array(
 				'COLUMNS'	=> array(
-					'prefix_id'	=> array('UINT', 0),
-					'forum_id'	=> array('UINT', 0),
+					'prefix_id'		=> array('UINT', 0),
+					'forum_id'		=> array('UINT', 0),
+					'prefix_order'	=> array('UINT', 0),
 				),
 				'KEYS'		=> array(
 					'pid'	=> array('INDEX', array('prefix_id')),
