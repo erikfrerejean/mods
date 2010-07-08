@@ -33,6 +33,12 @@ class acp_subject_prefix
 		// Quick actions
 		switch ($action)
 		{
+			case 'delete'	 :
+				$pid = request_var('pid', 0);
+				subjectprefix\sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE prefix_id = ' . $pid);
+				subjectprefix\sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . ' WHERE prefix_id = ' . $pid);
+			break;
+
 			case 'move_down' :
 			case 'move_up'	 :
 				$field_order = request_var('prefix_order', 0);
@@ -99,6 +105,7 @@ class acp_subject_prefix
 					'PREFIX_COLOUR'	=> $prefix['prefix_colour'],
 
 					// Actions
+					'U_DELETE'		=> $this->u_action . '&amp;action=delete&amp;pid=' . $prefix['prefix_id'],
 					'U_MOVE_DOWN'	=> $this->u_action . '&amp;action=move_down&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
 					'U_MOVE_UP'		=> $this->u_action . '&amp;action=move_up&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
 				));
