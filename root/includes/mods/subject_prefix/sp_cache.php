@@ -135,7 +135,8 @@ class sp_cache extends \cache
 	 */
 	static public function subject_prefix_quick_clear()
 	{
-		$this->destroy('_subject_prefixes');
+		sp_phpbb::$cache->destroy('_subject_prefixes');
+		sp_phpbb::$cache->destroy('_prefix_forum_tree');
 	}
 }
 

@@ -73,6 +73,7 @@ class acp_subject_prefix
 		$pid = request_var('pid', 0);
 		subjectprefix\sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE prefix_id = ' . $pid);
 		subjectprefix\sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . ' WHERE prefix_id = ' . $pid);
+		subjectprefix\sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -91,5 +92,6 @@ class acp_subject_prefix
 			WHERE prefix_order IN ($field_order, " . (($direction == 'up') ? $field_order - 1 : $field_order + 1) . ')
 				AND forum_id = ' . $fid;
 		subjectprefix\sp_phpbb::$db->sql_query($sql);
+		subjectprefix\sp_cache::subject_prefix_quick_clear();
 	}
 }
