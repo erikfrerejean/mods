@@ -33,9 +33,6 @@ $tableid	= substr($tablename, 13);
 // Fetch the posted list
 $prefixlist = request_var($tablename, array(0 => ''));
 
-// Pop the first that the header
-//array_pop($prefixlist);
-
 // Run through the list
 $sqls = array();
 foreach ($prefixlist as $order => $prefix)
@@ -53,7 +50,12 @@ foreach ($prefixlist as $order => $prefix)
 	$order = $order - 1;
 
 	// Update in the db
-//	$sqls[] = 'UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . ' SET prefix_order = ' . $order . ' WHERE prefix_id = ' . $prefix;
 	subjectprefix\sp_phpbb::$db->sql_query('UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . ' SET prefix_order = ' . $order . ' WHERE prefix_id = ' . $prefix);
 }
-//echo '<pre>' . implode("\n", $sqls);
+
+// Tell the template we're good ^^
+if (subjectprefix\sp_phpbb::$db->sql_affectedrows() > 0)
+{
+	echo 'success';
+}
+exit_handler();

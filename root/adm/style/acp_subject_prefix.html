@@ -106,7 +106,8 @@ $(document).ready(function() {
 		    data    : $.tableDnD.serialize(),
 		    success : function(html) {
 			// Show the message
-			$('.successbox').show();
+			if (html == 'success')
+			    $('.successbox').show();
 		    },
 		});
 	    },
