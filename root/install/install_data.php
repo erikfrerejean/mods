@@ -53,13 +53,23 @@ $versions = array(
 		// Throw the permissions in tha mix
 		'permission_add'	=> array(
 			array('a_subject_prefix', true),	// Main admin permission
+			array('acl_a_subject_prefix_create', true),	// Can create/edit prefixes
 		),
 
 		'permission_set'	=> array(
 			// Admin roles
-			array('ROLE_ADMIN_STANDARD', 'a_subject_prefix'),
-			array('ROLE_ADMIN_FORUM', 'a_subject_prefix'),
-			array('ROLE_ADMIN_FULL', 'a_subject_preifx'),
+			array('ROLE_ADMIN_STANDARD', array(
+				'a_subject_prefix',
+				'acl_a_subject_prefix_create'
+			)),
+			array('ROLE_ADMIN_FORUM', array(
+				'a_subject_prefix',
+				'acl_a_subject_prefix_create'
+			)),
+			array('ROLE_ADMIN_FULL', array(
+				'a_subject_prefix',
+				'acl_a_subject_prefix_create'
+			)),
 		)
 	),
 );

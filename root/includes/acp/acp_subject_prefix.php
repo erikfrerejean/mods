@@ -61,7 +61,7 @@ class acp_subject_prefix
 						'PREFIX_COLOUR'	=> $prefix['prefix_colour'],
 
 						// Actions
-						'U_DELETE'		=> $this->u_action . '&amp;action=delete&amp;pid=' . $prefix['prefix_id'],
+						'U_DELETE'		=> (subjectprefix\sp_phpbb::$auth->acl_get('acl_a_subject_prefix_create')) ? $this->u_action . '&amp;action=delete&amp;pid=' . $prefix['prefix_id'] : false,
 						'U_MOVE_DOWN'	=> $this->u_action . '&amp;action=move&amp;direction=down&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
 						'U_MOVE_UP'		=> $this->u_action . '&amp;action=move&amp;direction=up&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
 					));
