@@ -33,6 +33,8 @@ class acp_subject_prefix_info
 			'version'	=> '1.2.0',
 			'modes'		=> array(
 				'main'	=> array('title' => 'ACP_SUBJECT_PREFIX', 'auth' => 'acl_a_subject_prefix', 'cat' => array('ACP_SUBJECT_PREFIX')),
+				'add'	=> array('title' => 'ACP_SUBJECT_PREFIX_ADD', 'auth' => 'acl_a_subject_prefix_create', 'cat' => array('ACP_SUBJECT_PREFIX')),
+				'edit'	=> array('title' => 'ACP_SUBJECT_PREFIX_ADD', 'auth' => 'acl_a_subject_prefix_create', 'display' => false, 'cat' => array('ACP_SUBJECT_PREFIX')),
 			),
 		);
 	}
