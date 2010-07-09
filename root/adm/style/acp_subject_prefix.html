@@ -17,7 +17,7 @@
 <h1>{L_ACP_SUBJECT_PREFIX}</h1>
 
 <!-- BEGIN forumrow -->
-    <table cellpadding="1">
+    <table cellspacing="1">
 	<thead>
 	    <!-- <tr onclick="displayPrefixRow({forumrow.FORUM_ID});"> -->
 	    <tr>
@@ -27,7 +27,7 @@
 	</thead>
 	<tbody class="prefixrowbody" id="prefixrowbody-{forumrow.FORUM_ID}">
 	    <!-- BEGIN prefixrow -->
-	    <tr>
+	    <tr class="<!-- IF prefixrow.S_ROW_COUNT is odd -->row2<!-- ELSE -->row1<!-- ENDIF -->">
 		<td>{prefixrow.PREFIX_NAME}</td>
 		<td style="width: 80px; text-align: right; white-space: nowrap">
 		    <!-- IF prefixrow.S_FIRST_ROW && not prefixrow.S_LAST_ROW -->
