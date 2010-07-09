@@ -72,6 +72,7 @@ $(document).ready(function() {
 
 	// The move buttons break due to the drag-drop stuff, disable them
 	$('.moveButtons', this).remove();
+	$('.moveButtons', this).parent().css('width', 40);
 
 	// Init drag-drop
 	$(this).tableDnD({
@@ -157,7 +158,10 @@ function displayPrefixTable(ele, fromCookie)
     // Display the box
     $('tbody', table).show();
 
-    // Set a cookie so we know which "prefixlist" is open atm
+    // I love rock n' roll
+    // So put another cookie in the jukebox, baby
+    // I love rock n' roll
+    // So come and take your time and dance with me
     var selected = $(table).attr('id');
     $.cookie(cookieName, selected, { expires: 365, path: "/" });
 }
