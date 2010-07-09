@@ -642,56 +642,56 @@ var cookieName = 'acpprefixcollapsed';
 $(document).ready(function() {
     // Hide all tables
     $('#main > table').each(function(index) {
-	hidePrefixTable(this);
+        hidePrefixTable(this);
 
-	// Bind the onclick to the th
-	$('thead > tr > th:first', this).click(function() {
-	    displayPrefixTable(this);
-	});
+        // Bind the onclick to the th
+        $('thead > tr > th:first', this).click(function() {
+            displayPrefixTable(this);
+        });
 
-	// The move buttons break due to the drag-drop stuff, disable them
-	$('.moveButtons', this).remove();
-	$('.moveButtons', this).parent().css('width', 40);
+        // The move buttons break due to the drag-drop stuff, disable them
+        $('.moveButtons', this).remove();
+        $('.moveButtons', this).parent().css('width', 40);
 
-	// Init drag-drop
-	$(this).tableDnD({
-	    onDragClass	: 'row3',
-	    onDrop	: function(table, row) {
-		// Fix row colouring
-		var rowClassCorrect	= '';
-		var rowClassIncorrect	= '';
+        // Init drag-drop
+        $(this).tableDnD({
+            onDragClass	: 'row3',
+            onDrop	: function(table, row) {
+                // Fix row colouring
+                var rowClassCorrect	= '';
+                var rowClassIncorrect	= '';
 
-		$('tbody > tr', table).each(function(index) {
-		    rowClassCorrect	= (index % 2 == 0) ? 'row1' : 'row2';
-		    rowClassIncorrect	= (index % 2 == 0) ? 'row2' : 'row1';
+                $('tbody > tr', table).each(function(index) {
+                    rowClassCorrect	= (index % 2 == 0) ? 'row1' : 'row2';
+                    rowClassIncorrect	= (index % 2 == 0) ? 'row2' : 'row1';
 
-		    //alert (rowClassCorrect + "\t" + rowClassIncorrect + "\n" + $(this).attr('class'));
-		    // If incorrect class remove the class.
-		    if ($(this).hasClass(rowClassIncorrect))
-		    {
-			$(this).removeClass(rowClassIncorrect);
-		    }
+                    //alert (rowClassCorrect + "\t" + rowClassIncorrect + "\n" + $(this).attr('class'));
+                    // If incorrect class remove the class.
+                    if ($(this).hasClass(rowClassIncorrect))
+                    {
+                        $(this).removeClass(rowClassIncorrect);
+                    }
 
-		    // If needed assign the new class
-		    if ($(this).hasClass(rowClassCorrect) == false)
-		    {
-			$(this).addClass(rowClassCorrect);
-		    }
-		});
+                    // If needed assign the new class
+                    if ($(this).hasClass(rowClassCorrect) == false)
+                    {
+                        $(this).addClass(rowClassCorrect);
+                    }
+                });
 
-		// Now send this change to the server so we can store it ^^
-		$.ajax({
-		    type    : 'POST',
-		    url     : '{U_SUBJECT_PREFIX_AJAX_REQUEST}&tablename=' + $(table).attr('id'),
-		    data    : $.tableDnD.serialize(),
-		    success : function(html) {
-			// Show the message
-			if (html == 'success')
-			    $('.successbox').show();
-		    },
-		});
-	    },
-	});
+                // Now send this change to the server so we can store it ^^
+                $.ajax({
+                    type    : 'POST',
+                    url     : '{U_SUBJECT_PREFIX_AJAX_REQUEST}&tablename=' + $(table).attr('id'),
+                    data    : $.tableDnD.serialize(),
+                    success : function(html) {
+                    // Show the message
+                    if (html == 'success')
+                        $('.successbox').show();
+                    },
+                });
+            },
+        });
     });
 
     // Can I haz cookie
