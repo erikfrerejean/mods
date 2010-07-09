@@ -23,6 +23,7 @@ $user->setup();
 // Permission check
 if (!isset($user->data['session_admin']) || !$user->data['session_admin'])
 {
+	garbage_collection();
 	exit_handler();
 }
 
@@ -58,4 +59,5 @@ if (subjectprefix\sp_phpbb::$db->sql_affectedrows() > 0)
 {
 	echo 'success';
 }
+garbage_collection();
 exit_handler();
