@@ -632,3 +632,115 @@ jQuery.fn.extend(
 		tableDnDSerialize: jQuery.tableDnD.serializeTables
 	}
 );
+
+/**
+ * The Subject prefix javascript stuff
+ * This is build around all above libraries
+ */
+var cookieName = 'acpprefixcollapsed';
+
+$(document).ready(function() {
+    // Hide all tables
+    $('#main > table').each(function(index) {
+	hidePrefixTable(this);
+
+	// Bind the onclick to the th
+	$('thead > tr > th:first', this).click(function() {
+	    displayPrefixTable(this);
+	});
+
+	// The move buttons break due to the drag-drop stuff, disable them
+	$('.moveButtons', this).remove();
+	$('.moveButtons', this).parent().css('width', 40);
+
+	// Init drag-drop
+	$(this).tableDnD({
+	    onDragClass	: 'row3',
+	    onDrop	: function(table, row) {
+		// Fix row colouring
+		var rowClassCorrect	= '';
+		var rowClassIncorrect	= '';
+
+		$('tbody > tr', table).each(function(index) {
+		    rowClassCorrect	= (index % 2 == 0) ? 'row1' : 'row2';
+		    rowClassIncorrect	= (index % 2 == 0) ? 'row2' : 'row1';
+
+		    //alert (rowClassCorrect + "\t" + rowClassIncorrect + "\n" + $(this).attr('class'));
+		    // If incorrect class remove the class.
+		    if ($(this).hasClass(rowClassIncorrect))
+		    {
+			$(this).removeClass(rowClassIncorrect);
+		    }
+
+		    // If needed assign the new class
+		    if ($(this).hasClass(rowClassCorrect) == false)
+		    {
+			$(this).addClass(rowClassCorrect);
+		    }
+		});
+
+		// Now send this change to the server so we can store it ^^
+		$.ajax({
+		    type    : 'POST',
+		    url     : '{U_SUBJECT_PREFIX_AJAX_REQUEST}&tablename=' + $(table).attr('id'),
+		    data    : $.tableDnD.serialize(),
+		    success : function(html) {
+			// Show the message
+			if (html == 'success')
+			    $('.successbox').show();
+		    },
+		});
+	    },
+	});
+    });
+
+    // Can I haz cookie
+    var showObject = null;
+    var cookie = $.cookie(cookieName);
+    if (!cookie)
+    {
+	showObject = $('#main table:first');
+    }
+    else
+    {
+	// Yes, restore the last displayed list
+	showObject = $('#main > #' + cookie);
+    }
+    displayPrefixTable(showObject, true);
+});
+
+function hidePrefixTable(ele)
+{
+    // Hide the options column
+    $('thead > tr > th:gt(0)', ele).hide();
+
+    // Hide the body
+    $('tbody', ele).hide();
+}
+
+function displayPrefixTable(ele, fromCookie)
+{
+    // Hide all others
+    $('#main > table').each(function(index) {
+	hidePrefixTable(this);
+    });
+
+    // Get the table
+    if (fromCookie != null)
+	var table = ele;
+    else
+	var table = $(ele).parent().parent().parent();
+
+    // Display the options column
+    $('thead > tr > th:gt(0)', table).show();
+
+    // Display the box
+    $('tbody', table).show();
+
+    // I love rock n' roll
+    // So put another cookie in the jukebox, baby
+    // I love rock n' roll
+    // So come and take your time and dance with me
+    var selected = $(table).attr('id');
+    $.cookie(cookieName, selected, { expires: 365, path: "/" });
+}
