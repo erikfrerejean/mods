@@ -27,6 +27,7 @@ class acp_subject_prefix
 	{
 		// Set some stuff we *really* need
 		$this->tpl_name = 'acp_subject_prefix';
+		$this->page_title = 'ACP_SUBJECT_PREFIX';
 		add_form_key('acp_subject_prefix');
 		$action	= request_var('action', '');
 
