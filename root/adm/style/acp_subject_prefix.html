@@ -15,17 +15,16 @@
 <!-- INCLUDE overall_header.html -->
 
 <h1>{L_ACP_SUBJECT_PREFIX}</h1>
-
+<p><!-- IF .forumrow -->{L_ACP_SUBJECT_PREFIX_EXPLAIN}<!-- ELSE -->{L_NO_PREFIXES}<!-- ENDIF --></p>
 <!-- BEGIN forumrow -->
-    <table cellspacing="1">
+    <table cellspacing="1" id="prefixrowbody{forumrow.FORUM_ID}">
 	<thead>
-	    <!-- <tr onclick="displayPrefixRow({forumrow.FORUM_ID});"> -->
 	    <tr>
 		<th>{forumrow.FORUMNAME}</th>
 		<th>{L_OPTIONS}</th>
 	    </tr>
 	</thead>
-	<tbody class="prefixrowbody" id="prefixrowbody-{forumrow.FORUM_ID}">
+	<tbody class="prefixrowbody">
 	    <!-- BEGIN prefixrow -->
 	    <tr class="<!-- IF prefixrow.S_ROW_COUNT is odd -->row2<!-- ELSE -->row1<!-- ENDIF -->">
 		<td>{prefixrow.PREFIX_NAME}</td>
@@ -47,55 +46,67 @@
 	    <!-- END prefixrow -->
 	</tbody>
     </table>
-<!-- BEGINELSE -->
-    <p>{L_NO_PREFIXES}</p>
 <!-- END forumrow -->
 
+<script type="text/javascript" src="style/subject_prefix.js"></script>
 <script type="text/javascript">
-/**
- * Function by: http://www.dustindiaz.com/getelementsbyclass/
- *
-function getElementsByClass(searchClass,node,tag) {
-    var classElements = new Array();
-    if ( node == null )
-	node = document;
-    if ( tag == null )
-	tag = '*';
-    var els = node.getElementsByTagName(tag);
-    var elsLen = els.length;
-    var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-    for (i = 0, j = 0; i < elsLen; i++) {
-	if ( pattern.test(els[i].className) ) {
-	    classElements[j] = els[i];
-	    j++;
-	}
-    }
-    return classElements;
-}
+var cookieName = 'acpprefixcollapsed';
 
-// Hide all prefix bodies
-function hideAllPrefixRows()
-{
-    var rows = getElementsByClass('prefixrowbody');
-    for (i = 0; i < rows.length; i++)
+$(document).ready(function() {
+    // Hide all tables
+    $('#main > table').each(function(index) {
+	hidePrefixTable(this);
+
+	// Bind the onclick to the th
+	$('thead > tr > th:first', this).click(function() {
+	    displayPrefixTable(this);
+	});
+    });
+
+    // Do we have a cookie?
+    var cookie = $.cookie(cookieName);
+    if (!cookie)
     {
-	rows[i].style.display = 'none';
+	return;
     }
-}
 
-// Display a given prefix row
-function displayPrefixRow(id)
+    // Yes, restore the last displayed list
+    var cookieObj = $('#main > #' + cookie);
+    displayPrefixTable(cookieObj, true);
+});
+
+function hidePrefixTable(ele)
 {
-    var el = 'prefixrowbody-' + id;
+    // Hide the options column
+    $('thead > tr > th:gt(0)', ele).hide();
 
-    // First make them all dissapear
-    hideAllPrefixRows();
-
-    dE(el, 1);
+    // Hide the body
+    $('tbody', ele).hide();
 }
 
-hideAllPrefixRows();
-*/
+function displayPrefixTable(ele, fromCookie)
+{
+    // Hide all others
+    $('#main > table').each(function(index) {
+	hidePrefixTable(this);
+    });
+
+    // Get the table
+    if (fromCookie != null)
+	var table = ele;
+    else
+	var table = $(ele).parent().parent().parent();
+
+    // Display the options column
+    $('thead > tr > th:gt(0)', table).show();
+
+    // Display the box
+    $('tbody', table).show();
+
+    // Set a cookie so we know which "prefixlist" is open atm
+    var selected = $(table).attr('id');
+    $.cookie(cookieName, selected, { expires: 365, path: "/" });
+}
 </script>
 
 <!-- INCLUDE overall_footer.html -->

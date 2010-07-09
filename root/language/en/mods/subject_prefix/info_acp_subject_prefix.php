@@ -39,7 +39,8 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACP_SUBJECT_PREFIX'	=> 'Subject Prefix',
+	'ACP_SUBJECT_PREFIX'			=> 'Subject Prefix',
+	'ACP_SUBJECT_PREFIX_EXPLAIN'	=> 'This page can be used to manage prefixes on a forum basis, by default all forums are collapsed to prevent this page from growing to big. Click on a forum name to display the prefixes that you\'ve set for this forum and edit them accordingly',
 
 	'NO_PREFIXES'			=> 'You haven\'t created any subject prefixes yet',
 ));
