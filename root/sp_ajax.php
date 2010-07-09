@@ -21,7 +21,7 @@ $auth->acl($user->data);
 $user->setup();
 
 // Permission check
-if (!isset($user->data['session_admin']) || !$user->data['session_admin'])
+if (!isset($user->data['session_admin']) || !$user->data['session_admin'] || $auth->acl_get('!a_'))
 {
 	garbage_collection();
 	exit_handler();
