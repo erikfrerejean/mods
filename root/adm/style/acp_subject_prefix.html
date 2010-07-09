@@ -114,15 +114,18 @@ $(document).ready(function() {
     });
 
     // Can I haz cookie
+    var showObject = null;
     var cookie = $.cookie(cookieName);
     if (!cookie)
     {
-	return;
+	showObject = $('#main table:first');
     }
-
-    // Yes, restore the last displayed list
-    var cookieObj = $('#main > #' + cookie);
-    displayPrefixTable(cookieObj, true);
+    else
+    {
+	// Yes, restore the last displayed list
+	showObject = $('#main > #' + cookie);
+    }
+    displayPrefixTable(showObject, true);
 });
 
 function hidePrefixTable(ele)
