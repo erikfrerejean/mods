@@ -29,6 +29,7 @@ abstract class sp_hook
 	static public function register(&$phpbb_hook)
 	{
 		$phpbb_hook->register('phpbb_user_session_handler', 'subjectprefix\sp_hook::subject_prefix_init');
+		$phpbb_hook->register(array('template', 'display'), 'subjectprefix\sp_hook::subject_prefix_template_hook');
 	}
 
 	/**
@@ -58,6 +59,17 @@ abstract class sp_hook
 			require PHPBB_ROOT_PATH . 'includes/mods/subject_prefix/sp_core.' . PHP_EXT;
 			sp_core::init();
 		}
+	}
+
+	/**
+	 * A hook that is used to change the behavior of phpBB just before the templates
+	 * are displayed.
+	 * @param	phpbb_hook	$phpbb_hook	The phpBB hook object
+	 * @return	void
+	 */
+	static public function subject_prefix_template_hook(&$hook)
+	{
+
 	}
 }
 
