@@ -76,16 +76,6 @@ class acp_subject_prefix
 	}
 
 	/**
-	 * Handle ajax calls
-	 * @return void
-	 */
-	private function qa_ajax()
-	{
-		$_req = var_export($_REQUEST, true);
-		echo '<pre>' . $_req;
-	}
-
-	/**
 	 * Delete a prefix
 	 * @return void
 	 */
