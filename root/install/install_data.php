@@ -23,8 +23,8 @@ if (!defined('IN_PHPBB'))
 * The version numbering must otherwise be compatible with the version_compare function - http://php.net/manual/en/function.version-compare.php
 */
 $versions = array(
-	// Version Alpha 1
-	'1.2.0-A1'	=> array(
+	// Dev version, will be used as "main" schema
+	'1.2.0-dev'	=> array(
 		'table_add' => array(
 			// The main Subject Prefix table
 			array(SUBJECT_PREFIX_TABLE, array(
