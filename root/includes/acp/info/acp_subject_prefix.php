@@ -32,7 +32,7 @@ class acp_subject_prefix_info
 			'title'		=> 'ACP_SUBJECT_PREFIX',
 			'version'	=> '1.2.0',
 			'modes'		=> array(
-				'main'	=> array('title' => 'ACP_SUBJECT_PREFIX', 'auth' => '', 'cat' => array('ACP_SUBJECT_PREFIX')),
+				'main'	=> array('title' => 'ACP_SUBJECT_PREFIX', 'auth' => 'acl_a_subject_prefix', 'cat' => array('ACP_SUBJECT_PREFIX')),
 			),
 		);
 	}
