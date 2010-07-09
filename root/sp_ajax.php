@@ -20,6 +20,12 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 
+// Permission check
+if (!isset($user->data['session_admin']) || !$user->data['session_admin'])
+{
+	exit_handler();
+}
+
 // Get the table
 $tablename	= request_var('tablename', '');
 $tableid	= substr($tablename, 13);
