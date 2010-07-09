@@ -16,19 +16,26 @@
 
 <h1>{L_ACP_SUBJECT_PREFIX}</h1>
 <p><!-- IF .forumrow -->{L_ACP_SUBJECT_PREFIX_EXPLAIN}<!-- ELSE -->{L_NO_PREFIXES}<!-- ENDIF --></p>
+
+<div class="successbox" style="display: none;">
+    <h3>{L_INFORMATION}</h3>
+    <p>{L_PREFIX_ORDER_UPDATED}</p>
+</div>
+
 <!-- BEGIN forumrow -->
     <table cellspacing="1" id="prefixrowbody{forumrow.FORUM_ID}">
 	<thead>
-	    <tr>
+	    <tr class="nodrag">
 		<th>{forumrow.FORUMNAME}</th>
 		<th>{L_OPTIONS}</th>
 	    </tr>
 	</thead>
 	<tbody class="prefixrowbody">
 	    <!-- BEGIN prefixrow -->
-	    <tr class="<!-- IF prefixrow.S_ROW_COUNT is odd -->row2<!-- ELSE -->row1<!-- ENDIF -->">
+	    <tr id="{forumrow.FORUM_ID}.{prefixrow.PREFIX_ID}" class="<!-- IF prefixrow.S_ROW_COUNT is odd -->row2<!-- ELSE -->row1<!-- ENDIF -->">
 		<td>{prefixrow.PREFIX_NAME}</td>
 		<td style="width: 80px; text-align: right; white-space: nowrap">
+		    <span class="moveButtons">
 		    <!-- IF prefixrow.S_FIRST_ROW && not prefixrow.S_LAST_ROW -->
 			{ICON_MOVE_UP_DISABLED}
 			<a href="{prefixrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
@@ -39,6 +46,7 @@
 			<a href="{prefixrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
 			{ICON_MOVE_DOWN_DISABLED}
 		    <!-- ENDIF -->
+		    </span>
 		    <a href="{prefixrow.U_EDIT}">{ICON_EDIT}</a>
 		    <a href="{prefixrow.U_DELETE}">{ICON_DELETE}</a>
 		</td>
@@ -61,9 +69,51 @@ $(document).ready(function() {
 	$('thead > tr > th:first', this).click(function() {
 	    displayPrefixTable(this);
 	});
+
+	// The move buttons break due to the drag-drop stuff, disable them
+	$('.moveButtons', this).remove();
+
+	// Init drag-drop
+	$(this).tableDnD({
+	    onDragClass	: 'row3',
+	    onDrop	: function(table, row) {
+		// Fix row colouring
+		var rowClassCorrect	= '';
+		var rowClassIncorrect	= '';
+
+		$('tbody > tr', table).each(function(index) {
+		    rowClassCorrect	= (index % 2 == 0) ? 'row1' : 'row2';
+		    rowClassIncorrect	= (index % 2 == 0) ? 'row2' : 'row1';
+
+		    //alert (rowClassCorrect + "\t" + rowClassIncorrect + "\n" + $(this).attr('class'));
+		    // If incorrect class remove the class.
+		    if ($(this).hasClass(rowClassIncorrect))
+		    {
+			$(this).removeClass(rowClassIncorrect);
+		    }
+
+		    // If needed assign the new class
+		    if ($(this).hasClass(rowClassCorrect) == false)
+		    {
+			$(this).addClass(rowClassCorrect);
+		    }
+		});
+
+		// Now send this change to the server so we can store it ^^
+		$.ajax({
+		    type    : 'POST',
+		    url     : '{U_SUBJECT_PREFIX_AJAX_REQUEST}&tablename=' + $(table).attr('id'),
+		    data    : $.tableDnD.serialize(),
+		    success : function(html) {
+			// Show the message
+			$('.successbox').show();
+		    },
+		});
+	    },
+	});
     });
 
-    // Do we have a cookie?
+    // Can I haz cookie
     var cookie = $.cookie(cookieName);
     if (!cookie)
     {

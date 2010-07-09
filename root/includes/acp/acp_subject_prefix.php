@@ -67,6 +67,21 @@ class acp_subject_prefix
 				}
 			}
 		}
+
+		// Some common stuff
+		subjectprefix\sp_phpbb::$template->assign_vars(array(
+			'U_SUBJECT_PREFIX_AJAX_REQUEST'	=> append_sid(PHPBB_ROOT_PATH . 'sp_ajax.' . PHP_EXT),
+		));
+	}
+
+	/**
+	 * Handle ajax calls
+	 * @return void
+	 */
+	private function qa_ajax()
+	{
+		$_req = var_export($_REQUEST, true);
+		echo '<pre>' . $_req;
 	}
 
 	/**
