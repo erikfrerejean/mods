@@ -59,12 +59,6 @@ class acp_subject_prefix
 					}
 					subjectprefix\sp_phpbb::$db->sql_freeresult($result);
 
-					// Misteriously goes wrong :/
-					/*if (empty($colour))
-					{
-						$colour = '000000';
-					}*/
-
 					// Create the prefix
 					$prefix_data = array(
 						'prefix_id'		=> null,
@@ -72,7 +66,6 @@ class acp_subject_prefix
 						'prefix_colour'	=> (empty($colour)) ? '000000' : $colour,
 					);
 					subjectprefix\sp_phpbb::$db->sql_query('INSERT INTO ' . SUBJECT_PREFIX_TABLE . ' ' . subjectprefix\sp_phpbb::$db->sql_build_array('INSERT', $prefix_data));
-					//subjectprefix\sp_phpbb::$db->sql_query('INSERT INTO ' . SUBJECT_PREFIX_TABLE . "(prefix_id, prefix_title, prefix_colour) VALUES (null, '$title', null)");
 
 					// Get the ID
 					$prefix_id = subjectprefix\sp_phpbb::$db->sql_nextid();
