@@ -13,6 +13,7 @@
 <!-- ENDIF -->
 
 <!-- INCLUDE overall_header.html -->
+<script type="text/javascript" src="style/subject_prefix.js"></script>
 
 <!-- IF S_EDIT -->
     <form id="acp_subject_prefix" method="post" action="{U_ACTION}">
@@ -25,7 +26,7 @@
 	</dl>
 	<dl>
 	    <dt><label for="prefix_colour">{L_PREFIX_COLOUR}:</label><br /><span>{L_PREFIX_COLOUR_EXPLAIN}</span></dt>
-	    <dd>#<input name="prefix_colour" type="text" id="prefix_colour" value="{COLOUR}" size="6" maxlength="6" /><!-- IF COLOUR -->&nbsp;<span style="background-color: #{COLOUR}">&nbsp; &nbsp;</span><!-- ENDIF -->&nbsp;&nbsp;<span>[ <a href="{U_SWATCH}" onclick="popup(this.href, 636, 150, '_swatch'); return false">{L_COLOUR_SWATCH}</a> ]</span></dd>
+	    <dd>#<input name="prefix_colour" type="text" id="prefix_colour" value="{COLOUR}" size="6" maxlength="6" />&nbsp;<span id="prefixColourPreview" style="background-color: #{COLOUR};<!-- IF COLOUR == '' --> display: none;<!-- ENDIF -->">&nbsp; &nbsp;</span>&nbsp;&nbsp;<span>[ <a href="{U_SWATCH}" onclick="popup(this.href, 636, 150, '_swatch'); return false">{L_COLOUR_SWATCH}</a> ]</span></dd>
 	</dl>
 	<dl>
 	    <dt><label for="prefix_forums">{L_PREFIX_FORUMS}:</label><br /><span>{L_PREFIX_FORUMS_EXPLAIN}</span></dt>
@@ -80,8 +81,6 @@
 	    </tbody>
 	</table>
     <!-- END forumrow -->
-
-    <script type="text/javascript" src="style/subject_prefix.js"></script>
 <!-- ENDIF -->
 
 <!-- INCLUDE overall_footer.html -->

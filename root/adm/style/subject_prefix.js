@@ -699,14 +699,27 @@ $(document).ready(function() {
     var cookie = $.cookie(cookieName);
     if (!cookie)
     {
-	showObject = $('#main table:first');
+        showObject = $('#main table:first');
     }
     else
     {
-	// Yes, restore the last displayed list
-	showObject = $('#main > #' + cookie);
+        // Yes, restore the last displayed list
+        showObject = $('#main > #' + cookie);
     }
+
     displayPrefixTable(showObject, true);
+
+    // Red black, Blue brown, Yellow crimson, Green orange
+    // Purple pink, Violet white, White white
+    $('#prefix_colour').blur(function() {
+        // Make sure the preview is displayed
+        if ($('#prefixColourPreview').css('display') == 'none')
+        {
+            $('#prefixColourPreview').css('display', 'inline');
+        }
+
+        $('#prefixColourPreview').css('background-color', '#' + $(this).val());
+    });
 });
 
 function hidePrefixTable(ele)
