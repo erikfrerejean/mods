@@ -711,7 +711,7 @@ $(document).ready(function() {
 
     // Red black, Blue brown, Yellow crimson, Green orange
     // Purple pink, Violet white, White white
-    $('#prefix_colour').blur(function() {
+    $('#prefix_colour').change(function() {
         // Make sure the preview is displayed
         if ($('#prefixColourPreview').css('display') == 'none')
         {
