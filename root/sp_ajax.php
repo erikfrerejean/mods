@@ -51,11 +51,11 @@ foreach ($prefixlist as $order => $prefix)
 	$order = $order - 1;
 
 	// Update in the db
-	subjectprefix\sp_phpbb::$db->sql_query('UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . ' SET prefix_order = ' . $order . ' WHERE prefix_id = ' . $prefix);
+	sp_phpbb::$db->sql_query('UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . ' SET prefix_order = ' . $order . ' WHERE prefix_id = ' . $prefix);
 }
 
 // Tell the template we're good ^^
-if (subjectprefix\sp_phpbb::$db->sql_affectedrows() > 0)
+if (sp_phpbb::$db->sql_affectedrows() > 0)
 {
 	echo 'success';
 }

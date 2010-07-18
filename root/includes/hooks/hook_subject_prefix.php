@@ -6,7 +6,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  *
  */
-namespace subjectprefix;
 
 /**
  * @ignore
@@ -28,8 +27,8 @@ abstract class sp_hook
 	 */
 	static public function register(&$phpbb_hook)
 	{
-		$phpbb_hook->register('phpbb_user_session_handler', 'subjectprefix\sp_hook::subject_prefix_init');
-		$phpbb_hook->register(array('template', 'display'), 'subjectprefix\sp_hook::subject_prefix_template_hook');
+		$phpbb_hook->register('phpbb_user_session_handler', 'sp_hook::subject_prefix_init');
+		$phpbb_hook->register(array('template', 'display'), 'sp_hook::subject_prefix_template_hook');
 	}
 
 	/**
