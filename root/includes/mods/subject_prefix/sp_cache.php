@@ -26,23 +26,20 @@ if (!class_exists('acm'))
 class sp_cache extends cache
 {
 	/**
-	 * @var array All prefix data so it will only be fetched once
-	 */
-	private $subject_prefixes = array();
-
-	/**
 	 * Fetch the Subject Prefixes from the database
 	 * @return	Array	All Subject Prefixes
 	 */
 	public function obtain_subject_prefixes()
 	{
-		if (!empty($this->subject_prefixes))
+		static $subject_prefixes = array();
+
+		if (!empty($subject_prefixes))
 		{
-			return $this->subject_prefixes;
+			return $subject_prefixes;
 		}
 
 		// In cache?
-		if (($this->subject_prefixes = $this->get('_subject_prefixes')) === false)
+		if (($subject_prefixes = $this->get('_subject_prefixes')) === false)
 		{
 			$sql = 'SELECT *
 				FROM ' . SUBJECT_PREFIX_TABLE;
@@ -56,10 +53,10 @@ class sp_cache extends cache
 				);
 			}
 			sp_phpbb::$db->sql_freeresult($result);
-			$this->put('_subject_prefixes', $this->subject_prefixes);
+			$this->put('_subject_prefixes', $subject_prefixes);
 		}
 
-		return $this->subject_prefixes;
+		return $subject_prefixes;
 	}
 
 	/**
