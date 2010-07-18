@@ -23,7 +23,7 @@ if (!class_exists('acm'))
 /**
  * Class that is used to handle all Subject Prefix related caching
  */
-class sp_cache extends \cache
+class sp_cache extends cache
 {
 	/**
 	 * @var array All prefix data so it will only be fetched once
