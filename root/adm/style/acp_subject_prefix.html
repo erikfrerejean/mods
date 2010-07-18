@@ -26,7 +26,7 @@
 	</dl>
 	<dl>
 	    <dt><label for="prefix_colour">{L_PREFIX_COLOUR}:</label><br /><span>{L_PREFIX_COLOUR_EXPLAIN}</span></dt>
-	    <dd>#<input name="prefix_colour" type="text" id="prefix_colour" value="{COLOUR}" size="6" maxlength="6" />&nbsp;<span id="prefixColourPreview" style="background-color: #{COLOUR};<!-- IF COLOUR == '' --> display: none;<!-- ENDIF -->">&nbsp; &nbsp;</span>&nbsp;&nbsp;<span>[ <a href="{U_SWATCH}" onclick="popup(this.href, 636, 150, '_swatch'); return false">{L_COLOUR_SWATCH}</a> ]</span></dd>
+	    <dd>#<input name="prefix_colour" type="text" id="prefix_colour" value="<!-- IF COLOUR == '' -->000000<!-- ELSE -->{COLOUR}<!-- ENDIF -->" size="6" maxlength="6" />&nbsp;<span id="prefixColourPreview" style="background-color: #{COLOUR};<!-- IF COLOUR == '' --> display: none;<!-- ENDIF -->">&nbsp; &nbsp;</span>&nbsp;&nbsp;<span>[ <a href="{U_SWATCH}" onclick="popup(this.href, 636, 150, '_swatch'); return false">{L_COLOUR_SWATCH}</a> ]</span></dd>
 	</dl>
 	<dl>
 	    <dt><label for="prefix_forums">{L_PREFIX_FORUMS}:</label><br /><span>{L_PREFIX_FORUMS_EXPLAIN}</span></dt>
