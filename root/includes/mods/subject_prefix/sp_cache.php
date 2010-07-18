@@ -56,6 +56,7 @@ class sp_cache extends \cache
 				);
 			}
 			sp_phpbb::$db->sql_freeresult($result);
+			$this->put('_subject_prefixes', $this->subject_prefixes);
 		}
 
 		return $this->subject_prefixes;
@@ -67,14 +68,14 @@ class sp_cache extends \cache
 	 * @param	array	$forums	The variable that will be filled with the forums data
 	 * @return	void
 	 */
-	static public function obtain_prefix_forum_tree(&$data, &$forums)
+	public function obtain_prefix_forum_tree(&$data, &$forums)
 	{
 		static $_pft = array();
 
 		// Only read from cache once
 		if (empty($_pft['data']))
 		{
-			$_pft = sp_phpbb::$cache->get('_prefix_forum_tree');
+			$_pft = $this->get('_prefix_forum_tree');
 		}
 
 		// Got data
@@ -122,7 +123,7 @@ class sp_cache extends \cache
 		sp_phpbb::$db->sql_freeresult($result);
 
 		// Cache
-		sp_phpbb::$cache->put('_prefix_forum_tree', $_pft);
+		$this->put('_prefix_forum_tree', $_pft);
 
 		// Send back
 		$data	= $_pft['data'];
