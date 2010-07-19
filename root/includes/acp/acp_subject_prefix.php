@@ -96,6 +96,7 @@ class acp_subject_prefix
 								'PREFIX_ID'		=> $prefix['prefix_id'],
 								'PREFIX_NAME'	=> $prefix['prefix_title'],
 								'PREFIX_COLOUR'	=> $prefix['prefix_colour'],
+								'PREFIX_FULL'	=> sp_core::generate_prefix_string($prefix['prefix_id']),
 
 								// Actions
 								'U_DELETE'		=> (sp_phpbb::$auth->acl_get('a_subject_prefix_create')) ? $this->u_action . '&amp;action=delete&amp;pid=' . $prefix['prefix_id'] : false,
