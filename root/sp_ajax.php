@@ -27,37 +27,62 @@ if (!isset($user->data['session_admin']) || !$user->data['session_admin'] || $au
 	exit_handler();
 }
 
-// Get the table
-$tablename	= request_var('tablename', '');
-$tableid	= substr($tablename, 13);
+// Set some common vars
+$mode	= request_var('ajax_mode', '');
+$result	= 'fail';
 
-// Fetch the posted list
-$prefixlist = request_var($tablename, array(0 => ''));
-
-// Run through the list
-$sqls = array();
-foreach ($prefixlist as $order => $prefix)
+switch ($mode)
 {
-	// First one is the header, skip it
-	if ($order == 0)
-	{
-		continue;
-	}
+	case 'move' :
+		// Get the table
+		$tablename	= request_var('tablename', '');
+		$tableid	= substr($tablename, 13);
 
-	// Get the order nr
-	$prefix = substr($prefix, 2);
+		// Fetch the posted list
+		$prefixlist = request_var($tablename, array(0 => ''));
 
-	// Keep the header in mind
-	$order = $order - 1;
+		// Run through the list
+		$sqls = array();
+		foreach ($prefixlist as $order => $prefix)
+		{
+			// First one is the header, skip it
+			if ($order == 0)
+			{
+				continue;
+			}
 
-	// Update in the db
-	sp_phpbb::$db->sql_query('UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . ' SET prefix_order = ' . $order . ' WHERE prefix_id = ' . $prefix);
+			// Get the order nr
+			$prefix = substr($prefix, 2);
+
+			// Keep the header in mind
+			$order = $order - 1;
+
+			// Update in the db
+			sp_phpbb::$db->sql_query('UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . ' SET prefix_order = ' . $order . ' WHERE prefix_id = ' . $prefix);
+		}
+
+		// Tell the template we're good ^^
+		$result = 'success';
+	break;
+
+	case 'delete' :
+		$data = request_var('data', '0_0');
+
+		// Strip "pf"
+		$data = substr($data, 3);
+
+		// Strip the ID
+		$parts = explode('_', $data);
+
+		sp_core::prefix_delete_forum($parts[0], $parts[1]);
+
+		// Tell the template we're good ^^
+		$result = 'success';
+	break;
 }
 
-// Tell the template we're good ^^
-if (sp_phpbb::$db->sql_affectedrows() > 0)
-{
-	echo 'success';
-}
+// echo the result
+echo $result;
+
 garbage_collection();
 exit_handler();
