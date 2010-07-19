@@ -23,6 +23,8 @@ class acp_subject_prefix
 {
 	public $u_action;
 
+	private $error = array();
+
 	public function main($id, $mode)
 	{
 		global $phpbb_admin_path;	// Anoyingly can't use a constant due to phpBB :/
@@ -46,42 +48,13 @@ class acp_subject_prefix
 					$colour		= request_var('prefix_colour', '');
 					$forum_ids	= request_var('prefix_forums_id', array(0 => 0));
 					$title		= request_var('prefix_title', '', true);
-					$order_max	= array();
-					// Figure out the highest order numbers per selected forum
-					$sql = 'SELECT MAX(prefix_order) AS order_max, forum_id
-						FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . '
-						WHERE ' . sp_phpbb::$db->sql_in_set('forum_id', $forum_ids) . '
-							GROUP BY forum_id';
-					$result = sp_phpbb::$db->sql_query($sql);
-					while ($row = sp_phpbb::$db->sql_fetchrow($result))
-					{
-						$order_max[$row['forum_id']] = $row['order_max'];
-					}
-					sp_phpbb::$db->sql_freeresult($result);
 
-					// Create the prefix
-					$prefix_data = array(
-						'prefix_id'		=> null,
-						'prefix_title'	=> $title,
-						'prefix_colour'	=> (empty($colour)) ? '000000' : $colour,
-					);
-					sp_phpbb::$db->sql_query('INSERT INTO ' . SUBJECT_PREFIX_TABLE . ' ' . sp_phpbb::$db->sql_build_array('INSERT', $prefix_data));
+					// Create it
+					$pid = sp_core::prefix_add($title, $colour, $forum_ids, &$this->error);
 
-					// Get the ID
-					$prefix_id = sp_phpbb::$db->sql_nextid();
-
-					// Insert this ID on all selected forums
-					$prefix_forum_data = array();
-					foreach ($forum_ids as $id)
-					{
-						$prefix_forum_data[] = array(
-							'prefix_id'		=> $prefix_id,
-							'forum_id'		=> $id,
-							'prefix_order'	=> (isset($order_max[$id])) ? $order_max[$id] + 1 : 1,
-						);
-					}
-					sp_phpbb::$db->sql_multi_insert(SUBJECT_PREFIX_FORUMS_TABLE, $prefix_forum_data);
-					trigger_error('PREFIX_SUCCESSFULLY_ADDED' . adm_back_link($this->u_action));
+					// Redirect
+					meta_refresh(5, $this->u_action);
+					trigger_error(sp_phpbb::$user->lang['PREFIX_SUCCESSFULLY_ADDED'] . adm_back_link($this->u_action));
 				}
 
 				// Display page
@@ -102,10 +75,11 @@ class acp_subject_prefix
 
 				$data = $forums = array();
 				sp_phpbb::$cache->obtain_prefix_forum_tree($data, $forums);
-				ksort($data);
 
 				if (is_array($data) && is_array($forums))
 				{
+					ksort($data);
+
 					// Output the list
 					foreach ($data as $forum_id => $prefixes)
 					{
@@ -134,7 +108,7 @@ class acp_subject_prefix
 
 				// Some common stuff
 				sp_phpbb::$template->assign_vars(array(
-					'U_SUBJECT_PREFIX_AJAX_REQUEST'	=> append_sid(PHPBB_ROOT_PATH . 'sp_ajax.' . PHP_EXT),
+					'U_SUBJECT_PREFIX_AJAX_REQUEST' => append_sid(PHPBB_ROOT_PATH . 'sp_ajax.' . PHP_EXT),
 				));
 			break;
 		}
@@ -147,9 +121,7 @@ class acp_subject_prefix
 	private function qa_delete()
 	{
 		$pid = request_var('pid', 0);
-		sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE prefix_id = ' . $pid);
-		sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . ' WHERE prefix_id = ' . $pid);
-		sp_cache::subject_prefix_quick_clear();
+		sp_core::prefix_delete($pid);
 	}
 
 	/**
@@ -158,16 +130,9 @@ class acp_subject_prefix
 	 */
 	private function qa_move()
 	{
-		$direction	 = ($_GET['direction'] == 'down') ? 'down' : 'up';
-		$field_order = request_var('prefix_order', 0);
-		$fid		 = request_var('f', 0);
-		$order_total = $field_order * 2 + (($direction == 'up') ? -1 : 1);
-
-		$sql = 'UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . "
-			SET prefix_order = $order_total - prefix_order
-			WHERE prefix_order IN ($field_order, " . (($direction == 'up') ? $field_order - 1 : $field_order + 1) . ')
-				AND forum_id = ' . $fid;
-		sp_phpbb::$db->sql_query($sql);
-		sp_cache::subject_prefix_quick_clear();
+		$direction	= ($_GET['direction'] == 'down') ? 'down' : 'up';
+		$fid		= request_var('f', 0);
+		$order		= request_var('prefix_order', 0);
+		sp_core::prefix_reorder($fid, $order, $direction);
 	}
 }
