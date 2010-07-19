@@ -46,7 +46,7 @@ class sp_cache extends cache
 			$result = sp_phpbb::$db->sql_query($sql);
 			while ($prefix = sp_phpbb::$db->sql_fetchrow($result))
 			{
-				$this->subject_prefixes[$prefix['prefix_id']] = array(
+				$subject_prefixes[$prefix['prefix_id']] = array(
 					'id'		=> $prefix['prefix_id'],
 					'title'		=> $prefix['prefix_title'],
 					'colour'	=> $prefix['prefix_colour'],
