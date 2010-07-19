@@ -48,13 +48,14 @@ $lang = array_merge($lang, array(
 	'NO_PREFIX_COLOUR'	=> 'You must provide a valid prefix colour',
 	'NO_PREFIX_TITLE'	=> 'You must provide a Prefix title',
 
-	'PREFIX_COLOUR'			=> 'Prefix colour',
-	'PREFIX_COLOUR_EXPLAIN'	=> 'Define which colour will be used for this prefix.',
-	'PREFIX_FORUMS'			=> 'Prefix forums',
-	'PREFIX_FORUMS_EXPLAIN'	=> 'Select the forums in which this prefix can be used.',
-	'PREFIX_INSERT_FAIL'	=> 'Couldn\'t insert the prefix',
-	'PREFIX_ORDER_UPDATED'	=> 'Subject Prefix order successfully updated',
-	'PREFIX_TITLE'			=> 'Prefix title',
+	'PREFIX_COLOUR'				=> 'Prefix colour',
+	'PREFIX_COLOUR_EXPLAIN'		=> 'Define which colour will be used for this prefix.',
+	'PREFIX_FORUMS'				=> 'Prefix forums',
+	'PREFIX_FORUMS_EXPLAIN'		=> 'Select the forums in which this prefix can be used.',
+	'PREFIX_INSERT_FAIL'		=> 'Couldn\'t insert the prefix',
+	'PREFIX_ORDER_UPDATED'		=> 'Subject Prefix order successfully updated',
+	'PREFIX_SUCCESSFULLY_ADDED'	=> 'The prefix has been created successfully!',
+	'PREFIX_TITLE'				=> 'Prefix title',
 
 	'SUBJECT_PREFIX_ADD_EDIT'	=> array(
 		0 => 'Create a new Subject Prefix',

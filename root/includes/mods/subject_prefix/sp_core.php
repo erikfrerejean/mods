@@ -126,8 +126,6 @@ abstract class sp_core
 		{
 			sp_phpbb::$db->sql_query("DELETE FROM $table WHERE prefix_id = $pid");
 		}
-
-		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -159,22 +157,13 @@ abstract class sp_core
 
 	/**
 	 * Move a given prefix up/down in the tree
-	 * @param	Integer	$pid			The ID of the prefix that will be moved
 	 * @param	Integer	$fid			The ID defining the forum in which this move will occure
+	 * @param	Integer	$field_order	The current order inside this forum
 	 * @param	String	$direction		String defining the direction (up or down)
 	 * @return	void
 	 */
-	static public function prefix_reorder($pid, $fid, $direction)
+	static public function prefix_reorder($fid, $field_order, $direction)
 	{
-		// Get the current order place
-		$sql = 'SELECT prefix_order
-			FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . "
-			WHERE prefix_id = $pid
-				AND forum_id = $fid";
-		$result			= sp_phpbb::$db->sql_query($sql);
-		$field_order	= sp_phpbb::$db->sql_fetchfield('prefix_order', false, $result);
-		sp_phpbb::$db->sql_freeresult($result);
-
 		$order_total = $field_order * 2 + (($direction == 'up') ? -1 : 1);
 
 		$sql = 'UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . "
@@ -182,7 +171,6 @@ abstract class sp_core
 			WHERE prefix_order IN ($field_order, " . (($direction == 'up') ? $field_order - 1 : $field_order + 1) . ')
 				AND forum_id = ' . $fid;
 		sp_phpbb::$db->sql_query($sql);
-		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -240,8 +228,6 @@ abstract class sp_core
 		sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE ' . sp_phpbb::$db->sql_in_set('prefix_id', $pids, true));
 
 		sp_phpbb::$db->sql_transaction('commit');
-
-		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -306,5 +292,13 @@ abstract class sp_core
 
 		// Insert
 		sp_phpbb::$db->sql_multi_insert(SUBJECT_PREFIX_FORUMS_TABLE, $insert_data);
+	}
+
+	/**
+	 * Do somethings when this class isn't used anymore
+	 */
+	public function __destruct()
+	{
+		sp_cache::subject_prefix_quick_clear();
 	}
 }
