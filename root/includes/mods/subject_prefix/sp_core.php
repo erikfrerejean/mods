@@ -54,7 +54,7 @@ abstract class sp_core
 
 		// Doesn't exist
 		if (!isset($prefixes[$pid]))
-		{die("@$%");
+		{
 			return;
 		}
 
