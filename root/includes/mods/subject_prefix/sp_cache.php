@@ -61,11 +61,11 @@ class sp_cache extends cache
 
 	/**
 	 * Obtain the "prefix forum tree", this is used to build the ACP page
-	 * @param	array	$data	The variable that will be filled with all prefix data
+	 * @param	array	$tree	The variable that will be filled with the prefix tree
 	 * @param	array	$forums	The variable that will be filled with the forums data
 	 * @return	void
 	 */
-	public function obtain_prefix_forum_tree(&$data, &$forums)
+	public function obtain_prefix_forum_tree(&$tree, &$forums)
 	{
 		static $_pft = array();
 
@@ -78,7 +78,7 @@ class sp_cache extends cache
 		// Got data
 		if ($_pft !== false)
 		{
-			$data	= $_pft['data'];
+			$tree	= $_pft['tree'];
 			$forums	= $_pft['forums'];
 			return;
 		}
@@ -104,13 +104,13 @@ class sp_cache extends cache
 		$result	= sp_phpbb::$db->sql_query(sp_phpbb::$db->sql_build_query('SELECT', $sql_ary));
 		while ($row = sp_phpbb::$db->sql_fetchrow($result))
 		{
-			if (!isset($_pft['data'][$row['forum_id']]))
+			if (!isset($_pft['tree'][$row['forum_id']]))
 			{
-				$_pft['data'][$row['forum_id']]		= array();
+				$_pft['tree'][$row['forum_id']]		= array();
 				$_pft['forums'][$row['forum_id']]	= $row['forum_name'];
 			}
 
-			$_pft['data'][$row['forum_id']][] = array(
+			$_pft['tree'][$row['forum_id']][] = array(
 				'prefix_id'		=> $row['prefix_id'],
 				'prefix_title'	=> $row['prefix_title'],
 				'prefix_colour'	=> $row['prefix_colour'],
@@ -123,7 +123,7 @@ class sp_cache extends cache
 		$this->put('_prefix_forum_tree', $_pft);
 
 		// Send back
-		$data	= $_pft['data'];
+		$tree	= $_pft['tree'];
 		$forums	= $_pft['forums'];
 	}
 
