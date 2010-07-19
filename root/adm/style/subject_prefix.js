@@ -662,33 +662,19 @@ $(document).ready(function() {
                 var rowClassIncorrect	= '';
 
                 $('tbody > tr', table).each(function(index) {
-                    rowClassCorrect	= (index % 2 == 0) ? 'row1' : 'row2';
-                    rowClassIncorrect	= (index % 2 == 0) ? 'row2' : 'row1';
-
-                    //alert (rowClassCorrect + "\t" + rowClassIncorrect + "\n" + $(this).attr('class'));
-                    // If incorrect class remove the class.
-                    if ($(this).hasClass(rowClassIncorrect))
-                    {
-                        $(this).removeClass(rowClassIncorrect);
-                    }
-
-                    // If needed assign the new class
-                    if ($(this).hasClass(rowClassCorrect) == false)
-                    {
-                        $(this).addClass(rowClassCorrect);
-                    }
+                    fixColouring(this, index);
                 });
 
                 // Now send this change to the server so we can store it ^^
                 $.ajax({
                     type    : 'POST',
-                    url     : '{U_SUBJECT_PREFIX_AJAX_REQUEST}&tablename=' + $(table).attr('id'),
+                    url     : U_SUBJECT_PREFIX_AJAX_REQUEST + '&ajax_mode=move&tablename=' + $(table).attr('id'),
                     data    : $.tableDnD.serialize(),
                     success : function(html) {
-                    // Show the message
-                    if (html == 'success')
-                        $('.successbox').show();
-                    },
+                        // Show the message
+                        if (html == 'success')
+                            $('.successbox').show();
+                        },
                 });
             },
         });
@@ -720,7 +706,62 @@ $(document).ready(function() {
 
         $('#prefixColourPreview').css('background-color', '#' + $(this).val());
     });
+
+    // Bind AJAX call to delete button
+    $('.delete-prefix').click(function() {
+        var prefID = $(this).parent().parent().attr('id');
+
+        // Setup ajax call
+        $.ajax({
+            type    : 'POST',
+            url     : U_SUBJECT_PREFIX_AJAX_REQUEST + '&ajax_mode=delete',
+            data    : 'data=' + prefID,
+            success : function(html) {
+                // Show the message
+                if (html == 'success')
+                {
+                    // Hide this element
+                    $('#' + prefID).hide();
+
+                    // No visable elements hide the forum table
+                    table = $('#' + prefID).parent().parent().parent();
+                    if ($('tr:visible', table).length < 1)
+                    {
+                        $(table).hide();
+                    }
+                    // Fix the table colouring
+                    else
+                    {
+                        $('tbody > tr', table).each(function(index) {
+                            fixColouring(this, index);
+                        });
+                    }
+                }
+            },
+        });
+
+       // Don't follow tha link
+       return false;
+    });
 });
+
+function fixColouring(ele, index)
+{
+    rowClassCorrect	= (index % 2 == 0) ? 'row1' : 'row2';
+    rowClassIncorrect	= (index % 2 == 0) ? 'row2' : 'row1';
+
+    // If incorrect class remove the class.
+    if ($(ele).hasClass(rowClassIncorrect))
+    {
+        $(ele).removeClass(rowClassIncorrect);
+    }
+
+    // If needed assign the new class
+    if ($(ele).hasClass(rowClassCorrect) == false)
+    {
+        $(ele).addClass(rowClassCorrect);
+    }
+}
 
 function hidePrefixTable(ele)
 {
@@ -735,14 +776,14 @@ function displayPrefixTable(ele, fromCookie)
 {
     // Hide all others
     $('#main > table').each(function(index) {
-	hidePrefixTable(this);
+        hidePrefixTable(this);
     });
 
     // Get the table
     if (fromCookie != null)
-	var table = ele;
+        var table = ele;
     else
-	var table = $(ele).parent().parent().parent();
+        var table = $(ele).parent().parent().parent();
 
     // Display the options column
     $('thead > tr > th:gt(0)', table).show();

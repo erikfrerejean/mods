@@ -68,7 +68,7 @@ var U_SUBJECT_PREFIX_AJAX_REQUEST = "{U_SUBJECT_PREFIX_AJAX_REQUEST}";
 	    </thead>
 	    <tbody class="prefixrowbody">
 		<!-- BEGIN prefixrow -->
-		<tr id="{forumrow.FORUM_ID}.{prefixrow.PREFIX_ID}" class="<!-- IF prefixrow.S_ROW_COUNT is odd -->row2<!-- ELSE -->row1<!-- ENDIF --><!-- IF prefixrow.S_FIRST_ROW && prefixrow.S_LAST_ROW --> nodrag<!-- ENDIF -->">
+		<tr id="pf-{prefixrow.PREFIX_ID}_{forumrow.FORUM_ID}" class="<!-- IF prefixrow.S_ROW_COUNT is odd -->row2<!-- ELSE -->row1<!-- ENDIF --><!-- IF prefixrow.S_FIRST_ROW && prefixrow.S_LAST_ROW --> nodrag<!-- ENDIF -->">
 		    <td>{prefixrow.PREFIX_FULL}</td>
 		    <td style="width: 80px; text-align: right; white-space: nowrap">
 			<span class="moveButtons">
