@@ -68,7 +68,23 @@ abstract class sp_hook
 	 */
 	static public function subject_prefix_template_hook(&$hook)
 	{
+		// Add the prefix to certain pages
+		switch (sp_phpbb::$user->page['page_name'])
+		{
+			case 'viewtopic.' . PHP_EXT :
+				global $topic_data;
 
+				// Add to the page title
+				$page_title = sp_phpbb::$template->_tpldata['.'][0]['PAGE_TITLE'];
+				$page_title = substr_replace($page_title, ' ' . sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false), strpos($page_title, '-') + 1, 0);
+				sp_phpbb::$template->assign_var('PAGE_TITLE', $page_title);
+
+				// Add to the topic title
+				$topic_title = sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
+				$topic_title = sp_core::generate_prefix_string($topic_data['subject_prefix_id']) . ' ' . $topic_title;
+				sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
+			break;
+		}
 	}
 }
 

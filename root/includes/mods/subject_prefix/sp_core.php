@@ -44,11 +44,13 @@ abstract class sp_core
 	/**
 	 * Generate the output for the reqested prefix
 	 * @param	Integer	$pid	ID of the prefix
+	 * @param	Boolean	$markup	Use colouring or not
 	 * @return	void|String		Formatted string
 	 */
-	static public function generate_prefix_string($pid)
+	static public function generate_prefix_string($pid, $markup = true)
 	{
-		static $formatted = '<span style="color: #%s">%s</span>';
+		static $formatted	= '<span style="color: #%s">%s</span>';
+		static $unformatted	= '[%s]';
 
 		$prefixes = sp_phpbb::$cache->obtain_subject_prefixes();
 
@@ -58,7 +60,14 @@ abstract class sp_core
 			return;
 		}
 
-		return sprintf($formatted, $prefixes[$pid]['colour'], $prefixes[$pid]['title']);
+		if ($markup)
+		{
+			return sprintf($formatted, $prefixes[$pid]['colour'], $prefixes[$pid]['title']);
+		}
+		else
+		{
+			return sprintf($unformatted, $prefixes[$pid]['title']);
+		}
 	}
 
 	/**
