@@ -71,6 +71,32 @@ abstract class sp_hook
 		// Add the prefix to certain pages
 		switch (sp_phpbb::$user->page['page_name'])
 		{
+			case 'viewforum.' . PHP_EXT :
+				// As the topic data is unset once its used we'll have to introduce an query to
+				// fetch the prefixes
+				$topic_ids_rows = array();
+				foreach (sp_phpbb::$template->_tpldata['topicrow'] as $row => $data)
+				{
+					$topic_ids_rows[$data['TOPIC_ID']] = $row;
+				}
+
+				$sql = 'SELECT topic_id, subject_prefix_id
+					FROM ' . TOPICS_TABLE . '
+					WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', array_keys($topic_ids_rows)) . '
+						AND subject_prefix_id > 0';
+				$result = sp_phpbb::$db->sql_query($sql);
+				while ($row = sp_phpbb::$db->sql_fetchrow($result))
+				{
+					$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['topicrow'][$topic_ids_rows[$row['topic_id']]]['TOPIC_TITLE'];
+
+					// Alter the array
+					sp_phpbb::$template->alter_block_array('topicrow', array(
+						'TOPIC_TITLE' => $topic_title,
+					), $key = $topic_ids_rows[$row['topic_id']], $mode = 'change');
+				}
+				sp_phpbb::$db->sql_freeresult($result);
+			break;
+
 			case 'viewtopic.' . PHP_EXT :
 				global $topic_data;
 
