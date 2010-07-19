@@ -42,6 +42,26 @@ abstract class sp_core
 	}
 
 	/**
+	 * Generate the output for the reqested prefix
+	 * @param	Integer	$pid	ID of the prefix
+	 * @return	void|String		Formatted string
+	 */
+	static public function generate_prefix_string($pid)
+	{
+		static $formatted = '<span style="color: #%s">%s</span>';
+
+		$prefixes = sp_phpbb::$cache->obtain_subject_prefixes();
+
+		// Doesn't exist
+		if (!isset($prefixes[$pid]))
+		{die("@$%");
+			return;
+		}
+
+		return sprintf($formatted, $prefixes[$pid]['colour'], $prefixes[$pid]['title']);
+	}
+
+	/**
 	 * Add a prefix
 	 * @param	String	$prefix_title	The title of the new prefix
 	 * @param	String	$prefix_colour	The colour of the new prefix
