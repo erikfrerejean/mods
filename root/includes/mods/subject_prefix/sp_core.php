@@ -40,4 +40,254 @@ abstract class sp_core
 			sp_phpbb::$user->add_lang('mods/subject_prefix/permissions_subject_prefix');
 		}
 	}
+
+	/**
+	 * Add a prefix
+	 * @param	String	$prefix_title	The title of the new prefix
+	 * @param	String	$prefix_colour	The colour of the new prefix
+	 * @param	Array	$error			Array that will be filled with encountered error messages
+	 * @param	Array	$forums			Array containing the forums to which this prefix will be added
+	 * @return	Integer|void			The ID of the new prefix or void on error
+	 */
+	static public function prefix_add($prefix_title, $prefix_colour, &$error, $forums = array())
+	{
+		// Validate input
+		if (empty($prefix_title))
+		{
+			$error[] = 'NO_PREFIX_TITLE';
+		}
+		if (preg_match('~^(#{0,1})[a-fA-F0-9]{6}$~', $prefix_colour))
+		{
+			$prefix_colour = (substr($prefix_colour, 0, 1) == '#') ? substr($prefix_colour, 1) : $prefix_colour;
+		}
+		else
+		{
+			$error[] = 'NO_PREFIX_COLOUR';
+		}
+		if (!empty($error))
+		{
+			return;
+		}
+
+		// Create the actual prefix
+		sp_phpbb::$db->sql_query('INSERT INTO ' . SUBJECT_PREFIX_TABLE . ' ' . sp_phpbb::$db->sql_build_array('INSERT', array(
+			'prefix_title'	=> $prefix_title,
+			'prefix_colour'	=> $prefix_colour,
+		)));
+
+		sp_cache::subject_prefix_quick_clear();
+
+		$pid = sp_phpbb::$db->sql_nextid();
+
+		if ($pid === false)
+		{
+			$error[] = 'PREFIX_INSERT_FAIL';
+			return;
+		}
+
+		if (!empty($forums))
+		{
+			self::prefix_link_to_forums($pid, $forums, $error);
+		}
+
+		return $pid;
+	}
+
+	/**
+	 * Completely delete a prefix
+	 * @param	Boolean|Integer	$pid	The prefix to be deleted, if false it will be grapped from the $_REQUEST array by "pid"
+	 * @return	void
+	 */
+	static public function prefix_delete($pid = false)
+	{
+		if (!ctype_digit($pid))
+		{
+			$pid = request_var('pid', 0);
+		}
+
+		foreach (array(SUBJECT_PREFIX_FORUMS_TABLE, SUBJECT_PREFIX_TABLE) as $table)
+		{
+			sp_phpbb::$db->sql_query("DELETE FROM $table WHERE prefix_id = $pid");
+		}
+
+		sp_cache::subject_prefix_quick_clear();
+	}
+
+	/**
+	 * Delete a prefix from a given forum
+	 * @param	Integer	$pid	The prefix ID
+	 * @param	Integer	$fid	The forum ID
+	 * @return	void
+	 */
+	static public function prefix_delete_forum($pid, $fid)
+	{
+		$sql = 'DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . '
+			WHERE prefix_id = ' . $pid . '
+				AND forum_id = ' . $fid;
+		sp_phpbb::$db->sql_query($sql);
+
+		// A prefix can't exist when its not linked to at least one forum
+		$result	= sp_phpbb::$db->sql_query('SELECT forum_id FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . ' WHERE prefix_id = ' . $pid);
+		$check	= sp_phpbb::$db->sql_fetchfield('forum_id', false, $result);
+		sp_phpbb::$db->sql_freeresult($result);
+
+		if (!empty($check))
+		{
+			return;
+		}
+
+		// Delete it
+		self::prefix_delete($pid);
+	}
+
+	/**
+	 * Move a given prefix up/down in the tree
+	 * @param	Integer	$pid			The ID of the prefix that will be moved
+	 * @param	Integer	$fid			The ID defining the forum in which this move will occure
+	 * @param	String	$direction		String defining the direction (up or down)
+	 * @return	void
+	 */
+	static public function prefix_reorder($pid, $fid, $direction)
+	{
+		// Get the current order place
+		$sql = 'SELECT prefix_order
+			FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . "
+			WHERE prefix_id = $pid
+				AND forum_id = $fid";
+		$result			= sp_phpbb::$db->sql_query($sql);
+		$field_order	= sp_phpbb::$db->sql_fetchfield('prefix_order', false, $result);
+		sp_phpbb::$db->sql_freeresult($result);
+
+		$order_total = $field_order * 2 + (($direction == 'up') ? -1 : 1);
+
+		$sql = 'UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . "
+			SET prefix_order = $order_total - prefix_order
+			WHERE prefix_order IN ($field_order, " . (($direction == 'up') ? $field_order - 1 : $field_order + 1) . ')
+				AND forum_id = ' . $fid;
+		sp_phpbb::$db->sql_query($sql);
+		sp_cache::subject_prefix_quick_clear();
+	}
+
+	/**
+	 * Resyncronise the prefix tables.
+	 * * Make sure the prefix orders are incrementing numbers
+	 * * A prefix can't exist when its not linked to at least 1 forum
+	 *
+	 * @return void
+	 */
+	static public function prefix_order_resync()
+	{
+		// First clear the cache, need to make sure we get the data as it is right now in the database
+		sp_cache::subject_prefix_quick_clear();
+
+		// Fetch the tree
+		$tree = $forums = array();
+		sp_phpbb::$cache->obtain_prefix_forum_tree($tree, $forums);
+
+		sp_phpbb::$db->sql_transaction('begin');
+
+		// Run through the tree and fix the ordering
+		foreach ($tree as $fid => $data)
+		{
+			$next_order = 0;
+
+			// Go through the data and check the order
+			foreach ($data as $prefix)
+			{
+				// Order as expected?
+				if ($prefix['prefix_order'] != $next_order)
+				{
+					// Update the field
+					$sql = 'UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . "
+						SET prefix_order = $next_order
+						WHERE prefix_id = {$prefix['prefix_id']}
+							AND forum_id = $fid";
+					sp_phpbb::$db->sql_query($sql);
+				}
+
+				$next_order++;
+			}
+		}
+
+		sp_phpbb::$db->sql_transaction('commit');
+
+		// Now remove all prefixes that aren't linked to a forum
+		$pids	= array();
+		$sql	= 'SELECT prefix_id
+			FROM ' . SUBJECT_PREFIX_FORUMS_TABLE;
+		$result	= sp_phpbb::$db->sql_query($sql);
+		while ($row = sp_phpbb::$db->sql_fetchrow($result))
+		{
+			$pids[] = $row['prefix_id'];
+		}
+		sp_phpbb::$db->sql_freeresult($result);
+
+		sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE ' . sp_phpbb::$db->sql_in_set('prefix_id', $pids, true));
+
+		sp_cache::subject_prefix_quick_clear();
+	}
+
+	/**
+	 * Link a prefix to forums
+	 * @param	Integer		$pid	The prefix ID
+	 * @param	Array		$forums	A list containing all forum IDs to which this prefix will be linked
+	 * @param	Array		$error	Array that will be filled with encountered error messages
+	 * @return	Boolean
+	 */
+	static public function prefix_link_to_forums($pid, $forums, &$error)
+	{
+		if (!is_array($forums))
+		{
+			$forums = array($forums);
+		}
+
+		// When this prefix is already linked to this forum we'll leave it there
+		$sql = 'SELECT forum_id
+			FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . "
+			WHERE prefix_id = $pid
+				AND " . sp_phpbb::$db->sql_in_set('forum_id', $forums);
+		$forums = array_flip($forums);	// Flip for the ease of things here
+		$result = sp_phpbb::$db->sql_query($sql);
+		while($row = sp_phpbb::$db->sql_fetchrow($result))
+		{
+			if (isset($forums[$row['forum_id']]))
+			{
+				unset($forums[$row['forum_id']]);
+			}
+		}
+		$forums = array_flip($forums);	// Flip back
+
+		// No more forums
+		if (empty($forums))
+		{
+			return;
+		}
+
+		// First got to figure out where in the tree this pid has to be added
+		$max_orders = array();
+		$sql	= 'SELECT forum_id, MAX(prefix_order) AS prefix_order
+			FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . '
+			WHERE ' . sp_phpbb::$db->sql_in_set('forum_id', $forums) . '
+				GROUP BY forum_id';
+		$result	= sp_phpbb::$db->sql_query($sql);
+		while ($row = sp_phpbb::$db->sql_fetchrow($result))
+		{
+			$max_orders[$row['forum_id']] = $row['prefix_order'];
+		}
+		sp_phpbb::$db->sql_freeresult($result);
+
+		// Now prepare the data to be inserted
+		$insert_data = array();
+		foreach ($forums as $forum)
+		{
+			$insert_data[]	= array(
+				'prefix_id'		=> $pid,
+				'forum_id'		=> $forum,
+				'prefix_order'	=> (isset($max_orders[$forum])) ? $max_orders[$forum] + 1 : 0,
+			);
+		}
+
+		// Insert
+		sp_phpbb::$db->sql_multi_insert(SUBJECT_PREFIX_FORUMS_TABLE, $insert_data);
+	}
 }
