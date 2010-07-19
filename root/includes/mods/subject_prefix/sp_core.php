@@ -33,12 +33,12 @@ abstract class sp_core
 		// Add some language files
 		if (sp_phpbb::$user->page['page_dir'] == 'adm' && sp_phpbb::$user->page['page_name'] == 'index.' . PHP_EXT)
 		{
-			// Include the acp langauge file
-			sp_phpbb::$user->add_lang('mods/subject_prefix/info_acp_subject_prefix');
-
 			// Include the permissions file
 			sp_phpbb::$user->add_lang('mods/subject_prefix/permissions_subject_prefix');
 		}
+
+		// Include the acp langauge file
+		sp_phpbb::$user->add_lang('mods/subject_prefix/info_acp_subject_prefix');
 	}
 
 	/**
@@ -65,11 +65,11 @@ abstract class sp_core
 	 * Add a prefix
 	 * @param	String	$prefix_title	The title of the new prefix
 	 * @param	String	$prefix_colour	The colour of the new prefix
-	 * @param	Array	$error			Array that will be filled with encountered error messages
 	 * @param	Array	$forums			Array containing the forums to which this prefix will be added
+	 * @param	Array	$error			Array that will be filled with encountered error messages
 	 * @return	Integer|void			The ID of the new prefix or void on error
 	 */
-	static public function prefix_add($prefix_title, $prefix_colour, &$error, $forums = array())
+	static public function prefix_add($prefix_title, $prefix_colour, $forums, &$error)
 	{
 		// Validate input
 		if (empty($prefix_title))
@@ -105,10 +105,7 @@ abstract class sp_core
 			return;
 		}
 
-		if (!empty($forums))
-		{
-			self::prefix_link_to_forums($pid, $forums, $error);
-		}
+		self::prefix_link_to_forums($pid, $forums, $error);
 
 		return $pid;
 	}
