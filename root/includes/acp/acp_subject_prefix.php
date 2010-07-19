@@ -99,7 +99,7 @@ class acp_subject_prefix
 								'PREFIX_FULL'	=> sp_core::generate_prefix_string($prefix['prefix_id']),
 
 								// Actions
-								'U_DELETE'		=> (sp_phpbb::$auth->acl_get('a_subject_prefix_create')) ? $this->u_action . '&amp;action=delete&amp;pid=' . $prefix['prefix_id'] : false,
+								'U_DELETE'		=> (sp_phpbb::$auth->acl_get('a_subject_prefix_create')) ? $this->u_action . "&amp;action=delete&amp;pid={$prefix['prefix_id']}&amp;fid={$forum_id}" : false,
 								'U_MOVE_DOWN'	=> $this->u_action . '&amp;action=move&amp;direction=down&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
 								'U_MOVE_UP'		=> $this->u_action . '&amp;action=move&amp;direction=up&amp;prefix_order=' . $prefix['prefix_order'] . '&amp;f=' . $forum_id,
 							));
@@ -121,8 +121,9 @@ class acp_subject_prefix
 	 */
 	private function qa_delete()
 	{
+		$fid = request_var('fid', 0);
 		$pid = request_var('pid', 0);
-		sp_core::prefix_delete($pid);
+		sp_core::prefix_delete_forum($pid, $fid);
 	}
 
 	/**
