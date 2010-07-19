@@ -209,8 +209,6 @@ abstract class sp_core
 			}
 		}
 
-		sp_phpbb::$db->sql_transaction('commit');
-
 		// Now remove all prefixes that aren't linked to a forum
 		$pids	= array();
 		$sql	= 'SELECT prefix_id
@@ -223,6 +221,8 @@ abstract class sp_core
 		sp_phpbb::$db->sql_freeresult($result);
 
 		sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE ' . sp_phpbb::$db->sql_in_set('prefix_id', $pids, true));
+
+		sp_phpbb::$db->sql_transaction('commit');
 
 		sp_cache::subject_prefix_quick_clear();
 	}
