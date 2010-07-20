@@ -116,6 +116,8 @@ abstract class sp_core
 
 		self::prefix_link_to_forums($pid, $forums, $error);
 
+		sp_cache::subject_prefix_quick_clear();
+
 		return $pid;
 	}
 
@@ -135,6 +137,8 @@ abstract class sp_core
 		{
 			sp_phpbb::$db->sql_query("DELETE FROM $table WHERE prefix_id = $pid");
 		}
+
+		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -162,6 +166,8 @@ abstract class sp_core
 
 		// Delete it
 		self::prefix_delete($pid);
+
+		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -180,6 +186,8 @@ abstract class sp_core
 			WHERE prefix_order IN ($field_order, " . (($direction == 'up') ? $field_order - 1 : $field_order + 1) . ')
 				AND forum_id = ' . $fid;
 		sp_phpbb::$db->sql_query($sql);
+
+		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -237,6 +245,8 @@ abstract class sp_core
 		sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_TABLE . ' WHERE ' . sp_phpbb::$db->sql_in_set('prefix_id', $pids, true));
 
 		sp_phpbb::$db->sql_transaction('commit');
+
+		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -301,6 +311,8 @@ abstract class sp_core
 
 		// Insert
 		sp_phpbb::$db->sql_multi_insert(SUBJECT_PREFIX_FORUMS_TABLE, $insert_data);
+
+		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -308,6 +320,6 @@ abstract class sp_core
 	 */
 	public function __destruct()
 	{
-		sp_cache::subject_prefix_quick_clear();
+//		sp_cache::subject_prefix_quick_clear();
 	}
 }
