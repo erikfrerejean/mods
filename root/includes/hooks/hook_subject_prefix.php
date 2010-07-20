@@ -98,9 +98,25 @@ abstract class sp_hook
 					// Alter the array
 					sp_phpbb::$template->alter_block_array('forumrow', array(
 						'LAST_POST_SUBJECT' => $last_post_subject,
-					), $key = $last_post_ids[$row['topic_last_post_id']], $mode = 'change');
+					), $key = $last_post_ids[$row['topic_last_post_id']], 'change');
 				}
 				sp_phpbb::$db->sql_freeresult($result);
+			break;
+
+			case 'search.' . PHP_EXT :
+				if (!isset(sp_phpbb::$template->_tpldata['searchresults']))
+				{
+					return;
+				}
+
+				foreach (sp_phpbb::$template->_tpldata['searchresults'] as $row => $data)
+				{
+					$topic_title = sp_core::generate_prefix_string($data['TOPIC_ID']) . ' ' . $data['TOPIC_TITLE'];
+
+					sp_phpbb::$template->alter_block_array('searchresults', array(
+						'TOPIC_TITLE'	=> $topic_title,
+					), $row, 'change');
+				}
 			break;
 
 			case 'viewforum.' . PHP_EXT :
@@ -124,7 +140,7 @@ abstract class sp_hook
 					// Alter the array
 					sp_phpbb::$template->alter_block_array('topicrow', array(
 						'TOPIC_TITLE' => $topic_title,
-					), $key = $topic_ids_rows[$row['topic_id']], $mode = 'change');
+					), $key = $topic_ids_rows[$row['topic_id']], 'change');
 				}
 				sp_phpbb::$db->sql_freeresult($result);
 			break;
