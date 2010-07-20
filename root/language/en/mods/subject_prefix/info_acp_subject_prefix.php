@@ -38,6 +38,26 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
+/**
+ * Localise Prefixes.
+ * To localise a prefix change the name of a prefix to an UPPER CASE identifier
+ * and add an entry to the following array. Say you have a prefix with the name
+ * "LOCALISED_PREFIX" which would be translated to "Localised prefix" the array would
+ * look like:
+ * <code>
+ * $lang = array_merge($lang, array(
+ * 	'SP_LOCALISED_PREFIX'	=> 'Localised prefix',
+ * ));
+ * </code>
+ * Notice that the name is prefixed with "SP_" when added to this array!
+ */
+$lang = array_merge($lang, array(
+	'SP_LOCALISED_PREFIX'	=> 'Localised prefix',
+));
+
+/**
+ * Global lang stuff
+ */
 $lang = array_merge($lang, array(
 	'ACP_SUBJECT_PREFIX'				=> 'Subject Prefix',
 	'ACP_SUBJECT_PREFIX_ADD'			=> 'Create subject prefix',
@@ -57,6 +77,8 @@ $lang = array_merge($lang, array(
 	'PREFIX_SUCCESSFULLY_ADDED'	=> 'The prefix has been created successfully!',
 	'PREFIX_TITLE'				=> 'Prefix title',
 
+	'SELECT_A_PREFIX'			=> 'Select a prefix',
+	'SUBJECT_PREFIX'			=> 'Subject prefix',
 	'SUBJECT_PREFIX_ADD_EDIT'	=> array(
 		0 => 'Create a new Subject Prefix',
 		1 => 'Edit existing Subject Prefix',
