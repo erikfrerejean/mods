@@ -68,6 +68,12 @@ abstract class sp_hook
 	 */
 	static public function add_subject_prefix_to_page(&$hook)
 	{
+		// Only on regular pages
+		if (!empty(sp_phpbb::$user->page['page_dir']))
+		{
+			return;
+		}
+
 		// Add the prefix to certain pages
 		switch (sp_phpbb::$user->page['page_name'])
 		{
