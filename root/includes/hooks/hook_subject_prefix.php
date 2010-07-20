@@ -185,7 +185,8 @@ abstract class sp_hook
 		{
 			// Add the prefix dropdown to the posting page
 			case 'posting.' . PHP_EXT :
-				global $forum_id, $mode;
+				global $forum_id, $post_id, $topic_id;
+				global $mode;
 
 				// Must habs perms
 				if (sp_phpbb::$auth->acl_get('!f_subject_prefix', $forum_id))
@@ -193,33 +194,63 @@ abstract class sp_hook
 					return;
 				}
 
+				// When editing we only pass this point when the *first* post is edited
+				$selected = false;
+				$sql = 'SELECT subject_prefix_id
+					FROM ' . TOPICS_TABLE . "
+					WHERE topic_id = $topic_id
+						AND topic_first_post_id = $post_id";
+				$result		= sp_phpbb::$db->sql_query($sql);
+				$selected	= sp_phpbb::$db->sql_fetchfield('subject_prefix_id', false, $result);
+				sp_phpbb::$db->sql_freeresult($result);
+
 				// If submitted, change the selected prefix here
 				if (isset($_POST['post']))
 				{
 					global $data;
 
-					// New topic
-					if ($mode == 'post')
+					switch ($mode)
 					{
-						// Only have to add the prefix
-						$pid = request_var('subjectprefix', 0);
-						$sql = 'UPDATE ' . TOPICS_TABLE . '
-							SET subject_prefix_id = ' . $pid . '
-							WHERE topic_id = ' . $data['topic_id'];
-						sp_phpbb::$db->sql_query($sql);
+						case 'edit' :
+							if ($selected === false)
+							{
+								return;
+							}
 
-						// Done :)
-						return;
+						// No Break;
+
+						case 'post' :
+							// Only have to add the prefix
+							$pid = request_var('subjectprefix', 0);
+							$sql = 'UPDATE ' . TOPICS_TABLE . '
+								SET subject_prefix_id = ' . $pid . '
+								WHERE topic_id = ' . $data['topic_id'];
+							sp_phpbb::$db->sql_query($sql);
+
+							// Done :)
+							return;
+						break;
 					}
 				}
 				// Display the dropbox
 				else
 				{
-					if ($mode == 'post')
+					switch ($mode)
 					{
-						sp_phpbb::$template->assign_vars(array(
-							'S_SUBJECT_PREFIX_OPTIONS'	=> sp_core::generate_prefix_options($forum_id),
-						));
+						case 'edit' :
+							if ($selected === false)
+							{
+								// Nope
+								return;
+							}
+
+						// No Break;
+
+						case 'post';
+							sp_phpbb::$template->assign_vars(array(
+								'S_SUBJECT_PREFIX_OPTIONS'	=> sp_core::generate_prefix_options($forum_id, $selected),
+							));
+						break;
 					}
 				}
 			break;
