@@ -125,14 +125,15 @@ abstract class sp_hook
 				$topic_ids_rows = array();
 				foreach (sp_phpbb::$template->_tpldata['topicrow'] as $row => $data)
 				{
-					$topic_ids_rows[$data['TOPIC_ID']] = $row;
+					$topic_ids_rows[$row] = $data['TOPIC_ID'];
 				}
 
 				$sql = 'SELECT topic_id, subject_prefix_id
 					FROM ' . TOPICS_TABLE . '
-					WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', array_keys($topic_ids_rows)) . '
+					WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $topic_ids_rows) . '
 						AND subject_prefix_id > 0';
 				$result = sp_phpbb::$db->sql_query($sql);
+				$topic_ids_rows = array_flip($topic_ids_rows);
 				while ($row = sp_phpbb::$db->sql_fetchrow($result))
 				{
 					$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['topicrow'][$topic_ids_rows[$row['topic_id']]]['TOPIC_TITLE'];
