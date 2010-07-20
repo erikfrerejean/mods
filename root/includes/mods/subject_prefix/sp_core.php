@@ -314,12 +314,4 @@ abstract class sp_core
 
 		sp_cache::subject_prefix_quick_clear();
 	}
-
-	/**
-	 * Do somethings when this class isn't used anymore
-	 */
-	public function __destruct()
-	{
-//		sp_cache::subject_prefix_quick_clear();
-	}
 }
