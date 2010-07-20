@@ -187,6 +187,12 @@ abstract class sp_hook
 			case 'posting.' . PHP_EXT :
 				global $mode;
 
+				// Must habs perms
+				if (sp_phpbb::$auth->acl_get('!u_subject_prefix'))
+				{
+					return;
+				}
+
 				// If submitted, change the selected prefix here
 				if (isset($_POST['post']))
 				{

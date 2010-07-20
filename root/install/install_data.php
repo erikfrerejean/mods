@@ -52,23 +52,36 @@ $versions = array(
 
 		// Throw the permissions in tha mix
 		'permission_add'	=> array(
-			array('a_subject_prefix', true),	// Main admin permission
-			array('acl_a_subject_prefix_create', true),	// Can create/edit prefixes
+			array('a_subject_prefix', true),		// Main admin permission
+			array('a_subject_prefix_create', true),	// Can create/edit prefixes
+
+			array('u_subject_prefix'),				// Can post prefixes
 		),
 
 		'permission_set'	=> array(
 			// Admin roles
 			array('ROLE_ADMIN_STANDARD', array(
 				'a_subject_prefix',
-				'acl_a_subject_prefix_create'
+				'a_subject_prefix_create',
 			)),
 			array('ROLE_ADMIN_FORUM', array(
 				'a_subject_prefix',
-				'acl_a_subject_prefix_create'
+				'a_subject_prefix_create',
 			)),
 			array('ROLE_ADMIN_FULL', array(
 				'a_subject_prefix',
-				'acl_a_subject_prefix_create'
+				'a_subject_prefix_create',
+			)),
+
+			// User roles
+			array('ROLE_FORUM_FULL', array(
+				'u_subject_prefix',
+			)),
+			array('ROLE_FORUM_STANDARD', array(
+				'u_subject_prefix',
+			)),
+			array('ROLE_FORUM_POLLS', array(
+				'u_subject_prefix',
 			)),
 		)
 	),
