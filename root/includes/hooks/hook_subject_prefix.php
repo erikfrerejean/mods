@@ -74,6 +74,12 @@ abstract class sp_hook
 			return;
 		}
 
+		// This is kinda nasty, viewforum.php?f=. should be handled as index.php
+		if (sp_phpbb::$user->page['page_name'] == 'viewforum.' . PHP_EXT && isset(sp_phpbb::$template->_tpldata['forumrow']))
+		{
+			sp_phpbb::$user->page['page_name'] = 'index.' . PHP_EXT;
+		}
+
 		// Add the prefix to certain pages
 		switch (sp_phpbb::$user->page['page_name'])
 		{
