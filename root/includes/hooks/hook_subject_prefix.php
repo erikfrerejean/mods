@@ -28,6 +28,7 @@ abstract class sp_hook
 	static public function register(&$phpbb_hook)
 	{
 		$phpbb_hook->register('phpbb_user_session_handler', 'sp_hook::subject_prefix_init');
+		$phpbb_hook->register(array('template', 'display'), 'sp_hook::add_subject_prefix_to_page');
 		$phpbb_hook->register(array('template', 'display'), 'sp_hook::subject_prefix_template_hook');
 	}
 
@@ -61,12 +62,11 @@ abstract class sp_hook
 	}
 
 	/**
-	 * A hook that is used to change the behavior of phpBB just before the templates
-	 * are displayed.
+	 * A hook that adds the subject prefixes to phpBB pages without modifying the page itself
 	 * @param	phpbb_hook	$phpbb_hook	The phpBB hook object
 	 * @return	void
 	 */
-	static public function subject_prefix_template_hook(&$hook)
+	static public function add_subject_prefix_to_page(&$hook)
 	{
 		// Add the prefix to certain pages
 		switch (sp_phpbb::$user->page['page_name'])
@@ -159,6 +159,17 @@ abstract class sp_hook
 				sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
 			break;
 		}
+	}
+
+	/**
+	 * A hook that is used to change the behavior of phpBB just before the templates
+	 * are displayed.
+	 * @param	phpbb_hook	$phpbb_hook	The phpBB hook object
+	 * @return	void
+	 */
+	static public function subject_prefix_template_hook(&$hook)
+	{
+
 	}
 }
 
