@@ -56,81 +56,10 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 				<date>2010-07-19</date>
 				<rev-version>1.2.0-dev</rev-version>
 				<changelog>
-					<change>Full rewrite.</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-07-05</date>
-				<rev-version>1.0.0.a</rev-version>
-				<changelog lang="en">
-					<change>[Fix] Correctly display/remember prefixes when using post preview (Bug #2).</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-06-12</date>
-				<rev-version>1.0.0</rev-version>
-				<changelog lang="en">
-					<change>Up the version number.</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-06-12</date>
-				<rev-version>1.0.0-rc3</rev-version>
-				<changelog lang="en">
-					<change>[Fix] Display prefixes in viewtopic when the user is no moderator and isn't the topic starter.</change>
-					<change>[Fix] ACP page triggers an error when adding a prefix directly after a prefix was removed.</change>
-					<change>[Fix] Correctly update the cached data.</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-06-11</date>
-				<rev-version>1.0.0-rc2</rev-version>
-				<changelog lang="en">
-					<change>[Fix] Fix a critical issue that would break the installer.</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-06-11</date>
-				<rev-version>1.0.0-rc1</rev-version>
-				<changelog lang="en">
-					<change>[Change] Use the normal phpBB schema for table names.</change>
-					<change>[Fix] Resolve invalid form errors when QR is disabled and the topic doesn't has a poll.</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-06-09</date>
-				<rev-version>1.0.0-b1</rev-version>
-				<changelog lang="en">
-					<change>[Add] Added the ability to localise Subject prefixes.</change>
-					<change>[Add] MOD installer.</change>
-					<change>[Change] Increased minimum requirements to php 5.1.0.</change>
-					<change>[Change] Some small speed improvements.</change>
-					<change>[Change] Unified permission names.</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-05-28</date>
-				<rev-version>1.0.0-a2</rev-version>
-				<changelog lang="en">
-					<change>[Add] User based permission.</change>
-					<change>[Add] A quick change box for moderators to change the topic prefix.</change>
-					<change>[Add] Full SubSilver2 support.</change>
-					<change>[Change] Don't move prefixes to forums where this prefix can't be used.</change>
-					<change>[Fix] Added missing prefix support in viewtopic print.</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-05-20</date>
-				<rev-version>1.0.0-a1</rev-version>
-				<changelog lang="en">
-					<change>First Alpha release</change>
+					<change>Full rewrite of this MOD.</change>
 				</changelog>
 			</entry>
 		</history>
-
-		<link-group>
-			<link type="template" realname="SubSilver2" href="contrib/subsilver2.xml" lang="en">SubSilver2</link>
-		</link-group>
 	</header>
 	<action-group>
 		<!-- File copy -->
@@ -142,8 +71,17 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 			<file from="root/includes/mods/subject_prefix/*.*" to="includes/mods/subject_prefix/*.*" />
 			<file from="root/install/*.*" to="install/*.*" />
 			<file from="root/language/en/mods/subject_prefix/*.*" to="language/en/mods/subject_prefix/*.*" />
+			<file from="root/styles/prosilver/template/mods/subject_prefix/*.*" to="styles/prosilver/template/mods/subject_prefix/*.*" />
 			<file from="root/umil/*.*" to="umil/*.*" />
 			<file from="root/sp_ajax.php" to="sp_ajax.php" />
 		</copy>
+
+		<!-- File edits -->
+		<open src="styles/prosilver/template/posting_editor.html">
+			<edit>
+				<find><![CDATA[<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->]]></find>
+				<action type="before-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
+			</edit>
+		</open>
 	</action-group>
 </mod>
