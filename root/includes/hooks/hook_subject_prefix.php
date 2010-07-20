@@ -185,10 +185,10 @@ abstract class sp_hook
 		{
 			// Add the prefix dropdown to the posting page
 			case 'posting.' . PHP_EXT :
-				global $mode;
+				global $forum_id, $mode;
 
 				// Must habs perms
-				if (sp_phpbb::$auth->acl_get('!u_subject_prefix'))
+				if (sp_phpbb::$auth->acl_get('!f_subject_prefix', $forum_id))
 				{
 					return;
 				}
@@ -217,8 +217,6 @@ abstract class sp_hook
 				{
 					if ($mode == 'post')
 					{
-						global $forum_id;
-
 						sp_phpbb::$template->assign_vars(array(
 							'S_SUBJECT_PREFIX_OPTIONS'	=> sp_core::generate_prefix_options($forum_id),
 						));

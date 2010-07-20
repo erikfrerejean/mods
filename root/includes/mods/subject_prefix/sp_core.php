@@ -49,12 +49,6 @@ abstract class sp_core
 	 */
 	static public function generate_prefix_options($fid, $selected = false)
 	{
-		// Can't use, can't see
-		if (sp_phpbb::$auth->acl_get('!u_subject_prefix'))
-		{
-			return '';
-		}
-
 		// Fetch all the prefixes
 		$tree = $forums = array();
 		sp_phpbb::$cache->obtain_prefix_forum_tree($tree, $forums);
