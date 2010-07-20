@@ -42,6 +42,33 @@ abstract class sp_core
 	}
 
 	/**
+	 * Generate the options for any dropdown box containing prefixes
+	 * @param	Integer	$fid		The box is used in this forum
+	 * @param	Integer	$selected	The ID of the selected option
+	 * @return	String				String containing the options HTML
+	 */
+	static public function generate_prefix_options($fid, $selected = false)
+	{
+		// Fetch all the prefixes
+		$tree = $forums = array();
+		sp_phpbb::$cache->obtain_prefix_forum_tree($tree, $forums);
+
+		// No prefixes in this forum
+		if (empty($tree[$fid]))
+		{
+			return '';
+		}
+
+		$options = array("<option value='0'" . (($selected === false) ? " selected='selected'" : '') . '>' . sp_phpbb::$user->lang('SELECT_A_PREFIX') . '</option>');
+		foreach ($tree[$fid] as $prefix)
+		{
+			$options[] = "<option value='{$prefix['prefix_id']}'" . (($selected == $prefix['prefix_id']) ? " selected='selected'" : '') . " style='color: {$prefix['prefix_colour']};'>" . self::generate_prefix_string($prefix['prefix_id'], false) . '</option>';
+		}
+
+		return implode('', $options);
+	}
+
+	/**
 	 * Generate the output for the reqested prefix
 	 * @param	Integer	$pid	ID of the prefix
 	 * @param	Boolean	$markup	Use colouring or not
@@ -50,7 +77,7 @@ abstract class sp_core
 	static public function generate_prefix_string($pid, $markup = true)
 	{
 		static $formatted	= '<span style="color: #%s">%s</span>';
-		static $unformatted	= '[%s]';
+		static $unformatted	= '%s';
 
 		$prefixes = sp_phpbb::$cache->obtain_subject_prefixes();
 
@@ -60,13 +87,15 @@ abstract class sp_core
 			return;
 		}
 
+		$prefix_title = (isset(sp_phpbb::$user->lang['SP_' . $prefixes[$pid]['title']])) ? sp_phpbb::$user->lang['SP_' . $prefixes[$pid]['title']] : $prefixes[$pid]['title'];
+
 		if ($markup)
 		{
-			return sprintf($formatted, $prefixes[$pid]['colour'], $prefixes[$pid]['title']);
+			return sprintf($formatted, $prefixes[$pid]['colour'], $prefix_title);
 		}
 		else
 		{
-			return sprintf($unformatted, $prefixes[$pid]['title']);
+			return sprintf($unformatted, $prefix_title);
 		}
 	}
 
