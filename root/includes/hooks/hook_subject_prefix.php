@@ -71,6 +71,38 @@ abstract class sp_hook
 		// Add the prefix to certain pages
 		switch (sp_phpbb::$user->page['page_name'])
 		{
+			case 'index.' . PHP_EXT :
+				// To fetch the subject prefixes we'll need the last post ids
+				$last_post_ids = array();
+				foreach (sp_phpbb::$template->_tpldata['forumrow'] as $row => $data)
+				{
+					// Need the last post link
+					if (empty($data['U_LAST_POST']))
+					{
+						continue;
+					}
+
+					$last_post_ids[$row] = substr(strrchr($data['U_LAST_POST'], 'p'), 1);
+				}
+
+				// Get the prefixes
+				$sql = 'SELECT topic_last_post_id, subject_prefix_id
+					FROM ' . TOPICS_TABLE . '
+					WHERE ' . sp_phpbb::$db->sql_in_set('topic_last_post_id', $last_post_ids);
+				$result	= sp_phpbb::$db->sql_query($sql);
+				$last_post_ids = array_flip($last_post_ids);
+				while ($row = sp_phpbb::$db->sql_fetchrow($result))
+				{
+					$last_post_subject = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['forumrow'][$last_post_ids[$row['topic_last_post_id']]]['LAST_POST_SUBJECT'];
+
+					// Alter the array
+					sp_phpbb::$template->alter_block_array('forumrow', array(
+						'LAST_POST_SUBJECT' => $last_post_subject,
+					), $key = $last_post_ids[$row['topic_last_post_id']], $mode = 'change');
+				}
+				sp_phpbb::$db->sql_freeresult($result);
+			break;
+
 			case 'viewforum.' . PHP_EXT :
 				// As the topic data is unset once its used we'll have to introduce an query to
 				// fetch the prefixes
