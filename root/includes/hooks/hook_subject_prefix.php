@@ -128,6 +128,11 @@ abstract class sp_hook
 			case 'viewforum.' . PHP_EXT :
 				// As the topic data is unset once its used we'll have to introduce an query to
 				// fetch the prefixes
+				if (empty(sp_phpbb::$template->_tpldata['topicrow']))
+				{
+					return;
+				}
+
 				$topic_ids_rows = array();
 				foreach (sp_phpbb::$template->_tpldata['topicrow'] as $row => $data)
 				{
@@ -176,7 +181,45 @@ abstract class sp_hook
 	 */
 	static public function subject_prefix_template_hook(&$hook)
 	{
+		switch (sp_phpbb::$user->page['page_name'])
+		{
+			// Add the prefix dropdown to the posting page
+			case 'posting.' . PHP_EXT :
+				global $mode;
 
+				// If submitted, change the selected prefix here
+				if (isset($_POST['post']))
+				{
+					global $data;
+
+					// New topic
+					if ($mode == 'post')
+					{
+						// Only have to add the prefix
+						$pid = request_var('subjectprefix', 0);
+						$sql = 'UPDATE ' . TOPICS_TABLE . '
+							SET subject_prefix_id = ' . $pid . '
+							WHERE topic_id = ' . $data['topic_id'];
+						sp_phpbb::$db->sql_query($sql);
+
+						// Done :)
+						return;
+					}
+				}
+				// Display the dropbox
+				else
+				{
+					if ($mode == 'post')
+					{
+						global $forum_id;
+
+						sp_phpbb::$template->assign_vars(array(
+							'S_SUBJECT_PREFIX_OPTIONS'	=> sp_core::generate_prefix_options($forum_id),
+						));
+					}
+				}
+			break;
+		}
 	}
 }
 
