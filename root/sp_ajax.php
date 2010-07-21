@@ -36,13 +36,11 @@ switch ($mode)
 	case 'move' :
 		// Get the table
 		$tablename	= request_var('tablename', '');
-		$tableid	= substr($tablename, 13);
 
 		// Fetch the posted list
 		$prefixlist = request_var($tablename, array(0 => ''));
 
 		// Run through the list
-		$sqls = array();
 		foreach ($prefixlist as $order => $prefix)
 		{
 			// First one is the header, skip it
@@ -58,7 +56,7 @@ switch ($mode)
 			$order = $order - 1;
 
 			// Update in the db
-			sp_phpbb::$db->sql_query('UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . ' SET prefix_order = ' . $order . ' WHERE prefix_id = ' . $prefix);
+			sp_phpbb::$db->sql_query('UPDATE ' . SUBJECT_PREFIX_FORUMS_TABLE . ' SET prefix_order = ' . $order . ' WHERE prefix_id = ' . (int) $prefix);
 		}
 
 		// Tell the template we're good ^^
@@ -66,7 +64,7 @@ switch ($mode)
 	break;
 
 	case 'delete' :
-		$data = request_var('data', '0_0');
+		$data = request_var('data', 'pf0_0');
 
 		// Strip "pf"
 		$data = substr($data, 3);
@@ -74,7 +72,7 @@ switch ($mode)
 		// Strip the ID
 		$parts = explode('_', $data);
 
-		sp_core::prefix_delete_forum($parts[0], $parts[1]);
+		sp_core::prefix_delete_forum((int) $parts[0], (int) $parts[1]);
 
 		// Tell the template we're good ^^
 		$result = 'success';
