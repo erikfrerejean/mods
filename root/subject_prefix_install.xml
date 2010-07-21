@@ -81,5 +81,8 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 				<action type="before-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
 			</edit>
 		</open>
+
+		<!-- Installer -->
+		<php-installer>install/index.php</php-installer>
 	</action-group>
 </mod>
