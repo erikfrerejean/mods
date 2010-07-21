@@ -64,16 +64,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 	<action-group>
 		<!-- File copy -->
 		<copy>
-			<file from="root/adm/style/*.*" to="adm/style/*.*" />
-			<file from="root/includes/acp/info/*.*" to="includes/acp/info/*.*" />
-			<file from="root/includes/acp/*.*" to="includes/acp/*.*" />
-			<file from="root/includes/hooks/*.*" to="includes/hooks/*.*" />
-			<file from="root/includes/mods/subject_prefix/*.*" to="includes/mods/subject_prefix/*.*" />
-			<file from="root/install/*.*" to="install/*.*" />
-			<file from="root/language/en/mods/subject_prefix/*.*" to="language/en/mods/subject_prefix/*.*" />
-			<file from="root/styles/prosilver/template/mods/subject_prefix/*.*" to="styles/prosilver/template/mods/subject_prefix/*.*" />
-			<file from="root/umil/*.*" to="umil/*.*" />
-			<file from="root/sp_ajax.php" to="sp_ajax.php" />
+			<file from="root/*.*" to="*.*" />
 		</copy>
 
 		<!-- File edits -->
