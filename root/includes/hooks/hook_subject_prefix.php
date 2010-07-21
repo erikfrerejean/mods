@@ -126,6 +126,19 @@ abstract class sp_hook
 				sp_phpbb::$db->sql_freeresult($result);
 			break;
 
+			case 'posting.' . PHP_EXT :
+				global $preview;
+
+				// When previewing this add the tag
+				if (!empty($preview))
+				{
+					$pid = request_var('subjectprefix', 0);
+					$topic_title = sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
+					$topic_title = sp_core::generate_prefix_string($pid) . ' ' . $topic_title;
+					sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
+				}
+			break;
+
 			case 'search.' . PHP_EXT :
 				if (empty(sp_phpbb::$template->_tpldata['searchresults']))
 				{
@@ -213,7 +226,7 @@ abstract class sp_hook
 			// Add the prefix dropdown to the posting page
 			case 'posting.' . PHP_EXT :
 				global $forum_id, $post_id, $topic_id;
-				global $mode;
+				global $mode, $preview;
 
 				// Must habs perms
 				if (sp_phpbb::$auth->acl_get('!f_subject_prefix', $forum_id))
@@ -271,6 +284,12 @@ abstract class sp_hook
 				// Display the dropbox
 				else
 				{
+					// Set the correct prefix when previewing
+					if (!empty($preview))
+					{
+						$selected = $pid;
+					}
+
 					switch ($mode)
 					{
 						case 'edit' :
