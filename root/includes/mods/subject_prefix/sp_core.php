@@ -38,7 +38,7 @@ abstract class sp_core
 		}
 
 		// Include the acp langauge file
-		sp_phpbb::$user->add_lang('mods/subject_prefix/info_acp_subject_prefix');
+		sp_phpbb::$user->add_lang('mods/subject_prefix/subject_prefix_common');
 	}
 
 	/**
