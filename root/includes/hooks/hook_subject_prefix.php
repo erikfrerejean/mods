@@ -90,6 +90,11 @@ abstract class sp_hook
 		switch (sp_phpbb::$user->page['page_name'])
 		{
 			case 'index.' . PHP_EXT :
+				if (empty(sp_phpbb::$template->_tpldata['forumrow']))
+				{
+					return;
+				}
+
 				// To fetch the subject prefixes we'll need the last post ids
 				$last_post_ids = array();
 				foreach (sp_phpbb::$template->_tpldata['forumrow'] as $row => $data)
@@ -122,7 +127,7 @@ abstract class sp_hook
 			break;
 
 			case 'search.' . PHP_EXT :
-				if (!isset(sp_phpbb::$template->_tpldata['searchresults']))
+				if (empty(sp_phpbb::$template->_tpldata['searchresults']))
 				{
 					return;
 				}
