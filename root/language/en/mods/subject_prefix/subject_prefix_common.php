@@ -76,6 +76,7 @@ $lang = array_merge($lang, array(
 	'PREFIX_FORUMS_EXPLAIN'		=> 'Select the forums in which this prefix can be used.',
 	'PREFIX_INSERT_FAIL'		=> 'Couldn\'t insert the prefix',
 	'PREFIX_NOT_ALLOWED'		=> 'The selected prefix isn\'t allowed in this forum',
+	'PREFIX_NOT_CHANGED'		=> 'The subject prefix hasn\'t been changed',
 	'PREFIX_ORDER_UPDATED'		=> 'Subject Prefix order successfully updated',
 	'PREFIX_SUCCESSFULLY_ADDED'	=> 'The prefix has been created successfully!',
 	'PREFIX_TITLE'				=> 'Prefix title',

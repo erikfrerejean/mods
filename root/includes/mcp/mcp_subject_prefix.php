@@ -27,14 +27,12 @@ class mcp_subject_prefix
 	*/
 	public function main($mode, $id)
 	{
-		global $db, $user;
-		global $phpEx;
-
 		// Fetch all the data
 		$fid	= request_var('f', 0);
 		$pid	= request_var('prefixid', 0);
-		$red	= request_var('redirect', 'index.' . $phpEx);
+		$red	= request_var('redirect', 'index.' . PHP_EXT);
 		$tid	= request_var('t', 0);
+		$red	= reapply_sid($red);
 
 		// Get the prefix data
 		$tree = $forums = array();
@@ -57,13 +55,15 @@ class mcp_subject_prefix
 		// No change
 		if ($pid == $_c_pid)
 		{
-			return;
+			meta_refresh(2, $red);
+			trigger_error(sp_phpbb::$user->lang['PREFIX_NOT_CHANGED'] . '<br /><br />' . sprintf(sp_phpbb::$user->lang['RETURN_PAGE'], '<a href="' . $red . '">', '</a>'));
 		}
 
 		// The selected prefix can be used in this forum?
 		if (!isset($tree[$fid][$pid]))
 		{
-			trigger_error('PREFIX_NOT_ALLOWED');
+			meta_refresh(2, $red);
+			trigger_error(sp_phpbb::$user->lang['PREFIX_NOT_ALLOWED'] . '<br /><br />' . sprintf(sp_phpbb::$user->lang['RETURN_PAGE'], '<a href="' . $red . '">', '</a>'));
 		}
 
 		// Update
@@ -78,9 +78,8 @@ class mcp_subject_prefix
 		else
 		{
 			sp_cache::subject_prefix_quick_clear();
-			$redirect = reapply_sid($red);
-			meta_refresh(2, $redirect);
-			trigger_error($user->lang['PREFIX_UPDATED_SUCCESS'] . '<br /><br />' . sprintf($user->lang['RETURN_PAGE'], '<a href="' . $redirect . '">', '</a>'));
+			meta_refresh(2, $red);
+			trigger_error(sp_phpbb::$user->lang['PREFIX_UPDATED_SUCCESS'] . '<br /><br />' . sprintf(sp_phpbb::$user->lang['RETURN_PAGE'], '<a href="' . $red . '">', '</a>'));
 		}
 	}
 }
