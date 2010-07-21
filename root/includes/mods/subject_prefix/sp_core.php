@@ -167,6 +167,12 @@ abstract class sp_core
 			sp_phpbb::$db->sql_query("DELETE FROM $table WHERE prefix_id = $pid");
 		}
 
+		// Update the topics table
+		$sql = 'UPDATE ' . TOPICS_TABLE . '
+			SET subject_prefix_id = 0
+			WHERE subject_prefix_id = ' . $pid;
+		sp_phpbb::$db->sql_query($sql);
+
 		sp_cache::subject_prefix_quick_clear();
 	}
 
@@ -178,9 +184,17 @@ abstract class sp_core
 	 */
 	static public function prefix_delete_forum($pid, $fid)
 	{
+		// Remove for this forum
 		$sql = 'DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . '
 			WHERE prefix_id = ' . $pid . '
 				AND forum_id = ' . $fid;
+		sp_phpbb::$db->sql_query($sql);
+
+		// Update the topics table
+		$sql = 'UPDATE ' . TOPICS_TABLE . "
+			SET subject_prefix_id = 0
+			WHERE forum_id = $fid
+				AND subject_prefix_id = $pid";
 		sp_phpbb::$db->sql_query($sql);
 
 		// A prefix can't exist when its not linked to at least one forum
@@ -190,13 +204,12 @@ abstract class sp_core
 
 		if (!empty($check))
 		{
+			sp_cache::subject_prefix_quick_clear();
 			return;
 		}
 
 		// Delete it
 		self::prefix_delete($pid);
-
-		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
