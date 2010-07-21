@@ -43,7 +43,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 			</author>
 		</author-group>
 
-		<mod-version>1.2.0-dev</mod-version>
+		<mod-version>1.2.0-B1</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -53,8 +53,8 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 
 		<history>
 			<entry>
-				<date>2010-07-19</date>
-				<rev-version>1.2.0-dev</rev-version>
+				<date>2010-07-21</date>
+				<rev-version>1.2.0-B1</rev-version>
 				<changelog>
 					<change>Full rewrite of this MOD.</change>
 				</changelog>
