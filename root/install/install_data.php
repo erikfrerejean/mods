@@ -93,6 +93,46 @@ $versions = array(
 			array('ROLE_FORUM_POLLS', array(
 				'f_subject_prefix',
 			)),
-		)
+		),
+
+		// Add the modules
+		'module_add' => array(
+			// ACP Module
+			array('acp', 'ACP_CAT_DOT_MODS', array(
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'module_langname'	=> 'ACP_SUBJECT_PREFIX',
+				'module_auth'		=> 'acl_a_subject_prefix',
+			)),
+			array('acp', 'ACP_SUBJECT_PREFIX', array(
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'module_langname'	=> 'ACP_SUBJECT_PREFIX',
+
+				'module_basename'	=> 'subject_prefix',
+				'module_mode'		=> 'main',
+				'module_auth'		=> 'acl_a_subject_prefix',
+			)),
+			array('acp', 'ACP_SUBJECT_PREFIX', array(
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'module_langname'	=> 'ACP_SUBJECT_PREFIX',
+
+				'module_basename'	=> 'subject_prefix',
+				'module_mode'		=> 'add',
+				'module_auth'		=> 'acl_a_subject_prefix_create',
+			)),
+
+			// MCP Module
+			array('mcp', 'MCP_MAIN', array(
+				'module_enabled'	=> 1,
+				'module_display'	=> 0,
+				'module_langname'	=> 'MCP_SUBJECT_PREFIX',
+
+				'module_basename'	=> 'subject_prefix',
+				'module_mode'		=> 'quick_edit',
+				'module_auth'		=> 'acl_m_subject_prefix',
+			)),
+		),
 	),
 );
