@@ -71,6 +71,8 @@ abstract class sp_hook
 	 * A hook that adds the subject prefixes to phpBB pages without modifying the page itself
 	 * @param	phpbb_hook	$phpbb_hook	The phpBB hook object
 	 * @return	void
+	 * @todo	Change this method to a more flexible one. The current method is really
+	 * 			static and there is a lot of code duplication around here.
 	 */
 	static public function add_subject_prefix_to_page(&$hook)
 	{
@@ -126,6 +128,10 @@ abstract class sp_hook
 				sp_phpbb::$db->sql_freeresult($result);
 			break;
 
+			case 'mcp.' . PHP_EXT :
+
+			break;
+
 			case 'posting.' . PHP_EXT :
 				global $preview;
 
@@ -153,6 +159,38 @@ abstract class sp_hook
 						'TOPIC_TITLE'	=> $topic_title,
 					), $row, 'change');
 				}
+			break;
+
+			case 'ucp.' . PHP_EXT :
+				// As the topic data is unset once its used we'll have to introduce an query to
+				// fetch the prefixes
+				if (empty(sp_phpbb::$template->_tpldata['topicrow']))
+				{
+					return;
+				}
+
+				$topic_ids_rows = array();
+				foreach (sp_phpbb::$template->_tpldata['topicrow'] as $row => $data)
+				{
+					$topic_ids_rows[$row] = $data['TOPIC_ID'];
+				}
+
+				$sql = 'SELECT topic_id, subject_prefix_id
+					FROM ' . TOPICS_TABLE . '
+					WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $topic_ids_rows) . '
+						AND subject_prefix_id > 0';
+				$result = sp_phpbb::$db->sql_query($sql);
+				$topic_ids_rows = array_flip($topic_ids_rows);
+				while ($row = sp_phpbb::$db->sql_fetchrow($result))
+				{
+					$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['topicrow'][$topic_ids_rows[$row['topic_id']]]['TOPIC_TITLE'];
+
+					// Alter the array
+					sp_phpbb::$template->alter_block_array('topicrow', array(
+						'TOPIC_TITLE' => $topic_title,
+					), $key = $topic_ids_rows[$row['topic_id']], 'change');
+				}
+				sp_phpbb::$db->sql_freeresult($result);
 			break;
 
 			case 'viewforum.' . PHP_EXT :
@@ -218,6 +256,7 @@ abstract class sp_hook
 	 * are displayed.
 	 * @param	phpbb_hook	$phpbb_hook	The phpBB hook object
 	 * @return	void
+	 * @todo	Clean up, kinda messy this :/
 	 */
 	static public function subject_prefix_template_hook(&$hook)
 	{
