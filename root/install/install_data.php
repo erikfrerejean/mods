@@ -55,6 +55,8 @@ $versions = array(
 			array('a_subject_prefix', true),		// Main admin permission
 			array('a_subject_prefix_create', true),	// Can create/edit prefixes
 
+			array('m_subject_prefix'),				// MCP quick edit permission
+
 			array('f_subject_prefix'),				// Can post prefixes
 		),
 
@@ -71,6 +73,14 @@ $versions = array(
 			array('ROLE_ADMIN_FULL', array(
 				'a_subject_prefix',
 				'a_subject_prefix_create',
+			)),
+
+			// Moderator roles
+			array('ROLE_MOD_FULL', array(
+				'm_subject_prefix',
+			)),
+			array('ROLE_MOD_STANDARD', array(
+				'm_subject_prefix',
 			)),
 
 			// User roles

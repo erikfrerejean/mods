@@ -164,7 +164,8 @@ abstract class sp_hook
 			break;
 
 			case 'viewtopic.' . PHP_EXT :
-				global $topic_data;
+				global $forum_id, $topic_id;
+				global $viewtopic_url, $topic_data;
 
 				// Add to the page title
 				$page_title = sp_phpbb::$template->_tpldata['.'][0]['PAGE_TITLE'];
@@ -175,6 +176,15 @@ abstract class sp_hook
 				$topic_title = sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
 				$topic_title = sp_core::generate_prefix_string($topic_data['subject_prefix_id']) . ' ' . $topic_title;
 				sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
+
+				// The quick MOD box
+				if (sp_phpbb::$auth->acl_get('m_subject_prefix', $forum_id))
+				{
+					sp_phpbb::$template->assign_vars(array(
+						'S_SUBJECT_PREFIX_QUICK_MOD'		=> sp_core::generate_prefix_options($forum_id, $topic_data['subject_prefix_id']),
+						'S_SUBJECT_PREFIX_QUICK_MOD_ACTION'	=> append_sid(PHPBB_ROOT_PATH . 'mcp.' . PHP_EXT, array('i' => 'subject_prefix', 'mode' => 'subject_prefix_qc', 'f' => $forum_id, 't' => $topic_id, 'redirect' => urlencode(str_replace('&amp;', '&', $viewtopic_url))), true, sp_phpbb::$user->session_id),
+					));
+				}
 			break;
 		}
 	}
@@ -226,6 +236,14 @@ abstract class sp_hook
 						// No Break;
 
 						case 'post' :
+							// Validate that this prefix can be used here
+							$tree = $forums = array();
+							sp_phpbb::$cache->obtain_prefix_forum_tree($tree, $forums);
+							if (empty($tree[$forum_id]) || empty($tree[$forum_id][$pid]))
+							{
+								trigger_error('PREFIX_NOT_ALLOWED');
+							}
+
 							// Only have to add the prefix
 							$pid = request_var('subjectprefix', 0);
 							$sql = 'UPDATE ' . TOPICS_TABLE . '

@@ -73,5 +73,7 @@ $lang = array_merge($lang, array(
 	'acl_a_subject_prefix'			=> array('lang' => 'Can manage subject prefixes', 'cat' => 'posting'),
 	'acl_a_subject_prefix_create'	=> array('lang' => 'Can create/edit subject prefixes', 'cat' => 'posting'),
 
+	'acl_m_subject_prefix'			=> array('lang' => 'Can use the subject prefix quick edit', 'cat' => 'topic_actions'),
+
 	'acl_f_subject_prefix'			=> array('lang' => 'Can post subject prefixes', 'cat' => 'post'),
 ));

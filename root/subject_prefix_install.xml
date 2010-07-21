@@ -83,5 +83,12 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 				<action type="before-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
 			</edit>
 		</open>
+
+		<open src="styles/prosilver/template/viewtopic_body.html">
+			<edit>
+				<find><![CDATA[<!-- IF S_DISPLAY_ONLINE_LIST -->]]></find>
+				<action type="before-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
+			</edit>
+		</open>
 	</action-group>
 </mod>
