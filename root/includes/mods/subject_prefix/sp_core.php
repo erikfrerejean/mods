@@ -110,30 +110,21 @@ abstract class sp_core
 	static public function prefix_add($prefix_title, $prefix_colour, $forums, &$error)
 	{
 		// Validate input
-		if (empty($prefix_title))
-		{
-			$error[] = 'NO_PREFIX_TITLE';
-		}
-		if (preg_match('~^(#{0,1})[a-fA-F0-9]{6}$~', $prefix_colour))
-		{
-			$prefix_colour = (substr($prefix_colour, 0, 1) == '#') ? substr($prefix_colour, 1) : $prefix_colour;
-		}
-		else
-		{
-			$error[] = 'NO_PREFIX_COLOUR';
-		}
+		$error = self::_validate_input($prefix_title, $prefix_colour);
+
 		if (!empty($error))
 		{
 			return;
 		}
+
+		// Fix colour code
+		$prefix_colour = (substr($prefix_colour, 0, 1) == '#') ? substr($prefix_colour, 1) : $prefix_colour;
 
 		// Create the actual prefix
 		sp_phpbb::$db->sql_query('INSERT INTO ' . SUBJECT_PREFIX_TABLE . ' ' . sp_phpbb::$db->sql_build_array('INSERT', array(
 			'prefix_title'	=> $prefix_title,
 			'prefix_colour'	=> $prefix_colour,
 		)));
-
-		sp_cache::subject_prefix_quick_clear();
 
 		$pid = sp_phpbb::$db->sql_nextid();
 
@@ -148,6 +139,40 @@ abstract class sp_core
 		sp_cache::subject_prefix_quick_clear();
 
 		return $pid;
+	}
+
+	static public function prefix_update($pid, $prefix_title, $prefix_colour, $forums, &$error)
+	{
+		if ($pid == 0)
+		{
+			$pid = self::prefix_add($prefix_title, $prefix_colour, $forums, $error);
+			return $pid;
+		}
+
+		// Validate input
+		$error = self::_validate_input($prefix_title, $prefix_colour);
+
+		if (!empty($error))
+		{
+			return;
+		}
+
+		// Fix colour code
+		$prefix_colour = (substr($prefix_colour, 0, 1) == '#') ? substr($prefix_colour, 1) : $prefix_colour;
+
+		// Update the prefix
+		sp_phpbb::$db->sql_query('UPDATE ' . SUBJECT_PREFIX_TABLE . ' SET ' . sp_phpbb::$db->sql_build_array('UPDATE', array(
+			'prefix_title'	=> $prefix_title,
+			'prefix_colour'	=> $prefix_colour,
+		)) . ' WHERE prefix_id = ' . $pid);
+
+		// Just for the ease of things we remove all prefix - forum links here
+		// And than add them all back
+		sp_phpbb::$db->sql_query('DELETE FROM ' . SUBJECT_PREFIX_FORUMS_TABLE . ' WHERE prefix_id = ' . $pid);
+
+		self::prefix_link_to_forums($pid, $forums, $error);
+
+		sp_cache::subject_prefix_quick_clear();
 	}
 
 	/**
@@ -353,7 +378,21 @@ abstract class sp_core
 
 		// Insert
 		sp_phpbb::$db->sql_multi_insert(SUBJECT_PREFIX_FORUMS_TABLE, $insert_data);
+	}
 
-		sp_cache::subject_prefix_quick_clear();
+	static private function _validate_input($prefix_title, $prefix_colour)
+	{
+		$error = array();
+
+		if (empty($prefix_title))
+		{
+			$error[] = 'NO_PREFIX_TITLE';
+		}
+		if (!preg_match('~^(#{0,1})[a-fA-F0-9]{6}$~', $prefix_colour))
+		{
+			$error[] = 'NO_PREFIX_COLOUR';
+		}
+
+		return $error;
 	}
 }
