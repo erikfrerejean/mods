@@ -15,8 +15,8 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-// Block the hook when installing
-if (defined('IN_INSTALL'))
+// When the MOD isn't installed, we won't bother here ^^
+if (!isset($config['subject_prefix_version']))
 {
 	return;
 }
@@ -193,7 +193,7 @@ abstract class sp_hook
 				{
 					sp_phpbb::$template->assign_vars(array(
 						'S_SUBJECT_PREFIX_QUICK_MOD'		=> sp_core::generate_prefix_options($forum_id, $topic_data['subject_prefix_id']),
-						'S_SUBJECT_PREFIX_QUICK_MOD_ACTION'	=> append_sid(PHPBB_ROOT_PATH . 'mcp.' . PHP_EXT, array('i' => 'subject_prefix', 'mode' => 'subject_prefix_qc', 'f' => $forum_id, 't' => $topic_id, 'redirect' => urlencode(str_replace('&amp;', '&', $viewtopic_url))), true, sp_phpbb::$user->session_id),
+						'S_SUBJECT_PREFIX_QUICK_MOD_ACTION'	=> append_sid(PHPBB_ROOT_PATH . 'mcp.' . PHP_EXT, array('i' => 'subject_prefix', 'mode' => 'quick_edit', 'f' => $forum_id, 't' => $topic_id, 'redirect' => urlencode(str_replace('&amp;', '&', $viewtopic_url))), true, sp_phpbb::$user->session_id),
 					));
 				}
 			break;
@@ -220,6 +220,8 @@ abstract class sp_hook
 				{
 					return;
 				}
+
+				$pid = request_var('subjectprefix', 0);
 
 				// When editing we only pass this point when the *first* post is edited
 				$selected = false;
@@ -250,13 +252,12 @@ abstract class sp_hook
 							// Validate that this prefix can be used here
 							$tree = $forums = array();
 							sp_phpbb::$cache->obtain_prefix_forum_tree($tree, $forums);
-							if (empty($tree[$forum_id]) || empty($tree[$forum_id][$pid]))
+							if (!isset($tree[$forum_id][$pid]) && $pid > 0)
 							{
 								trigger_error('PREFIX_NOT_ALLOWED');
 							}
 
 							// Only have to add the prefix
-							$pid = request_var('subjectprefix', 0);
 							$sql = 'UPDATE ' . TOPICS_TABLE . '
 								SET subject_prefix_id = ' . $pid . '
 								WHERE topic_id = ' . $data['topic_id'];
