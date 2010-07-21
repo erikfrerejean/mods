@@ -55,9 +55,9 @@ $versions = array(
 			array('a_subject_prefix', true),		// Main admin permission
 			array('a_subject_prefix_create', true),	// Can create/edit prefixes
 
-			array('m_subject_prefix'),				// MCP quick edit permission
+			array('m_subject_prefix', false),		// MCP quick edit permission
 
-			array('f_subject_prefix'),				// Can post prefixes
+			array('f_subject_prefix', false),		// Can post prefixes
 		),
 
 		'permission_set'	=> array(
