@@ -110,7 +110,7 @@ class sp_cache extends cache
 				$_pft['forums'][$row['forum_id']]	= $row['forum_name'];
 			}
 
-			$_pft['tree'][$row['forum_id']][] = array(
+			$_pft['tree'][$row['forum_id']][$row['prefix_id']] = array(
 				'prefix_id'		=> $row['prefix_id'],
 				'prefix_title'	=> $row['prefix_title'],
 				'prefix_colour'	=> $row['prefix_colour'],

@@ -70,8 +70,8 @@ class mcp_subject_prefix
 		$sql = 'UPDATE ' . TOPICS_TABLE . '
 			SET subject_prefix_id = ' . $pid . '
 			WHERE topic_id = ' . $tid;
-		$db->sql_query($sql);
-		if ($db->sql_affectedrows() == -1)
+		sp_phpbb::$db->sql_query($sql);
+		if (sp_phpbb::$db->sql_affectedrows() == -1)
 		{
 			trigger_error('PREFIX_UPDATE_FAILED');
 		}
