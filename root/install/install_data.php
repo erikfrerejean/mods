@@ -24,7 +24,7 @@ if (!defined('IN_PHPBB'))
 */
 $versions = array(
 	// Dev version, will be used as "main" schema
-	'1.2.0-dev'	=> array(
+	'1.2.0-RC1'	=> array(
 		'table_add' => array(
 			// The main Subject Prefix table
 			array(SUBJECT_PREFIX_TABLE, array(
@@ -105,34 +105,25 @@ $versions = array(
 				'module_auth'		=> 'acl_a_subject_prefix',
 			)),
 			array('acp', 'ACP_SUBJECT_PREFIX', array(
-				'module_enabled'	=> 1,
-				'module_display'	=> 1,
-				'module_langname'	=> 'ACP_SUBJECT_PREFIX',
-
 				'module_basename'	=> 'subject_prefix',
-				'module_mode'		=> 'main',
-				'module_auth'		=> 'acl_a_subject_prefix',
-			)),
-			array('acp', 'ACP_SUBJECT_PREFIX', array(
-				'module_enabled'	=> 1,
-				'module_display'	=> 1,
-				'module_langname'	=> 'ACP_SUBJECT_PREFIX',
-
-				'module_basename'	=> 'subject_prefix',
-				'module_mode'		=> 'add',
-				'module_auth'		=> 'acl_a_subject_prefix_create',
+				'modes'				=> array('main', 'add'),
 			)),
 
 			// MCP Module
 			array('mcp', 'MCP_MAIN', array(
-				'module_enabled'	=> 1,
-				'module_display'	=> 0,
-				'module_langname'	=> 'MCP_SUBJECT_PREFIX',
-
 				'module_basename'	=> 'subject_prefix',
-				'module_mode'		=> 'quick_edit',
-				'module_auth'		=> 'acl_m_subject_prefix',
+				'modes'				=> array('quick_edit'),
 			)),
+		),
+
+		// Alter the database structure
+		'table_column_add' => array(
+			array(TOPICS_TABLE, 'subject_prefix_id', array('UINT', '0'))
+		),
+
+		'table_index_add' => array(
+			array(TOPICS_TABLE, 'topic_first_post_id', 'topic_first_post_id'),
+			array(TOPICS_TABLE, 'subject_prefix_id', 'subject_prefix_id'),
 		),
 	),
 );

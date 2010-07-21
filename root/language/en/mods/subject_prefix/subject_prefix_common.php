@@ -92,3 +92,13 @@ $lang = array_merge($lang, array(
 	'SUBJECT_PREFIX_QUICK_MOD'	=> 'Subject Prefix quick change',
 	'SELECT_A_PREFIX'			=> 'Select a prefix',
 ));
+
+// The installer
+$lang = array_merge($lang, array(
+	'INSTALL_SUBJECTPREFIX'				=> 'Install Subject Prefix',
+	'INSTALL_SUBJECTPREFIX_CONFIRM'		=> 'Do you really want to install Subject Prefix',
+	'UPDATE_SUBJECTPREFIX'				=> 'Update Subject Prefix',
+	'UPDATE_SUBJECTPREFIX_CONFIRM'		=> 'Do you really want to update Subject Prefix',
+	'UNINSTALL_SUBJECTPREFIX'			=> 'Remove Subject Prefix',
+	'UNINSTALL_SUBJECTPREFIX_CONFIRM'	=> 'Do you really want to remove Subject Prefix',
+));
