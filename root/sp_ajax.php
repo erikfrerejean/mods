@@ -50,7 +50,7 @@ switch ($mode)
 			}
 
 			// Get the order nr
-			$prefix = substr($prefix, 2);
+			$prefix = substr($prefix, 0, 1);
 
 			// Keep the header in mind
 			$order = $order - 1;
@@ -80,6 +80,9 @@ switch ($mode)
 	break;
  */
 }
+
+// Purge the cache
+sp_cache::subject_prefix_quick_clear();
 
 // echo the result
 echo $result;
