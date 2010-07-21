@@ -60,7 +60,7 @@ class mcp_subject_prefix
 		}
 
 		// The selected prefix can be used in this forum?
-		if (!isset($tree[$fid][$pid]))
+		if (!isset($tree[$fid][$pid]) && $pid > 0)
 		{
 			meta_refresh(2, $red);
 			trigger_error(sp_phpbb::$user->lang['PREFIX_NOT_ALLOWED'] . '<br /><br />' . sprintf(sp_phpbb::$user->lang['RETURN_PAGE'], '<a href="' . $red . '">', '</a>'));
