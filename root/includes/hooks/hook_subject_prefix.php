@@ -15,6 +15,12 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+// Block the hook when installing
+if (defined('IN_INSTALL'))
+{
+	return;
+}
+
 /**
  * Class that contains all hooked methods
  */
