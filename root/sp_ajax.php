@@ -62,7 +62,8 @@ switch ($mode)
 		// Tell the template we're good ^^
 		$result = 'success';
 	break;
-
+/*
+ * Doesn't work correctly atm
 	case 'delete' :
 		$data = request_var('data', 'pf0_0');
 
@@ -77,6 +78,7 @@ switch ($mode)
 		// Tell the template we're good ^^
 		$result = 'success';
 	break;
+ */
 }
 
 // echo the result

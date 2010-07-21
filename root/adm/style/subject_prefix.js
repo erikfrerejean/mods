@@ -708,6 +708,8 @@ $(document).ready(function() {
     });
 
     // Bind AJAX call to delete button
+    /*
+     * Doesn't work correctly atm
     $('.delete-prefix').click(function() {
         var prefID = $(this).parent().parent().attr('id');
 
@@ -743,6 +745,7 @@ $(document).ready(function() {
        // Don't follow tha link
        return false;
     });
+     */
 });
 
 function fixColouring(ele, index)
