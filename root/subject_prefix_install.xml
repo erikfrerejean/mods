@@ -54,8 +54,19 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 		<history>
 			<entry>
 				<date>2010-07-21</date>
+				<rev-version>1.2.0</rev-version>
+				<changelog lang="en">
+					<change>[Add] Correctly display/handle prefixes when previewing a post.</change>
+					<change>[Add] Display prefixes in bookmarks.</change>
+					<change>[Add] Display prefixes in subscriptions.</change>
+					<change>[Add] Display prefixes in a users "most active topic".</change>
+					<change>[Fix] Allow removal of prefixes through quick edit.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-07-21</date>
 				<rev-version>1.2.0-B1</rev-version>
-				<changelog>
+				<changelog lang="en">
 					<change>Full rewrite of this MOD.</change>
 				</changelog>
 			</entry>
