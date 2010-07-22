@@ -52,7 +52,7 @@ if (empty($lang) || !is_array($lang))
  * Notice that the name is prefixed with "SP_" when added to this array!
  */
 $lang = array_merge($lang, array(
-	'SP_LOCALISED_PREFIX'	=> 'Localised prefix',
+
 ));
 
 /**
