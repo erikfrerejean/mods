@@ -24,7 +24,7 @@ if (!defined('IN_PHPBB'))
 */
 $versions = array(
 	// Dev version, will be used as "main" schema
-	'1.2.0-B1'	=> array(
+	'1.2.0-b1'	=> array(
 		'table_add' => array(
 			// The main Subject Prefix table
 			array(SUBJECT_PREFIX_TABLE, array(
@@ -126,4 +126,5 @@ $versions = array(
 			array(TOPICS_TABLE, 'subject_prefix_id', 'subject_prefix_id'),
 		),
 	),
+	'1.2.0-rc1'	=> array(),	// No database changes
 );

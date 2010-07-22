@@ -43,7 +43,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 			</author>
 		</author-group>
 
-		<mod-version>1.2.0-B1</mod-version>
+		<mod-version>1.2.0-rc1</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -53,8 +53,8 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 
 		<history>
 			<entry>
-				<date>2010-07-21</date>
-				<rev-version>1.2.0-RC1</rev-version>
+				<date>2010-07-22</date>
+				<rev-version>1.2.0-rc1</rev-version>
 				<changelog lang="en">
 					<change>[Add] Correctly display/handle prefixes when previewing a post.</change>
 					<change>[Add] Display prefixes in bookmarks.</change>
@@ -66,7 +66,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 			</entry>
 			<entry>
 				<date>2010-07-21</date>
-				<rev-version>1.2.0-B1</rev-version>
+				<rev-version>1.2.0-b1</rev-version>
 				<changelog lang="en">
 					<change>Full rewrite of this MOD.</change>
 				</changelog>

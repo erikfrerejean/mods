@@ -1,14 +1,13 @@
 <?php
 /**
-*
-* @author Erik Frèrejean (erikfrerejean@phpbb.com) http://www.erikfrerejean.nl
-*
-* @package phpBB3
-* @copyright (c) 2010 Erik Frèrejean
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-* Minimum Requirement: PHP 5.1.0
-*/
+ *
+ * @author Erik Frèrejean (erikfrerejean@phpbb.com) http://www.erikfrerejean.nl
+ *
+ * @package phpBB3
+ * @copyright (c) 2010 Erik Frèrejean
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
 
 /**
 * @ignore
