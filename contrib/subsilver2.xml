@@ -74,31 +74,24 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 		</history>
 
 		<link-group>
-			<link type="template" realname="subsilver2" href="contrib/subsilver2.xml" lang="en">subsilver2</link>
+			<link type="parent" realname="Subject Prefix install file" href="../subject_prefix_install.xml" lang="en">Main install file</link>
 		</link-group>
 	</header>
 	<action-group>
-		<!-- File copy -->
-		<copy>
-			<file from="root/*.*" to="*.*" />
-		</copy>
-
 		<!-- File edits -->
 		<open src="styles/prosilver/template/posting_editor.html">
 			<edit>
-				<find><![CDATA[<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->]]></find>
-				<action type="before-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
+				<find><![CDATA[<td class="row2" width="78%"><input class="post" style="width:450px" type="text" name="subject" size="45" maxlength="<!-- IF S_NEW_MESSAGE -->60<!-- ELSE -->64<!-- ENDIF -->" tabindex="2" value="{SUBJECT}" /></td>
+</tr>]]></find>
+				<action type="after-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
 			</edit>
 		</open>
 
 		<open src="styles/prosilver/template/viewtopic_body.html">
 			<edit>
-				<find><![CDATA[<!-- IF S_DISPLAY_ONLINE_LIST -->]]></find>
-				<action type="before-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
+				<find><![CDATA[<!-- IF S_TOPIC_MOD --><form method="post" action="{S_MOD_ACTION}"><span class="gensmall">{L_QUICK_MOD}:</span> {S_TOPIC_MOD} <input class="btnlite" type="submit" value="{L_GO}" /></form><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
 			</edit>
 		</open>
-
-		<!-- Installer -->
-		<php-installer>install/index.php</php-installer>
 	</action-group>
 </mod>
