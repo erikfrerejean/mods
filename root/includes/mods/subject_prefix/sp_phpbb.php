@@ -25,6 +25,7 @@ abstract class sp_phpbb
 	 */
 	static public $auth		= null;
 	static public $cache	= null;
+	static public $config	= array();
 	static public $db		= null;
 	static public $template	= null;
 	static public $user		= null;
@@ -43,9 +44,10 @@ abstract class sp_phpbb
 		}
 
 		// Set the phpBB objects
-		global $auth, $cache, $db, $template, $user;
+		global $auth, $config, $cache, $db, $template, $user;
 		self::$auth		= &$auth;
 		self::$cache	= &$cache;
+		self::$config	= &$config;
 		self::$db		= &$db;
 		self::$template	= &$template;
 		self::$user		= &$user;
