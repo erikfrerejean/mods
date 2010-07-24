@@ -97,6 +97,16 @@ abstract class sp_hook
 					return;
 				}
 
+				// This MOD also supports Joas his "last post topic title MOD".
+				if (isset(sp_phpbb::$config['altt_active']) && sp_phpbb::$config['altt_active'])
+				{
+					$blockvar = 'ALTT_LINK_NAME_SHORT';
+				}
+				else
+				{
+					$blockvar = 'LAST_POST_SUBJECT';
+				}
+
 				// To fetch the subject prefixes we'll need the last post ids
 				$last_post_ids = array();
 				foreach (sp_phpbb::$template->_tpldata['forumrow'] as $row => $data)
@@ -118,11 +128,11 @@ abstract class sp_hook
 				$last_post_ids = array_flip($last_post_ids);
 				while ($row = sp_phpbb::$db->sql_fetchrow($result))
 				{
-					$last_post_subject = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['forumrow'][$last_post_ids[$row['topic_last_post_id']]]['LAST_POST_SUBJECT'];
+					$last_post_subject = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['forumrow'][$last_post_ids[$row['topic_last_post_id']]][$blockvar];
 
 					// Alter the array
 					sp_phpbb::$template->alter_block_array('forumrow', array(
-						'LAST_POST_SUBJECT' => $last_post_subject,
+						$blockvar => $last_post_subject,
 					), $key = $last_post_ids[$row['topic_last_post_id']], 'change');
 				}
 				sp_phpbb::$db->sql_freeresult($result);

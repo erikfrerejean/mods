@@ -56,7 +56,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 				<date>2010-07-25</date>
 				<rev-version>1.2.0</rev-version>
 				<changelog lang="en">
-					<change>Bump the version number to stable</change>
+					<change>[Add] This MOD now also compatible with Joas his "last post topic title MOD".</change>
 				</changelog>
 			</entry>
 			<entry>
