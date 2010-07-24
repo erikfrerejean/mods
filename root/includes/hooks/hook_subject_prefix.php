@@ -182,14 +182,35 @@ abstract class sp_hook
 					return;
 				}
 
+				// Collect the post ids
+				$post_row_id = array();
 				foreach (sp_phpbb::$template->_tpldata['searchresults'] as $row => $data)
 				{
-					$topic_title = sp_core::generate_prefix_string($data['TOPIC_ID']) . ' ' . $data['TOPIC_TITLE'];
+					if (empty($data['POST_ID']))
+					{
+						continue;
+					}
 
-					sp_phpbb::$template->alter_block_array('searchresults', array(
-						'TOPIC_TITLE'	=> $topic_title,
-					), $row, 'change');
+					$post_row_id[$row] = $data['POST_ID'];
 				}
+
+				// Fetch the prefixes
+				$sql = 'SELECT p.post_id, t.subject_prefix_id
+					FROM (' . POSTS_TABLE . ' p, ' . TOPICS_TABLE . ' t)
+					WHERE ' . sp_phpbb::$db->sql_in_set('post_id', $post_row_id) . '
+						AND t.topic_id = p.topic_id';
+				$result = sp_phpbb::$db->sql_query($sql);
+				$post_row_id = array_flip($post_row_id);
+				while ($row = sp_phpbb::$db->sql_fetchrow($result))
+				{
+					$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['searchresults'][$post_row_id[$row['post_id']]]['TOPIC_TITLE'];
+
+					// Update the template
+					sp_phpbb::$template->alter_block_array('searchresults', array(
+						'TOPIC_TITLE' => $topic_title,
+					), $post_row_id[$row['post_id']], 'change');
+				}
+				sp_phpbb::$db->sql_freeresult($result);
 			break;
 
 			case 'ucp.' . PHP_EXT :

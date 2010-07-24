@@ -57,6 +57,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 				<rev-version>1.2.0</rev-version>
 				<changelog lang="en">
 					<change>[Add] This MOD now also compatible with Joas his "last post topic title MOD".</change>
+					<change>[Fix] Correctly display subject prefixes in search results.</change>
 				</changelog>
 			</entry>
 			<entry>
