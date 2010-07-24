@@ -23,8 +23,7 @@ $user->setup();
 // Permission check
 if (!isset($user->data['session_admin']) || !$user->data['session_admin'] || $auth->acl_get('!a_subject_prefix'))
 {
-	garbage_collection();
-	exit_handler();
+	trigger_error('NO_AUTH_ADMIN');
 }
 
 // Set some common vars
