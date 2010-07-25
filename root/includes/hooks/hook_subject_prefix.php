@@ -182,33 +182,59 @@ abstract class sp_hook
 					return;
 				}
 
+				$sr = request_var('sr', '');
+
 				// Collect the post ids
-				$post_row_id = array();
+				$row_id = array();
 				foreach (sp_phpbb::$template->_tpldata['searchresults'] as $row => $data)
 				{
-					if (empty($data['POST_ID']))
+					if ($sr == 'topics')
 					{
-						continue;
-					}
+						if (empty($data['U_VIEW_TOPIC']))
+						{
+							continue;
+						}
 
-					$post_row_id[$row] = $data['POST_ID'];
+						$row_id[$row] = (int) substr(strrchr(sp_phpbb::$template->_tpldata['searchresults'][$row]['U_VIEW_TOPIC'], '='), 1);
+					}
+					else
+					{
+						if (empty($data['POST_ID']))
+						{
+							continue;
+						}
+
+						$row_id[$row] = $data['POST_ID'];
+					}
 				}
 
 				// Fetch the prefixes
-				$sql = 'SELECT p.post_id, t.subject_prefix_id
-					FROM (' . POSTS_TABLE . ' p, ' . TOPICS_TABLE . ' t)
-					WHERE ' . sp_phpbb::$db->sql_in_set('post_id', $post_row_id) . '
-						AND t.topic_id = p.topic_id';
+				switch ($sr)
+				{
+					case 'topics' :
+						$sql = 'SELECT topic_id, subject_prefix_id
+							FROM ' . TOPICS_TABLE . '
+							WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $row_id);
+						$rowfield = 'topic_id';
+					break;
+
+					default :
+						$sql = 'SELECT p.post_id, t.subject_prefix_id
+							FROM (' . POSTS_TABLE . ' p, ' . TOPICS_TABLE . ' t)
+							WHERE ' . sp_phpbb::$db->sql_in_set('p.post_id', $row_id) . '
+								AND t.topic_id = p.topic_id';
+						$rowfield = 'post_id';
+				}
 				$result = sp_phpbb::$db->sql_query($sql);
-				$post_row_id = array_flip($post_row_id);
+				$row_id = array_flip($row_id);
 				while ($row = sp_phpbb::$db->sql_fetchrow($result))
 				{
-					$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['searchresults'][$post_row_id[$row['post_id']]]['TOPIC_TITLE'];
+					$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['searchresults'][$row_id[$row[$rowfield]]]['TOPIC_TITLE'];
 
 					// Update the template
 					sp_phpbb::$template->alter_block_array('searchresults', array(
 						'TOPIC_TITLE' => $topic_title,
-					), $post_row_id[$row['post_id']], 'change');
+					), $row_id[$row[$rowfield]], 'change');
 				}
 				sp_phpbb::$db->sql_freeresult($result);
 			break;
