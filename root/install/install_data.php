@@ -127,5 +127,6 @@ $versions = array(
 		),
 	),
 	'1.2.0-rc1'	=> array(),	// No database changes
-	'1.2.0'		=> array(), // No database changes
+	'1.2.0'		=> array(),	// No database changes
+	'1.2.1'		=> array(),	// No database changes
 );
