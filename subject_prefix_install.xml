@@ -43,7 +43,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 			</author>
 		</author-group>
 
-		<mod-version>1.2.1</mod-version>
+		<mod-version>1.2.2-dev</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -52,6 +52,12 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 		</installation>
 
 		<history>
+			<entry>
+				<date>0000-00-00</date>
+				<changelog lang="en">
+					<change>[Fix] #11 The topic feed breaks when a topic has a prefix set.</change>
+				</changelog>
+			</entry>
 			<entry>
 				<date>2010-07-25</date>
 				<rev-version>1.2.1</rev-version>
@@ -99,6 +105,17 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 		</copy>
 
 		<!-- File edits -->
+		<open src="styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - {TOPIC_TITLE}" href="{U_FEED}?f={S_FORUM_ID}&amp;t={S_TOPIC_ID}" /><!-- ENDIF -->]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[TOPIC_TITLE]]></inline-find>
+					<inline-action type="replace-with"><![CDATA[FEED_TOPIC_TITLE]]></inline-action>
+				</inline-edit>
+				<comment lang="en">If you don't use feeds or don't plan on using them you don't have to apply this edit.</comment>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/posting_editor.html">
 			<edit>
 				<find><![CDATA[<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->]]></find>

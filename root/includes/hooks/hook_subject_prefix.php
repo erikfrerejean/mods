@@ -330,6 +330,7 @@ abstract class sp_hook
 
 				// Add to the topic title
 				$topic_title = sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
+				sp_phpbb::$template->assign_var('FEED_TOPIC_TITLE', $topic_title);		// A small fix for topic feeds (#11)
 				$topic_title = sp_core::generate_prefix_string($topic_data['subject_prefix_id']) . ' ' . $topic_title;
 				sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
 
