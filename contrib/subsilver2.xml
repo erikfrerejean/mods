@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml-stylesheet type="text/xsl" href="./modx.prosilver.en.xsl"?>
+<!--
+	For security purposes, please check: http://www.phpbb.com/mods/
+	for the latest version of this MOD. Although MODs are checked
+	before being allowed in the MODs Database there is no guarantee
+	that there are no security problems within the MOD. No support
+	will be given for MODs not found within the MODs Database which
+	can be found at http://www.phpbb.com/mods/
+-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="en">Subject Prefix</title>
+
+		<description lang="en">A MOD that allows users to easily give topics a subject prefix. This may be through a dropdown menu, radio boxes, a custom text input field, etc where a user can select the appropriate option and have it appended to the front of the topic title. </description>
+
+		<author-notes lang="en">This MOD is part of the MOD teams "Summer of MODs".
+This MOD was developed for php 5.2.0 and above, it might work on any other php 5 version but usage on these systems will be unsupported when the php version is causing a problem.</author-notes>
+
+		<author-group>
+			<author>
+				<realname>Erik Frèrejean</realname>
+				<username>Erik Frèrejean</username>
+				<homepage>http://www.erikfrerejean.nl</homepage>
+				<contributions-group>
+					<contributions status="current" from="2010-05-19" position="Developer" />
+				</contributions-group>
+			</author>
+			<author>
+				<realname>Tabitha</realname>
+				<username>t_backoff</username>
+				<contributions-group>
+					<contributions status="current" from="2010-05-19" position="Tester" />
+				</contributions-group>
+			</author>
+			<author>
+				<username>VSE</username>
+				<contributions-group>
+					<contributions status="current" from="2010-05-19" position="Tester" />
+				</contributions-group>
+			</author>
+		</author-group>
+
+		<mod-version>1.2.1</mod-version>
+
+		<installation>
+			<level>easy</level>
+			<time>160</time>
+			<target-version>3.0.7-PL1</target-version>
+		</installation>
+
+		<history>
+			<entry>
+				<date>2010-07-25</date>
+				<rev-version>1.2.1</rev-version>
+				<changelog lang="en">
+					<change>Packaging changes after MPV run.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-07-25</date>
+				<rev-version>1.2.0</rev-version>
+				<changelog lang="en">
+					<change>[Add] This MOD now also compatible with Joas his "last post topic title MOD".</change>
+					<change>[Fix] Correctly display subject prefixes in search results.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-07-22</date>
+				<rev-version>1.2.0-rc1</rev-version>
+				<changelog lang="en">
+					<change>[Add] Correctly display/handle prefixes when previewing a post.</change>
+					<change>[Add] Display prefixes in bookmarks.</change>
+					<change>[Add] Display prefixes in subscriptions.</change>
+					<change>[Add] Display prefixes in a users "most active topic".</change>
+					<change>[Add] SubSilver2 support.</change>
+					<change>[Fix] Allow removal of prefixes through quick edit.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-07-21</date>
+				<rev-version>1.2.0-b1</rev-version>
+				<changelog lang="en">
+					<change>Full rewrite of this MOD.</change>
+				</changelog>
+			</entry>
+		</history>
+
+		<link-group>
+			<link type="parent" realname="Subject Prefix install file" href="../subject_prefix_install.xml" lang="en">Main install file</link>
+		</link-group>
+	</header>
+	<action-group>
+		<!-- File edits -->
+		<open src="styles/prosilver/template/posting_editor.html">
+			<edit>
+				<find><![CDATA[<td class="row2" width="78%"><input class="post" style="width:450px" type="text" name="subject" size="45" maxlength="<!-- IF S_NEW_MESSAGE -->60<!-- ELSE -->64<!-- ENDIF -->" tabindex="2" value="{SUBJECT}" /></td>
+</tr>]]></find>
+				<action type="after-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/viewtopic_body.html">
+			<edit>
+				<find><![CDATA[<!-- IF S_TOPIC_MOD --><form method="post" action="{S_MOD_ACTION}"><span class="gensmall">{L_QUICK_MOD}:</span> {S_TOPIC_MOD} <input class="btnlite" type="submit" value="{L_GO}" /></form><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
+			</edit>
+		</open>
+	</action-group>
+</mod>

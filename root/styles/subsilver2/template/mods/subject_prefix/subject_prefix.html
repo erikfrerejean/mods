@@ -1,0 +1,25 @@
+<!-- IF S_KEYWORD_VERSION -->
+<!--
+/**
+ *
+ * @author Erik Frèrejean
+ *
+ * @package Subject Prefix
+ * @copyright (c) 2010 Erik Frèrejean ( erikfrerejean@phpbb.com ) http://www.erikfrerejean.nl
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+//-->
+<!-- ENDIF -->
+
+<!-- IF S_SUBJECT_PREFIX_OPTIONS -->
+<tr>
+	<td class="row1" width="22%"><b class="genmed">{L_SUBJECT_PREFIX}:</b></td>
+	<td class="row2" width="78%"><select name="subjectprefix" id="subjectprefix">{S_SUBJECT_PREFIX_OPTIONS}</select></td>
+</tr>
+<!-- ENDIF -->
+
+<!-- IF S_SUBJECT_PREFIX_QUICK_MOD -->
+    <!-- IF S_TOPIC_MOD --><br class="clear" /><!-- ENDIF -->
+    <form method="post" action="{S_MOD_ACTION}"><span class="gensmall">{L_SUBJECT_PREFIX_QUICK_MOD}:</span> <select name="prefixid" id="prefixid">{S_SUBJECT_PREFIX_QUICK_MOD}</select> <input class="btnlite" type="submit" value="{L_GO}" /></form>
+<!-- ENDIF -->
