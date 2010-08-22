@@ -195,7 +195,10 @@ abstract class sp_hook
 							continue;
 						}
 
-						$row_id[$row] = (int) substr(strrchr(sp_phpbb::$template->_tpldata['searchresults'][$row]['U_VIEW_TOPIC'], '='), 1);
+						$matches = array();
+						preg_match('#t=(?<topic_id>[0-9]+)#', sp_phpbb::$template->_tpldata['searchresults'][$row]['U_VIEW_TOPIC'], $matches);
+
+						$row_id[$row] = $matches['topic_id'];
 					}
 					else
 					{
