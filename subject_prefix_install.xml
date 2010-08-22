@@ -57,6 +57,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 				<changelog lang="en">
 					<change>[Fix] #9 Prefix doesn't get added when using advanced search and show the results per topic.</change>
 					<change>[Fix] #11 The topic feed breaks when a topic has a prefix set.</change>
+					<change>[Fix] #12 "Special" searches trigger an error.</change>
 				</changelog>
 			</entry>
 			<entry>
