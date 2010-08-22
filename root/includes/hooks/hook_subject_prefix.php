@@ -88,251 +88,267 @@ abstract class sp_hook
 			sp_phpbb::$user->page['page_name'] = 'index.' . PHP_EXT;
 		}
 
-		// Add the prefix to certain pages
-		switch (sp_phpbb::$user->page['page_name'])
+		// Get the page basename to call a method
+		$_callback = basename(sp_phpbb::$user->page['page_name'], '.' . PHP_EXT);
+		if (method_exists('sp_hook', 'add_to_' . $_callback))
 		{
-			case 'index.' . PHP_EXT :
-				if (empty(sp_phpbb::$template->_tpldata['forumrow']))
+			call_user_func('self::add_to_' . $_callback);
+		}
+	}
+
+	/**
+	 * Add the prefix to the index page
+	 * @return void
+	 */
+	static private function add_to_index()
+	{
+		if (empty(sp_phpbb::$template->_tpldata['forumrow']))
+		{
+			return;
+		}
+
+		// This MOD also supports Joas his "last post topic title MOD".
+		if (isset(sp_phpbb::$config['altt_active']) && sp_phpbb::$config['altt_active'])
+		{
+			$blockvar = 'ALTT_LINK_NAME_SHORT';
+		}
+		else
+		{
+			$blockvar = 'LAST_POST_SUBJECT';
+		}
+
+		// To fetch the subject prefixes we'll need the last post ids
+		$last_post_ids = array();
+		foreach (sp_phpbb::$template->_tpldata['forumrow'] as $row => $data)
+		{
+			// Need the last post link
+			if (empty($data['U_LAST_POST']))
+			{
+				continue;
+			}
+
+			$last_post_ids[$row] = substr(strrchr($data['U_LAST_POST'], 'p'), 1);
+		}
+
+		// Get the prefixes
+		$sql = 'SELECT topic_last_post_id, subject_prefix_id
+			FROM ' . TOPICS_TABLE . '
+			WHERE ' . sp_phpbb::$db->sql_in_set('topic_last_post_id', $last_post_ids);
+		$result	= sp_phpbb::$db->sql_query($sql);
+		$last_post_ids = array_flip($last_post_ids);
+		while ($row = sp_phpbb::$db->sql_fetchrow($result))
+		{
+			$last_post_subject = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['forumrow'][$last_post_ids[$row['topic_last_post_id']]][$blockvar];
+
+			// Alter the array
+			sp_phpbb::$template->alter_block_array('forumrow', array(
+				$blockvar => $last_post_subject,
+			), $key = $last_post_ids[$row['topic_last_post_id']], 'change');
+		}
+		sp_phpbb::$db->sql_freeresult($result);
+	}
+
+	/**
+	 * Add the prefix to the memberlist
+	 * @return void
+	 */
+	static private function add_to_memberlist()
+	{
+		// Most active topic
+		if (!empty(sp_phpbb::$template->_tpldata['.'][0]['ACTIVE_TOPIC']))
+		{
+			// Strip the topic id from link
+			$topic_id = substr(strrchr(sp_phpbb::$template->_tpldata['.'][0]['U_ACTIVE_TOPIC'], '='), 1);
+
+			// Get the subject prefix
+			$sql = 'SELECT subject_prefix_id
+				FROM ' . TOPICS_TABLE . '
+				WHERE topic_id = ' . (int) $topic_id;
+			$result	= sp_phpbb::$db->sql_query($sql);
+			$pid	= sp_phpbb::$db->sql_fetchfield('subject_prefix_id', false, $result);
+			sp_phpbb::$db->sql_freeresult($result);
+
+			// Send to the template
+			$active_title = sp_core::generate_prefix_string($pid) . ' ' . sp_phpbb::$template->_tpldata['.'][0]['ACTIVE_TOPIC'];
+			sp_phpbb::$template->assign_var('ACTIVE_TOPIC', $active_title);
+		}
+	}
+
+	/**
+	 * Add the prefix to search
+	 * @return void
+	 */
+	static private function add_to_search()
+	{
+		if (empty(sp_phpbb::$template->_tpldata['searchresults']))
+		{
+			return;
+		}
+
+		$sr = request_var('sr', '');
+
+		// Collect the post ids
+		$row_id = array();
+		foreach (sp_phpbb::$template->_tpldata['searchresults'] as $row => $data)
+		{
+			if ($sr == 'topics')
+			{
+				if (empty($data['U_VIEW_TOPIC']))
 				{
-					return;
+					continue;
 				}
 
-				// This MOD also supports Joas his "last post topic title MOD".
-				if (isset(sp_phpbb::$config['altt_active']) && sp_phpbb::$config['altt_active'])
-				{
-					$blockvar = 'ALTT_LINK_NAME_SHORT';
-				}
-				else
-				{
-					$blockvar = 'LAST_POST_SUBJECT';
-				}
+				$matches = array();
+				preg_match('#t=(?<topic_id>[0-9]+)#', sp_phpbb::$template->_tpldata['searchresults'][$row]['U_VIEW_TOPIC'], $matches);
 
-				// To fetch the subject prefixes we'll need the last post ids
-				$last_post_ids = array();
-				foreach (sp_phpbb::$template->_tpldata['forumrow'] as $row => $data)
+				$row_id[$row] = $matches['topic_id'];
+			}
+			else
+			{
+				if (empty($data['TOPIC_ID']))
 				{
-					// Need the last post link
-					if (empty($data['U_LAST_POST']))
-					{
-						continue;
-					}
-
-					$last_post_ids[$row] = substr(strrchr($data['U_LAST_POST'], 'p'), 1);
+					continue;
 				}
 
-				// Get the prefixes
-				$sql = 'SELECT topic_last_post_id, subject_prefix_id
-					FROM ' . TOPICS_TABLE . '
-					WHERE ' . sp_phpbb::$db->sql_in_set('topic_last_post_id', $last_post_ids);
-				$result	= sp_phpbb::$db->sql_query($sql);
-				$last_post_ids = array_flip($last_post_ids);
-				while ($row = sp_phpbb::$db->sql_fetchrow($result))
-				{
-					$last_post_subject = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['forumrow'][$last_post_ids[$row['topic_last_post_id']]][$blockvar];
+				$row_id[$row] = $data['TOPIC_ID'];
+			}
+		}
 
-					// Alter the array
-					sp_phpbb::$template->alter_block_array('forumrow', array(
-						$blockvar => $last_post_subject,
-					), $key = $last_post_ids[$row['topic_last_post_id']], 'change');
-				}
-				sp_phpbb::$db->sql_freeresult($result);
-			break;
+		// Fetch the prefixes
+		$sql = 'SELECT topic_id, subject_prefix_id
+			FROM ' . TOPICS_TABLE . '
+			WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $row_id);
+		$result = sp_phpbb::$db->sql_query($sql);
+		$row_id = array_flip($row_id);
+		while ($row = sp_phpbb::$db->sql_fetchrow($result))
+		{
+			$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['searchresults'][$row_id[$row['topic_id']]]['TOPIC_TITLE'];
 
-			case 'mcp.' . PHP_EXT :
+			// Update the template
+			sp_phpbb::$template->alter_block_array('searchresults', array(
+				'TOPIC_TITLE' => $topic_title,
+			), $row_id[$row['topic_id']], 'change');
+		}
+		sp_phpbb::$db->sql_freeresult($result);
+	}
 
-			break;
+	/**
+	 * Add the prefix to UPC
+	 * @return void
+	 */
+	static private function add_to_upc()
+	{
+		// Bookmarks and subscriptions
+		if (!empty(sp_phpbb::$template->_tpldata['topicrow']))
+		{
+			$topic_ids_rows = array();
+			foreach (sp_phpbb::$template->_tpldata['topicrow'] as $row => $data)
+			{
+				$topic_ids_rows[$row] = $data['TOPIC_ID'];
+			}
 
-			case 'memberlist.' . PHP_EXT :
-				// Most active topic
-				if (!empty(sp_phpbb::$template->_tpldata['.'][0]['ACTIVE_TOPIC']))
-				{
-					// Strip the topic id from link
-					$topic_id = substr(strrchr(sp_phpbb::$template->_tpldata['.'][0]['U_ACTIVE_TOPIC'], '='), 1);
+			$sql = 'SELECT topic_id, subject_prefix_id
+				FROM ' . TOPICS_TABLE . '
+				WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $topic_ids_rows) . '
+					AND subject_prefix_id > 0';
+			$result = sp_phpbb::$db->sql_query($sql);
+			$topic_ids_rows = array_flip($topic_ids_rows);
+			while ($row = sp_phpbb::$db->sql_fetchrow($result))
+			{
+				$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['topicrow'][$topic_ids_rows[$row['topic_id']]]['TOPIC_TITLE'];
 
-					// Get the subject prefix
-					$sql = 'SELECT subject_prefix_id
-						FROM ' . TOPICS_TABLE . '
-						WHERE topic_id = ' . (int) $topic_id;
-					$result	= sp_phpbb::$db->sql_query($sql);
-					$pid	= sp_phpbb::$db->sql_fetchfield('subject_prefix_id', false, $result);
-					sp_phpbb::$db->sql_freeresult($result);
+				// Alter the array
+				sp_phpbb::$template->alter_block_array('topicrow', array(
+					'TOPIC_TITLE' => $topic_title,
+				), $key = $topic_ids_rows[$row['topic_id']], 'change');
+			}
+			sp_phpbb::$db->sql_freeresult($result);
+		}
 
-					// Send to the template
-					$active_title = sp_core::generate_prefix_string($pid) . ' ' . sp_phpbb::$template->_tpldata['.'][0]['ACTIVE_TOPIC'];
-					sp_phpbb::$template->assign_var('ACTIVE_TOPIC', $active_title);
-				}
-			break;
+		// Most active topic
+		if (!empty(sp_phpbb::$template->_tpldata['.'][0]['ACTIVE_TOPIC']))
+		{
+			// Strip the topic id from link
+			$topic_id = substr(strrchr(sp_phpbb::$template->_tpldata['.'][0]['U_ACTIVE_TOPIC'], '='), 1);
 
-			case 'posting.' . PHP_EXT :
-				global $preview;
+			// Get the subject prefix
+			$sql = 'SELECT subject_prefix_id
+				FROM ' . TOPICS_TABLE . '
+				WHERE topic_id = ' . (int) $topic_id;
+			$result	= sp_phpbb::$db->sql_query($sql);
+			$pid	= sp_phpbb::$db->sql_fetchfield('subject_prefix_id', false, $result);
+			sp_phpbb::$db->sql_freeresult($result);
 
-				// When previewing this add the tag
-				if (!empty($preview))
-				{
-					$pid = request_var('subjectprefix', 0);
-					$topic_title = sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
-					$topic_title = sp_core::generate_prefix_string($pid) . ' ' . $topic_title;
-					sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
-				}
-			break;
+			// Send to the template
+			$active_title = sp_core::generate_prefix_string($pid) . ' ' . sp_phpbb::$template->_tpldata['.'][0]['ACTIVE_TOPIC'];
+			sp_phpbb::$template->assign_var('ACTIVE_TOPIC', $active_title);
+		}
+	}
 
-			case 'search.' . PHP_EXT :
-				if (empty(sp_phpbb::$template->_tpldata['searchresults']))
-				{
-					return;
-				}
+	/**
+	 * Add the prefix to viewforum
+	 * @return void
+	 */
+	static private function add_to_viewforum()
+	{
+		// As the topic data is unset once its used we'll have to introduce an query to
+		// fetch the prefixes
+		if (empty(sp_phpbb::$template->_tpldata['topicrow']))
+		{
+			return;
+		}
 
-				$sr = request_var('sr', '');
+		$topic_ids_rows = array();
+		foreach (sp_phpbb::$template->_tpldata['topicrow'] as $row => $data)
+		{
+			$topic_ids_rows[$row] = $data['TOPIC_ID'];
+		}
 
-				// Collect the post ids
-				$row_id = array();
-				foreach (sp_phpbb::$template->_tpldata['searchresults'] as $row => $data)
-				{
-					if ($sr == 'topics')
-					{
-						if (empty($data['U_VIEW_TOPIC']))
-						{
-							continue;
-						}
+		$sql = 'SELECT topic_id, subject_prefix_id
+			FROM ' . TOPICS_TABLE . '
+			WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $topic_ids_rows) . '
+				AND subject_prefix_id > 0';
+		$result = sp_phpbb::$db->sql_query($sql);
+		$topic_ids_rows = array_flip($topic_ids_rows);
+		while ($row = sp_phpbb::$db->sql_fetchrow($result))
+		{
+			$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['topicrow'][$topic_ids_rows[$row['topic_id']]]['TOPIC_TITLE'];
 
-						$matches = array();
-						preg_match('#t=(?<topic_id>[0-9]+)#', sp_phpbb::$template->_tpldata['searchresults'][$row]['U_VIEW_TOPIC'], $matches);
+			// Alter the array
+			sp_phpbb::$template->alter_block_array('topicrow', array(
+				'TOPIC_TITLE' => $topic_title,
+			), $key = $topic_ids_rows[$row['topic_id']], 'change');
+		}
+		sp_phpbb::$db->sql_freeresult($result);
+	}
 
-						$row_id[$row] = $matches['topic_id'];
-					}
-					else
-					{
-						if (empty($data['TOPIC_ID']))
-						{
-							continue;
-						}
+	/**
+	 * Add the prefix to viewtopic
+	 * @return void
+	 */
+	static private function add_to_viewtopic()
+	{
+		global $forum_id, $topic_id;
+		global $viewtopic_url, $topic_data;
 
-						$row_id[$row] = $data['TOPIC_ID'];
-					}
-				}
+		// Add to the page title
+		$page_title = sp_phpbb::$template->_tpldata['.'][0]['PAGE_TITLE'];
+		$page_title = substr_replace($page_title, ' ' . sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false), strpos($page_title, '-') + 1, 0);
+		sp_phpbb::$template->assign_var('PAGE_TITLE', $page_title);
 
-				// Fetch the prefixes
-				$sql = 'SELECT topic_id, subject_prefix_id
-					FROM ' . TOPICS_TABLE . '
-					WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $row_id);
-				$result = sp_phpbb::$db->sql_query($sql);
-				$row_id = array_flip($row_id);
-				while ($row = sp_phpbb::$db->sql_fetchrow($result))
-				{
-					$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['searchresults'][$row_id[$row['topic_id']]]['TOPIC_TITLE'];
+		// Add to the topic title
+		$topic_title = sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
+		sp_phpbb::$template->assign_var('FEED_TOPIC_TITLE', $topic_title);		// A small fix for topic feeds (#11)
+		$topic_title = sp_core::generate_prefix_string($topic_data['subject_prefix_id']) . ' ' . $topic_title;
+		sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
 
-					// Update the template
-					sp_phpbb::$template->alter_block_array('searchresults', array(
-						'TOPIC_TITLE' => $topic_title,
-					), $row_id[$row['topic_id']], 'change');
-				}
-				sp_phpbb::$db->sql_freeresult($result);
-			break;
-
-			case 'ucp.' . PHP_EXT :
-				// Bookmarks and subscriptions
-				if (!empty(sp_phpbb::$template->_tpldata['topicrow']))
-				{
-					$topic_ids_rows = array();
-					foreach (sp_phpbb::$template->_tpldata['topicrow'] as $row => $data)
-					{
-						$topic_ids_rows[$row] = $data['TOPIC_ID'];
-					}
-
-					$sql = 'SELECT topic_id, subject_prefix_id
-						FROM ' . TOPICS_TABLE . '
-						WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $topic_ids_rows) . '
-							AND subject_prefix_id > 0';
-					$result = sp_phpbb::$db->sql_query($sql);
-					$topic_ids_rows = array_flip($topic_ids_rows);
-					while ($row = sp_phpbb::$db->sql_fetchrow($result))
-					{
-						$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['topicrow'][$topic_ids_rows[$row['topic_id']]]['TOPIC_TITLE'];
-
-						// Alter the array
-						sp_phpbb::$template->alter_block_array('topicrow', array(
-							'TOPIC_TITLE' => $topic_title,
-						), $key = $topic_ids_rows[$row['topic_id']], 'change');
-					}
-					sp_phpbb::$db->sql_freeresult($result);
-				}
-
-				// Most active topic
-				if (!empty(sp_phpbb::$template->_tpldata['.'][0]['ACTIVE_TOPIC']))
-				{
-					// Strip the topic id from link
-					$topic_id = substr(strrchr(sp_phpbb::$template->_tpldata['.'][0]['U_ACTIVE_TOPIC'], '='), 1);
-
-					// Get the subject prefix
-					$sql = 'SELECT subject_prefix_id
-						FROM ' . TOPICS_TABLE . '
-						WHERE topic_id = ' . (int) $topic_id;
-					$result	= sp_phpbb::$db->sql_query($sql);
-					$pid	= sp_phpbb::$db->sql_fetchfield('subject_prefix_id', false, $result);
-					sp_phpbb::$db->sql_freeresult($result);
-
-					// Send to the template
-					$active_title = sp_core::generate_prefix_string($pid) . ' ' . sp_phpbb::$template->_tpldata['.'][0]['ACTIVE_TOPIC'];
-					sp_phpbb::$template->assign_var('ACTIVE_TOPIC', $active_title);
-				}
-			break;
-
-			case 'viewforum.' . PHP_EXT :
-				// As the topic data is unset once its used we'll have to introduce an query to
-				// fetch the prefixes
-				if (empty(sp_phpbb::$template->_tpldata['topicrow']))
-				{
-					return;
-				}
-
-				$topic_ids_rows = array();
-				foreach (sp_phpbb::$template->_tpldata['topicrow'] as $row => $data)
-				{
-					$topic_ids_rows[$row] = $data['TOPIC_ID'];
-				}
-
-				$sql = 'SELECT topic_id, subject_prefix_id
-					FROM ' . TOPICS_TABLE . '
-					WHERE ' . sp_phpbb::$db->sql_in_set('topic_id', $topic_ids_rows) . '
-						AND subject_prefix_id > 0';
-				$result = sp_phpbb::$db->sql_query($sql);
-				$topic_ids_rows = array_flip($topic_ids_rows);
-				while ($row = sp_phpbb::$db->sql_fetchrow($result))
-				{
-					$topic_title = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['topicrow'][$topic_ids_rows[$row['topic_id']]]['TOPIC_TITLE'];
-
-					// Alter the array
-					sp_phpbb::$template->alter_block_array('topicrow', array(
-						'TOPIC_TITLE' => $topic_title,
-					), $key = $topic_ids_rows[$row['topic_id']], 'change');
-				}
-				sp_phpbb::$db->sql_freeresult($result);
-			break;
-
-			case 'viewtopic.' . PHP_EXT :
-				global $forum_id, $topic_id;
-				global $viewtopic_url, $topic_data;
-
-				// Add to the page title
-				$page_title = sp_phpbb::$template->_tpldata['.'][0]['PAGE_TITLE'];
-				$page_title = substr_replace($page_title, ' ' . sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false), strpos($page_title, '-') + 1, 0);
-				sp_phpbb::$template->assign_var('PAGE_TITLE', $page_title);
-
-				// Add to the topic title
-				$topic_title = sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
-				sp_phpbb::$template->assign_var('FEED_TOPIC_TITLE', $topic_title);		// A small fix for topic feeds (#11)
-				$topic_title = sp_core::generate_prefix_string($topic_data['subject_prefix_id']) . ' ' . $topic_title;
-				sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
-
-				// The quick MOD box
-				if (sp_phpbb::$auth->acl_get('m_subject_prefix', $forum_id))
-				{
-					sp_phpbb::$template->assign_vars(array(
-						'S_SUBJECT_PREFIX_QUICK_MOD'		=> sp_core::generate_prefix_options($forum_id, $topic_data['subject_prefix_id']),
-						'S_SUBJECT_PREFIX_QUICK_MOD_ACTION'	=> append_sid(PHPBB_ROOT_PATH . 'mcp.' . PHP_EXT, array('i' => 'subject_prefix', 'mode' => 'quick_edit', 'f' => $forum_id, 't' => $topic_id, 'redirect' => urlencode(str_replace('&amp;', '&', $viewtopic_url))), true, sp_phpbb::$user->session_id),
-					));
-				}
-			break;
+		// The quick MOD box
+		if (sp_phpbb::$auth->acl_get('m_subject_prefix', $forum_id))
+		{
+			sp_phpbb::$template->assign_vars(array(
+				'S_SUBJECT_PREFIX_QUICK_MOD'		=> sp_core::generate_prefix_options($forum_id, $topic_data['subject_prefix_id']),
+				'S_SUBJECT_PREFIX_QUICK_MOD_ACTION'	=> append_sid(PHPBB_ROOT_PATH . 'mcp.' . PHP_EXT, array('i' => 'subject_prefix', 'mode' => 'quick_edit', 'f' => $forum_id, 't' => $topic_id, 'redirect' => urlencode(str_replace('&amp;', '&', $viewtopic_url))), true, sp_phpbb::$user->session_id),
+			));
 		}
 	}
 
