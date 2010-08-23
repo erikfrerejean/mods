@@ -20,6 +20,11 @@ if (!defined('IN_PHPBB'))
  */
 abstract class sp_core
 {
+	/**
+	 * Set to true when you've got the "PhpBB3 SEO Title" MOD installed (http://www.phpbb3bbcodes.com/viewtopic.php?f=8&t=300)
+	 */
+	const PHPBB3_SEO_TITLE_MOD = false;
+
 	static public function init()
 	{
 		// Define the database tables
@@ -84,7 +89,7 @@ abstract class sp_core
 		// Doesn't exist
 		if (!isset($prefixes[$pid]))
 		{
-			return;
+			return false;
 		}
 
 		$prefix_title = (isset(sp_phpbb::$user->lang['SP_' . $prefixes[$pid]['title']])) ? sp_phpbb::$user->lang['SP_' . $prefixes[$pid]['title']] : $prefixes[$pid]['title'];
