@@ -128,11 +128,12 @@ abstract class sp_hook
 				$last_post_ids = array_flip($last_post_ids);
 				while ($row = sp_phpbb::$db->sql_fetchrow($result))
 				{
-					$last_post_subject = sp_core::generate_prefix_string($row['subject_prefix_id']) . ' ' . sp_phpbb::$template->_tpldata['forumrow'][$last_post_ids[$row['topic_last_post_id']]][$blockvar];
+					$last_post_subject	= sp_phpbb::$template->_tpldata['forumrow'][$last_post_ids[$row['topic_last_post_id']]][$blockvar];
+					$last_post_prefix	= sp_core::generate_prefix_string($row['subject_prefix_id']);
 
 					// Alter the array
 					sp_phpbb::$template->alter_block_array('forumrow', array(
-						$blockvar => $last_post_subject,
+						$blockvar => ($last_post_prefix === false) ? $last_post_subject : $last_post_prefix . '&nbsp;' . $last_post_subject,
 					), $key = $last_post_ids[$row['topic_last_post_id']], 'change');
 				}
 				sp_phpbb::$db->sql_freeresult($result);
