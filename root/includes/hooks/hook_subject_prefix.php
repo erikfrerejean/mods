@@ -74,13 +74,14 @@ abstract class sp_hook
 		}
 
 		// This is kinda nasty, viewforum.php?f=. should be handled as index.php
+		$_callback = '';
 		if (sp_phpbb::$user->page['page_name'] == 'viewforum.' . PHP_EXT && isset(sp_phpbb::$template->_tpldata['forumrow']))
 		{
-			sp_phpbb::$user->page['page_name'] = 'index.' . PHP_EXT;
+			$_callback = 'index';
 		}
 
 		// Get the page basename to call a method
-		$_callback = basename(sp_phpbb::$user->page['page_name'], '.' . PHP_EXT);
+		$_callback = (!empty($_callback)) ? $_callback : basename(sp_phpbb::$user->page['page_name'], '.' . PHP_EXT);
 		if (method_exists('sp_hook', 'add_to_' . $_callback))
 		{
 			call_user_func('self::add_to_' . $_callback);
