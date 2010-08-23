@@ -315,7 +315,14 @@ abstract class sp_hook
 
 				// Add to the page title
 				$page_title = sp_phpbb::$template->_tpldata['.'][0]['PAGE_TITLE'];
-				$page_title = substr_replace($page_title, ' ' . sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false), strpos($page_title, '-') + 1, 0);
+				if (sp_core::PHPBB3_SEO_TITLE_MOD === true)
+				{
+					$page_title = (sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false) === false) ? $page_title : sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false) . ' ' . $page_title;
+				}
+				else
+				{
+					$page_title = substr_replace($page_title, ' ' . sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false), strpos($page_title, '-') + 1, 0);
+				}
 				sp_phpbb::$template->assign_var('PAGE_TITLE', $page_title);
 
 				// Add to the topic title

@@ -16,8 +16,7 @@
 
 		<description lang="en">A MOD that allows users to easily give topics a subject prefix. This may be through a dropdown menu, radio boxes, a custom text input field, etc where a user can select the appropriate option and have it appended to the front of the topic title. </description>
 
-		<author-notes lang="en">This MOD is part of the MOD teams "Summer of MODs".
-This MOD was developed for php 5.2.0 and above, it might work on any other php 5 version but usage on these systems will be unsupported when the php version is causing a problem.</author-notes>
+		<author-notes lang="en"><![CDATA[Only apply this fix if you have the PhpBB3 SEO Title" MOD installed (http://www.phpbb3bbcodes.com/viewtopic.php?f=8&t=300)]]></author-notes>
 
 		<author-group>
 			<author>
@@ -104,29 +103,14 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 	<action-group>
 
 		<!-- File edits -->
-		<open src="styles/subsilver/template/overall_header.html">
+		<open src="includes/mods/subject_prefix/sp_core.php">
 			<edit>
-				<find><![CDATA[<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - {TOPIC_TITLE}" href="{U_FEED}?f={S_FORUM_ID}&amp;t={S_TOPIC_ID}" /><!-- ENDIF -->]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[TOPIC_TITLE]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[FEED_TOPIC_TITLE]]></inline-action>
-				</inline-edit>
-				<comment lang="en">If you don't use feeds or don't plan on using them you don't have to apply this edit.</comment>
-			</edit>
-		</open>
-
-		<open src="styles/subsilver/template/posting_editor.html">
-			<edit>
-				<find><![CDATA[<td class="row2" width="78%"><input class="post" style="width:450px" type="text" name="subject" size="45" maxlength="<!-- IF S_NEW_MESSAGE -->60<!-- ELSE -->64<!-- ENDIF -->" tabindex="2" value="{SUBJECT}" /></td>
-</tr>]]></find>
-				<action type="after-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
-			</edit>
-		</open>
-
-		<open src="styles/subsilver/template/viewtopic_body.html">
-			<edit>
-				<find><![CDATA[<!-- IF S_TOPIC_MOD --><form method="post" action="{S_MOD_ACTION}"><span class="gensmall">{L_QUICK_MOD}:</span> {S_TOPIC_MOD} <input class="btnlite" type="submit" value="{L_GO}" /></form><!-- ENDIF -->]]></find>
-				<action type="after-add"><![CDATA[<!-- INCLUDE mods/subject_prefix/subject_prefix.html -->]]></action>
+				<find>abstract class sp_core
+{</find>
+				<action type="after-add"><![CDATA[	/**
+	 * Set to true when you've got the "PhpBB3 SEO Title" MOD installed (http://www.phpbb3bbcodes.com/viewtopic.php?f=8&t=300)
+	 */
+	const PHPBB3_SEO_TITLE_MOD = false;]]></action>
 			</edit>
 		</open>
 	</action-group>
