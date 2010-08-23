@@ -42,7 +42,7 @@
 			</author>
 		</author-group>
 
-		<mod-version>1.2.2-dev</mod-version>
+		<mod-version>1.2.2-b1</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -52,7 +52,8 @@
 
 		<history>
 			<entry>
-				<date>0000-00-00</date>
+				<date>2010-09-23</date>
+				<rev-version>1.2.2-b1</rev-version>
 				<changelog lang="en">
 					<change>[Change] Some overall changes to make the code more readable.</change>
 					<change>[Change] Updated UMIL to v 1.0.3.</change>
