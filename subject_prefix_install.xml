@@ -58,6 +58,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 					<change>[Fix] #9 Prefix doesn't get added when using advanced search and show the results per topic.</change>
 					<change>[Fix] #11 The topic feed breaks when a topic has a prefix set.</change>
 					<change>[Fix] #12 "Special" searches trigger an error.</change>
+					<change>[Fix] #14 Support the "PhpBB3 SEO Title" MOD.</change>
 				</changelog>
 			</entry>
 			<entry>
@@ -98,6 +99,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 
 		<link-group>
 			<link type="template" realname="subsilver2" href="contrib/subsilver2.xml" lang="en">subsilver2</link>
+			<link type="contrib" realname="phpBB3SEOTitleMOD" href="contrib/phpBB3_SEO_title_MOD_install.xml" lang="en">Add "PhpBB3 SEO Title" MOD Support</link>
 		</link-group>
 	</header>
 	<action-group>
