@@ -81,7 +81,7 @@ abstract class sp_core
 	 */
 	static public function generate_prefix_string($pid, $markup = true)
 	{
-		static $formatted	= '<span style="color: #%s">%s</span>';
+		static $formatted	= '<span style="color: #%s; display: inline;">%s</span>';
 		static $unformatted	= '%s';
 
 		$prefixes = sp_phpbb::$cache->obtain_subject_prefixes();

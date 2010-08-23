@@ -59,6 +59,7 @@ This MOD was developed for php 5.2.0 and above, it might work on any other php 5
 					<change>[Fix] #11 The topic feed breaks when a topic has a prefix set.</change>
 					<change>[Fix] #12 "Special" searches trigger an error.</change>
 					<change>[Fix] #14 Support the "PhpBB3 SEO Title" MOD.</change>
+					<change>[Fix] #15 Remove excess line break when used with the "last post topic title MOD".</change>
 				</changelog>
 			</entry>
 			<entry>
