@@ -332,22 +332,24 @@ abstract class sp_hook
 		global $viewtopic_url, $topic_data;
 
 		// Add to the page title
-		$page_title = sp_phpbb::$template->_tpldata['.'][0]['PAGE_TITLE'];
+		$page_title		= sp_phpbb::$template->_tpldata['.'][0]['PAGE_TITLE'];
+		$page_prefix	= sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false);
 		if (sp_core::PHPBB3_SEO_TITLE_MOD === true)
 		{
-			$page_title = (sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false) === false) ? $page_title : sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false) . ' ' . $page_title;
+			$page_title	= ($page_prefix === false) ? $page_title : $page_prefix . ' ' . $page_title;
 		}
 		else
 		{
-			$page_title = substr_replace($page_title, ' ' . sp_core::generate_prefix_string($topic_data['subject_prefix_id'], false), strpos($page_title, '-') + 1, 0);
+			$page_title = substr_replace($page_title, ' ' . $page_prefix, strpos($page_title, '-') + 1, 0);
 		}
 		sp_phpbb::$template->assign_var('PAGE_TITLE', $page_title);
 		sp_phpbb::$template->assign_var('PAGE_TITLE', $page_title);
 
 		// Add to the topic title
-		$topic_title = sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
+		$topic_title	= sp_phpbb::$template->_tpldata['.'][0]['TOPIC_TITLE'];
+		$topic_prefix	= sp_core::generate_prefix_string($topic_data['subject_prefix_id']);
 		sp_phpbb::$template->assign_var('FEED_TOPIC_TITLE', $topic_title);		// A small fix for topic feeds (#11)
-		$topic_title = sp_core::generate_prefix_string($topic_data['subject_prefix_id']) . ' ' . $topic_title;
+		$topic_title = ($topic_prefix === false) ? $topic_title : $topic_prefix . ' ' . $topic_title;
 		sp_phpbb::$template->assign_var('TOPIC_TITLE', $topic_title);
 
 		// The quick MOD box
