@@ -45,25 +45,16 @@ abstract class sp_hook
 	 */
 	static public function subject_prefix_init(&$hook)
 	{
-		// Load the phpBB class
-		if (!class_exists('sp_phpbb'))
-		{
-			global $phpbb_root_path, $phpEx;
-			require($phpbb_root_path . 'includes/mods/subject_prefix/sp_phpbb.' . $phpEx);
-			sp_phpbb::init();
-		}
+		global $phpbb_root_path, $phpEx;
 
-		// Load the Subject Prefix cache
-		if (!class_exists('sp_cache'))
+		// Load all the classes
+		$classes = array('sp_phpbb', 'sp_cache', 'sp_core');
+		foreach ($classes as $class)
 		{
-			require PHPBB_ROOT_PATH . 'includes/mods/subject_prefix/sp_cache.' . PHP_EXT;
-		}
-
-		// Load the Subject Prefix core
-		if (!class_exists('sp_core'))
-		{
-			require PHPBB_ROOT_PATH . 'includes/mods/subject_prefix/sp_core.' . PHP_EXT;
-			sp_core::init();
+			if (!class_exists($class))
+			{
+				require "{$phpbb_root_path}includes/mods/subject_prefix/{$class}.{$phpEx}";
+			}
 		}
 	}
 

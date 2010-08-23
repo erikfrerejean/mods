@@ -401,3 +401,6 @@ abstract class sp_core
 		return $error;
 	}
 }
+
+// Init
+sp_core::init();

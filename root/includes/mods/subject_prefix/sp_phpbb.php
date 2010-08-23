@@ -58,3 +58,6 @@ abstract class sp_phpbb
 		if (!defined('PHP_EXT')) define('PHP_EXT', $phpEx);
 	}
 }
+
+// Init
+sp_phpbb::init();
